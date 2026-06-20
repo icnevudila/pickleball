@@ -95,18 +95,18 @@ export const sessions: Session[] = [
 ];
 
 const people: Person[] = [
-  { id: "p1", fullName: "Ali Kara", firstName: "Ali", tag: "Member", skillLevel: "3.5" },
-  { id: "p2", fullName: "Deniz Yilmaz", firstName: "Deniz", tag: "Member", skillLevel: "3.5" },
-  { id: "p3", fullName: "Mark Stone", firstName: "Mark", tag: "Guest", skillLevel: "3.0" },
-  { id: "p4", fullName: "Josh Snow", firstName: "Josh", tag: "Guest", skillLevel: "3.0" },
-  { id: "p5", fullName: "Maria Rose", firstName: "Maria", tag: "Queue #1", skillLevel: "3.0" },
-  { id: "p6", fullName: "Kevin Vale", firstName: "Kevin", tag: "Queue #2", skillLevel: "3.5" },
-  { id: "p7", fullName: "Sam Moss", firstName: "Sam", tag: "Queue #3", skillLevel: "3.0" },
-  { id: "p8", fullName: "Leo Ortiz", firstName: "Leo", tag: "Queue #4", skillLevel: "3.0" },
-  { id: "p9", fullName: "Ana Cruz", firstName: "Ana", tag: "Member", skillLevel: "3.5" },
-  { id: "p10", fullName: "Ben North", firstName: "Ben", tag: "Member", skillLevel: "3.5" },
-  { id: "p11", fullName: "Theo Clark", firstName: "Theo", tag: "Guest", skillLevel: "3.0" },
-  { id: "p12", fullName: "Ken Nash", firstName: "Ken", tag: "Guest", skillLevel: "3.0" },
+  { id: "p1", fullName: "Ali Kara", firstName: "Ali", tag: "Member", skillLevel: "3.5", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=AliKara" },
+  { id: "p2", fullName: "Deniz Yilmaz", firstName: "Deniz", tag: "Member", skillLevel: "3.5", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=DenizYilmaz" },
+  { id: "p3", fullName: "Mark Stone", firstName: "Mark", tag: "Guest", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=MarkStone" },
+  { id: "p4", fullName: "Josh Snow", firstName: "Josh", tag: "Guest", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=JoshSnow" },
+  { id: "p5", fullName: "Maria Rose", firstName: "Maria", tag: "Queue #1", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=MariaRose" },
+  { id: "p6", fullName: "Kevin Vale", firstName: "Kevin", tag: "Queue #2", skillLevel: "3.5", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=KevinVale" },
+  { id: "p7", fullName: "Sam Moss", firstName: "Sam", tag: "Queue #3", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=SamMoss" },
+  { id: "p8", fullName: "Leo Ortiz", firstName: "Leo", tag: "Queue #4", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=LeoOrtiz" },
+  { id: "p9", fullName: "Ana Cruz", firstName: "Ana", tag: "Member", skillLevel: "3.5", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=AnaCruz" },
+  { id: "p10", fullName: "Ben North", firstName: "Ben", tag: "Member", skillLevel: "3.5", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=BenNorth" },
+  { id: "p11", fullName: "Theo Clark", firstName: "Theo", tag: "Guest", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=TheoClark" },
+  { id: "p12", fullName: "Ken Nash", firstName: "Ken", tag: "Guest", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=KenNash" },
 ];
 
 export const currentUser: Person = {
@@ -116,6 +116,7 @@ export const currentUser: Person = {
   role: "member",
   tag: "Intermediate",
   skillLevel: "3.5",
+  avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=DaniSantos",
 };
 
 export const bookings: Booking[] = [
@@ -139,6 +140,7 @@ export const bookings: Booking[] = [
       firstName: "Mila",
       role: "guest",
       tag: "Guest checkout",
+      avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=MilaTurner",
     },
     bookingType: "guest",
     bookingSource: "public-web",
@@ -157,6 +159,7 @@ export const bookings: Booking[] = [
       firstName: "Noah",
       role: "guest",
       tag: "Waitlist",
+      avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=NoahBrooks",
     },
     bookingType: "guest",
     bookingSource: "public-web",
@@ -193,8 +196,20 @@ export const queueEntries: QueueEntry[] = [
   { id: "q2", sessionId: "friday-open-play", position: 2, player: people[5], eta: "Court 2 next" },
   { id: "q3", sessionId: "friday-open-play", position: 3, player: people[6], eta: "6 min" },
   { id: "q4", sessionId: "friday-open-play", position: 4, player: people[7], eta: "6 min" },
-  { id: "q5", sessionId: "friday-open-play", position: 5, player: { id: "p13", fullName: "Carlo Ray", firstName: "Carlo" }, eta: "12 min" },
-  { id: "q6", sessionId: "friday-open-play", position: 6, player: { id: "p14", fullName: "Mia Park", firstName: "Mia" }, eta: "12 min" },
+  {
+    id: "q5",
+    sessionId: "friday-open-play",
+    position: 5,
+    player: { id: "p13", fullName: "Carlo Ray", firstName: "Carlo", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=CarloRay" },
+    eta: "12 min",
+  },
+  {
+    id: "q6",
+    sessionId: "friday-open-play",
+    position: 6,
+    player: { id: "p14", fullName: "Mia Park", firstName: "Mia", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=MiaPark" },
+    eta: "12 min",
+  },
 ];
 
 export const courtAssignments: CourtAssignment[] = [

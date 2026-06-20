@@ -10,7 +10,7 @@ export function SurfaceCard({
   return (
     <div
       className={cx(
-        "rounded-[28px] border border-white/12 bg-white/8 shadow-[0_24px_90px_rgba(0,0,0,0.26)] backdrop-blur",
+        "rounded-[28px] border border-[color:var(--line)] bg-white/95 shadow-[0_20px_60px_rgba(83,39,23,0.08)] backdrop-blur",
         className,
       )}
     >

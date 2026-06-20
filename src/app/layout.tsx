@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { IBM_Plex_Mono, Manrope, Sora } from "next/font/google";
 
 import "./globals.css";
 
-const headingFont = Space_Grotesk({
+const bodyFont = Manrope({
+  variable: "--font-sans-ui",
+  subsets: ["latin"],
+});
+
+const headingFont = Sora({
   variable: "--font-heading",
   subsets: ["latin"],
 });
@@ -26,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${headingFont.variable} ${monoFont.variable} h-full`}>
-      <body className="min-h-full bg-[#050b10] text-slate-100 antialiased">{children}</body>
+    <html lang="en" className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} h-full`}>
+      <body className="min-h-full bg-[var(--background)] text-[var(--foreground)] antialiased">{children}</body>
     </html>
   );
 }

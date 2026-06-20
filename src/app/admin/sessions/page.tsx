@@ -10,7 +10,7 @@ export default function AdminSessionsPage() {
     <div className="space-y-6">
       <div>
         <p className="eyebrow">Sessions</p>
-        <h1 className="section-title mt-3">Capacity, payment requirement, and court assignment all start here.</h1>
+        <h1 className="section-title mt-3">Capacity, reservation pressure, and court assignment all start here.</h1>
       </div>
 
       <div className="space-y-4">
@@ -24,15 +24,12 @@ export default function AdminSessionsPage() {
                   </StatusBadge>
                   <StatusBadge tone="slate">{session.level}</StatusBadge>
                 </div>
-                <h2 className="mt-4 text-2xl font-semibold tracking-[-0.05em] text-white">{session.name}</h2>
-                <p className="mt-2 text-sm leading-7 text-slate-300">
-                  {session.timeLabel} · {session.courts} courts · {session.booked}/{session.capacity} booked · {formatCurrency(session.price)}
+                <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{session.name}</h2>
+                <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
+                  {session.timeLabel} / {session.courts} courts / {session.booked}/{session.capacity} booked / {formatCurrency(session.price)}
                 </p>
               </div>
-              <Link
-                href={`/admin/sessions/${session.id}`}
-                className="rounded-full bg-[linear-gradient(135deg,#d4ff5f,#36d4ff)] px-5 py-3 text-sm font-bold text-slate-950"
-              >
+              <Link href={`/admin/sessions/${session.id}`} className="btn-primary px-5 py-3">
                 Open session
               </Link>
             </div>

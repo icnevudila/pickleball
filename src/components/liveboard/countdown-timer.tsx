@@ -26,11 +26,7 @@ export function CountdownTimer({
 
   return (
     <div
-      className={
-        compact
-          ? "text-3xl font-black tracking-[-0.08em] text-white"
-          : "text-5xl font-black tracking-[-0.08em] text-white sm:text-6xl"
-      }
+      className={compact ? "text-3xl font-extrabold tracking-[-0.08em] text-[color:var(--foreground)]" : "text-5xl font-extrabold tracking-[-0.08em] text-[color:var(--foreground)] sm:text-6xl"}
     >
       {minutes}:{seconds}
     </div>

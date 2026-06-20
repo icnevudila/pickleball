@@ -13,9 +13,9 @@ export default function AccountBookingsPage() {
       <main className="container-shell py-10">
         <div className="max-w-3xl space-y-4">
           <p className="eyebrow">Booking control</p>
-          <h1 className="section-title mt-3">See status, payment state, and what happens next.</h1>
-          <p className="text-sm leading-7 text-slate-300">
-            Player-facing booking control is intentionally calm. It explains state without exposing admin noise.
+          <h1 className="section-title mt-3">Reservation state, payment state, and next steps in one member view.</h1>
+          <p className="text-sm leading-7 text-[color:var(--muted)]">
+            This stays intentionally calm. Players should understand where a reservation stands without needing admin context.
           </p>
         </div>
 
@@ -32,21 +32,18 @@ export default function AccountBookingsPage() {
                       </StatusBadge>
                       <StatusBadge tone="cyan">{booking.paymentStatus}</StatusBadge>
                     </div>
-                    <h2 className="mt-4 text-2xl font-semibold tracking-[-0.05em] text-white">{session.name}</h2>
-                    <p className="mt-2 text-sm leading-7 text-slate-300">
-                      {session.dayLabel} · {session.timeLabel} · {booking.bookingType} booking · {booking.note}
+                    <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{session.name}</h2>
+                    <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
+                      {session.dayLabel} / {session.timeLabel} / {booking.bookingType} booking / {booking.note}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    <Link
-                      href={`/account/bookings/${booking.id}`}
-                      className="rounded-full bg-[linear-gradient(135deg,#d4ff5f,#36d4ff)] px-5 py-3 text-sm font-bold text-slate-950"
-                    >
+                    <Link href={`/account/bookings/${booking.id}`} className="btn-primary px-5 py-3">
                       Open detail
                     </Link>
                     <Link
                       href={booking.bookingStatus === "pending-payment" ? `/checkout/${booking.id}` : "/booking/confirm"}
-                      className="rounded-full border border-white/12 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100"
+                      className="btn-secondary px-5 py-3"
                     >
                       {booking.bookingStatus === "pending-payment" ? "Finish payment" : "View confirmation"}
                     </Link>

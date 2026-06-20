@@ -1,11 +1,11 @@
 import { cx } from "@/lib/utils";
 
 const toneClasses: Record<string, string> = {
-  lime: "border-lime-300/25 bg-lime-300/10 text-lime-100",
-  cyan: "border-cyan-300/25 bg-cyan-300/10 text-cyan-100",
-  amber: "border-amber-300/25 bg-amber-300/10 text-amber-100",
-  rose: "border-rose-300/25 bg-rose-300/10 text-rose-100",
-  slate: "border-white/15 bg-white/7 text-slate-100",
+  lime: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  cyan: "border-orange-200 bg-orange-50 text-orange-700",
+  amber: "border-amber-200 bg-amber-50 text-amber-700",
+  rose: "border-rose-200 bg-rose-50 text-rose-700",
+  slate: "border-stone-200 bg-stone-50 text-stone-700",
 };
 
 export function StatusBadge({
@@ -18,7 +18,7 @@ export function StatusBadge({
   return (
     <span
       className={cx(
-        "inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em]",
+        "inline-flex items-center rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em]",
         toneClasses[tone],
       )}
     >

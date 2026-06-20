@@ -12,16 +12,22 @@ export default function AdminCourtsPage() {
     <div className="space-y-6">
       <div>
         <p className="eyebrow">Courts</p>
-        <h1 className="section-title mt-3">Keep availability, status, and floor quality visible.</h1>
+        <h1 className="section-title mt-3">Keep court status, turnover quality, and availability readable at a glance.</h1>
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
-        {courts.map(([name, status, surface, note]) => (
+        {courts.map(([name, status, surface, note], index) => (
           <SurfaceCard key={name} className="p-6">
-            <p className="text-2xl font-semibold tracking-[-0.05em] text-white">{name}</p>
-            <p className="mt-2 text-sm uppercase tracking-[0.24em] text-slate-400">{status}</p>
-            <p className="mt-4 text-sm leading-7 text-slate-300">
-              {surface} · {note}
-            </p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{name}</p>
+                <p className="mt-2 text-sm font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">{status}</p>
+              </div>
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ background: index === 0 ? "var(--green)" : index === 1 ? "var(--brand)" : index === 2 ? "var(--amber)" : "var(--red)" }}
+              />
+            </div>
+            <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">{surface} / {note}</p>
           </SurfaceCard>
         ))}
       </div>

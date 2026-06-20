@@ -11,53 +11,47 @@ export default function BookingConfirmPage() {
     <div className="min-h-screen">
       <SiteHeader />
       <main className="container-shell py-16">
-        <SurfaceCard className="mx-auto max-w-3xl p-8 text-center sm:p-12">
-          <div className="mx-auto grid h-20 w-20 place-items-center rounded-[28px] bg-[linear-gradient(135deg,#d4ff5f,#36d4ff)]">
-            <CheckCircle2 className="h-9 w-9 text-slate-950" />
+        <SurfaceCard className="mx-auto max-w-4xl p-8 text-center sm:p-12">
+          <div
+            className="mx-auto grid h-20 w-20 place-items-center rounded-[28px] text-white"
+            style={{ background: "linear-gradient(145deg,var(--brand),#ff7654)" }}
+          >
+            <CheckCircle2 className="h-9 w-9 text-white" />
           </div>
-          <StatusBadge tone="lime">Confirmed</StatusBadge>
-          <h1 className="mt-5 text-4xl font-semibold tracking-[-0.07em] text-white sm:text-5xl">
-            Your booking is live and ready for check-in.
+          <div className="mt-5">
+            <StatusBadge tone="lime">Confirmed</StatusBadge>
+          </div>
+          <h1 className="mt-5 text-4xl font-extrabold tracking-[-0.07em] text-[color:var(--foreground)] sm:text-5xl">
+            Your reservation is live and ready for check-in.
           </h1>
-          <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
-            Payment succeeded, the booking is stored, and the session can now show you on player-facing and admin-facing views.
+          <p className="mt-4 text-sm leading-7 text-[color:var(--muted)] sm:text-base">
+            Payment succeeded, the booking is stored, and the session can now flow into player-facing, admin-facing, and liveboard-facing states.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <SurfaceCard className="border-white/8 bg-black/15 p-5">
-              <p className="font-semibold text-white">Booking</p>
-              <p className="mt-2 text-sm text-slate-300">Stored and visible in the account area.</p>
-            </SurfaceCard>
-            <SurfaceCard className="border-white/8 bg-black/15 p-5">
-              <p className="font-semibold text-white">Check-in</p>
-              <p className="mt-2 text-sm text-slate-300">Staff can move you from arrival to queue in one click.</p>
-            </SurfaceCard>
-            <SurfaceCard className="border-white/8 bg-black/15 p-5">
-              <p className="font-semibold text-white">Liveboard</p>
-              <p className="mt-2 text-sm text-slate-300">When you play, the public screen picks up the assignment.</p>
-            </SurfaceCard>
+            {[
+              ["Booking", "Stored and visible in the account area."],
+              ["Check-in", "Staff can move you from arrival to queue in one click."],
+              ["Liveboard", "When you play, the public screen picks up the assignment."],
+            ].map(([title, copy]) => (
+              <SurfaceCard key={title} className="bg-[color:var(--surface-muted)] p-5 shadow-none">
+                <p className="font-extrabold text-[color:var(--foreground)]">{title}</p>
+                <p className="mt-2 text-sm text-[color:var(--muted)]">{copy}</p>
+              </SurfaceCard>
+            ))}
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              href="/account/bookings"
-              className="rounded-full bg-[linear-gradient(135deg,#d4ff5f,#36d4ff)] px-6 py-3 text-sm font-bold text-slate-950"
-            >
+            <Link href="/account/bookings" className="btn-primary">
               View my bookings
             </Link>
-            <Link
-              href="/liveboard/tv/friday-open-play"
-              className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-6 py-3 text-sm font-semibold text-slate-100"
-            >
+            <Link href="/liveboard/tv/friday-open-play" className="btn-secondary">
               <MonitorPlay className="h-4 w-4" />
               Open liveboard
             </Link>
-            <Link
-              href="/admin/bookings"
-              className="inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/10 px-6 py-3 text-sm font-semibold text-cyan-100"
-            >
+            <Link href="/admin/bookings" className="btn-secondary">
               <MessageSquareShare className="h-4 w-4" />
-              Review admin booking control
+              Review booking control
             </Link>
           </div>
         </SurfaceCard>

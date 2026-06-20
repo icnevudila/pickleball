@@ -7,7 +7,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <SiteHeader />
-      <div className="container-shell grid gap-6 py-10 lg:grid-cols-[280px_1fr]">
+      <div className="container-shell grid gap-6 py-10 lg:grid-cols-[300px_1fr]">
         <AdminSidebar />
         <main>{children}</main>
       </div>
