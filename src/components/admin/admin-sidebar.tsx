@@ -12,6 +12,7 @@ const links = [
   { href: "/admin/courts", label: "Courts" },
   { href: "/admin/bookings", label: "Bookings" },
   { href: "/admin/members", label: "Members" },
+  { href: "/admin/memberships", label: "Membership Plans" },
   { href: "/admin/payments", label: "Payments" },
   { href: "/admin/liveboard/friday-open-play", label: "Live Control" },
 ];
