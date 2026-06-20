@@ -1,70 +1,128 @@
 import Link from "next/link";
+import {
+  Calendar,
+  Compass,
+  Award,
+  BookOpen,
+  ArrowRight,
+  UserCheck,
+  Zap,
+} from "lucide-react";
 
-import { PublicFooter } from "@/components/layout/public-footer";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
+import { StatCard } from "@/components/ui/stat-card";
 import { SiteHeader } from "@/components/layout/site-header";
-import { StatusBadge } from "@/components/status-badge";
-import { SurfaceCard } from "@/components/surface-card";
+import { PublicFooter } from "@/components/layout/public-footer";
 import { bookings, currentUser } from "@/lib/mock-data";
-
-const stats = [
-  ["3.5", "skill level"],
-  [String(bookings.length), "upcoming bookings"],
-  ["Mobile", "check-in lane"],
-];
 
 export default function AccountPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col bg-[var(--background)]">
       <SiteHeader />
-      <main className="container-shell py-10">
-        <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
-          <SurfaceCard className="p-6">
-            <StatusBadge tone="cyan">Member profile</StatusBadge>
-            <h1 className="mt-5 text-3xl font-extrabold tracking-[-0.06em] text-[color:var(--foreground)]">{currentUser.fullName}</h1>
-            <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
-              A cleaner member area for saved identity, faster booking, payment visibility, and booking-state control.
-            </p>
 
-            <div className="mt-6 grid gap-3">
-              {stats.map(([value, label]) => (
-                <div key={label} className="rounded-[22px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">{label}</p>
-                  <p className="mt-2 text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{value}</p>
-                </div>
-              ))}
-            </div>
-          </SurfaceCard>
-
-          <div className="space-y-5">
-            <SurfaceCard className="p-6">
-              <p className="eyebrow">Account actions</p>
-              <h2 className="mt-4 text-3xl font-extrabold tracking-[-0.06em] text-[color:var(--foreground)]">Keep booking control close.</h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--muted)]">
-                The member area should explain what happens next without leaking desk complexity. Booking status, payment state, and confirmation all stay player-readable.
+      <main className="container-shell flex-1 py-10">
+        <div className="grid gap-8 lg:grid-cols-[360px_1fr] items-start">
+          {/* Profile Card (Left Panel) */}
+          <Card variant="surface" className="p-6 border border-[var(--line-strong)]">
+            <div className="flex flex-col items-center text-center pb-6 border-b border-[var(--line)]">
+              <Avatar
+                name={currentUser.fullName}
+                size="xl"
+                ring={true}
+                src={currentUser.avatar}
+                className="mb-4"
+              />
+              <Badge tone="brand" className="mb-2">
+                Member Profile
+              </Badge>
+              <h1 className="text-2xl font-black tracking-tight text-[var(--foreground)]">
+                {currentUser.fullName}
+              </h1>
+              <p className="text-xs text-[var(--muted)] font-semibold mt-1">
+                ID: {currentUser.id} • {currentUser.role}
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/account/bookings" className="btn-primary px-5 py-3">
-                  View bookings
-                </Link>
-                <Link href="/sessions" className="btn-secondary px-5 py-3">
-                  Book another session
-                </Link>
-              </div>
-            </SurfaceCard>
+            </div>
 
-            <SurfaceCard className="p-6">
-              <p className="text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">Saved preferences</p>
-              <div className="mt-5 grid gap-4 sm:grid-cols-3">
-                {["Intermediate player", "Friday evening sessions", "Guest invitations enabled"].map((item) => (
-                  <div key={item} className="rounded-[22px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4 text-sm font-semibold text-[color:var(--foreground)]">
-                    {item}
+            {/* Quick Stats Grid */}
+            <div className="mt-6 space-y-4">
+              <StatCard
+                label="Skill Level"
+                value={currentUser.skillLevel || "3.5"}
+                icon={<Award className="w-5 h-5" />}
+                className="shadow-none border border-[var(--line)] bg-[var(--surface-muted)]"
+              />
+              <StatCard
+                label="Upcoming Bookings"
+                value={bookings.length}
+                icon={<Calendar className="w-5 h-5" />}
+                className="shadow-none border border-[var(--line)] bg-[var(--surface-muted)]"
+              />
+              <StatCard
+                label="Check-In Lane"
+                value="Lane A"
+                icon={<UserCheck className="w-5 h-5" />}
+                className="shadow-none border border-[var(--line)] bg-[var(--surface-muted)]"
+              />
+            </div>
+          </Card>
+
+          {/* Account Actions & Preferences (Right Panel) */}
+          <div className="space-y-6">
+            {/* Control Panel */}
+            <Card variant="surface" className="p-8 border border-[var(--line-strong)]">
+              <Badge tone="slate" className="mb-4">
+                Operations
+              </Badge>
+              <h2 className="text-3xl font-black tracking-tight text-[var(--foreground)]">
+                Keep booking control close.
+              </h2>
+              <p className="mt-3 text-sm text-[var(--muted)] leading-relaxed max-w-2xl">
+                The member area explains what happens next without leaking desk complexity. Booking status, payment state, and court assignment confirmation all stay player-readable.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Button variant="primary" asChild>
+                  <Link href="/account/bookings" className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" /> View My Bookings
+                  </Link>
+                </Button>
+                <Button variant="secondary" asChild>
+                  <Link href="/sessions" className="flex items-center gap-2">
+                    Book Another Session <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              </div>
+            </Card>
+
+            {/* Preferences Grid */}
+            <Card variant="surface" className="p-8 border border-[var(--line-strong)]">
+              <h3 className="text-lg font-black text-[var(--foreground)] mb-6">
+                Saved Preferences & Toggles
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {[
+                  { title: "Intermediate Player", detail: "Suggested level matching: 3.0 - 4.0" },
+                  { title: "Friday Evening Play", detail: "Favorite time slots automatically highligted" },
+                  { title: "Guests Auto-Pay", detail: "Split billing payments configured via Stripe" },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-5 text-sm font-semibold flex flex-col justify-between"
+                  >
+                    <span className="text-[var(--foreground)] font-black text-sm">{item.title}</span>
+                    <span className="text-[var(--muted)] text-xs font-medium mt-2 leading-relaxed">
+                      {item.detail}
+                    </span>
                   </div>
                 ))}
               </div>
-            </SurfaceCard>
+            </Card>
           </div>
         </div>
       </main>
+
       <PublicFooter />
     </div>
   );

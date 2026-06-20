@@ -1,57 +1,146 @@
 import Link from "next/link";
+import { ArrowLeft, Calendar, ShieldCheck, Ticket } from "lucide-react";
 
-import { PublicFooter } from "@/components/layout/public-footer";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { SiteHeader } from "@/components/layout/site-header";
-import { StatusBadge } from "@/components/status-badge";
-import { SurfaceCard } from "@/components/surface-card";
+import { PublicFooter } from "@/components/layout/public-footer";
 import { bookings, getSessionById } from "@/lib/mock-data";
+import { formatCurrency } from "@/lib/utils";
+
+const bookingStatusTones = {
+  "pending-payment": "amber",
+  confirmed: "lime",
+  "checked-in": "live",
+  waiting: "amber",
+  playing: "live",
+  waitlisted: "rose",
+  cancelled: "slate",
+} as const;
+
+const paymentStatusTones = {
+  pending: "amber",
+  paid: "lime",
+  failed: "rose",
+  refunded: "slate",
+  "manual-review": "amber",
+} as const;
 
 export default function AccountBookingsPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col bg-[var(--background)]">
       <SiteHeader />
-      <main className="container-shell py-10">
-        <div className="max-w-3xl space-y-4">
-          <p className="eyebrow">Booking control</p>
-          <h1 className="section-title mt-3">Reservation state, payment state, and next steps in one member view.</h1>
-          <p className="text-sm leading-7 text-[color:var(--muted)]">
-            This stays intentionally calm. Players should understand where a reservation stands without needing admin context.
-          </p>
+      <main className="container-shell flex-1 py-10">
+        {/* Navigation & Header */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8 animate-fade-in stagger-1">
+          <div className="space-y-2">
+            <Link
+              href="/account"
+              className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.16em] text-[var(--brand-deep)] hover:text-[var(--brand)] transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to Dashboard
+            </Link>
+            <h1 className="section-title text-3xl font-black mt-2">My Reservations</h1>
+            <p className="text-sm leading-relaxed text-[var(--muted)] max-w-2xl">
+              Track your reservation states, payment records, and court queues in one central view.
+            </p>
+          </div>
+          <Button variant="secondary" size="sm" asChild>
+            <Link href="/sessions">
+              <Calendar className="w-4 h-4 mr-1.5" /> Book New Session
+            </Link>
+          </Button>
         </div>
 
-        <div className="mt-8 space-y-4">
-          {bookings.map((booking) => {
-            const session = getSessionById(booking.sessionId);
-            return (
-              <SurfaceCard key={booking.id} className="p-6">
-                <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <StatusBadge tone={booking.bookingStatus === "waitlisted" ? "rose" : booking.bookingStatus === "pending-payment" ? "amber" : "lime"}>
-                        {booking.bookingStatus}
-                      </StatusBadge>
-                      <StatusBadge tone="cyan">{booking.paymentStatus}</StatusBadge>
+        {/* Bookings List */}
+        <div className="mt-8 space-y-6">
+          {bookings.length === 0 ? (
+            <Card variant="surface" className="p-12 text-center border border-[var(--line)]">
+              <Ticket className="w-12 h-12 text-[var(--muted)] mx-auto opacity-40 mb-4" />
+              <h3 className="text-lg font-black">No active bookings</h3>
+              <p className="text-xs font-semibold text-[var(--muted)] mt-1">
+                Any future bookings you make will appear right here.
+              </p>
+              <Button variant="primary" size="sm" className="mt-6" asChild>
+                <Link href="/sessions">Browse Sessions</Link>
+              </Button>
+            </Card>
+          ) : (
+            bookings.map((booking, index) => {
+              const session = getSessionById(booking.sessionId);
+              return (
+                <Card
+                  key={booking.id}
+                  variant="surface"
+                  className={`p-6 sm:p-8 border border-[var(--line-strong)] hover:shadow-md transition-all duration-300 animate-slide-up stagger-${
+                    (index % 3) + 1
+                  }`}
+                >
+                  <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="space-y-4">
+                      {/* Status Badges */}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge tone={bookingStatusTones[booking.bookingStatus] || "slate"}>
+                          Booking: {booking.bookingStatus}
+                        </Badge>
+                        <Badge tone={paymentStatusTones[booking.paymentStatus] || "slate"}>
+                          Payment: {booking.paymentStatus}
+                        </Badge>
+                      </div>
+
+                      {/* Session Name & Date */}
+                      <div>
+                        <h2 className="text-2xl font-black tracking-tight text-[var(--foreground)]">
+                          {session.name}
+                        </h2>
+                        <p className="text-xs font-semibold text-[var(--muted)] mt-1.5 flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-[var(--brand)]" />
+                          {session.dayLabel} • {session.timeLabel} • {booking.bookingType} booking
+                        </p>
+                      </div>
+
+                      {/* Detail note / price */}
+                      <div className="flex items-center gap-6">
+                        <div className="text-xs font-bold text-[var(--muted)]">
+                          Fee: <span className="font-extrabold text-[var(--foreground)] font-mono">{formatCurrency(session.price)}</span>
+                        </div>
+                        {booking.note && (
+                          <div className="text-xs font-semibold text-[var(--muted)]">
+                            Note: <span className="text-[var(--foreground)]">{booking.note}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{session.name}</h2>
-                    <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
-                      {session.dayLabel} / {session.timeLabel} / {booking.bookingType} booking / {booking.note}
-                    </p>
+
+                    {/* CTAs */}
+                    <div className="flex flex-wrap gap-3">
+                      <Button variant="secondary" size="md" asChild>
+                        <Link href={`/account/bookings/${booking.id}`}>Open details</Link>
+                      </Button>
+                      <Button
+                        variant={booking.bookingStatus === "pending-payment" ? "primary" : "secondary"}
+                        size="md"
+                        asChild
+                      >
+                        <Link
+                          href={
+                            booking.bookingStatus === "pending-payment"
+                              ? `/checkout/${booking.id}`
+                              : "/booking/confirm"
+                          }
+                        >
+                          {booking.bookingStatus === "pending-payment"
+                            ? "Finish payment"
+                            : "View confirmation"}
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    <Link href={`/account/bookings/${booking.id}`} className="btn-primary px-5 py-3">
-                      Open detail
-                    </Link>
-                    <Link
-                      href={booking.bookingStatus === "pending-payment" ? `/checkout/${booking.id}` : "/booking/confirm"}
-                      className="btn-secondary px-5 py-3"
-                    >
-                      {booking.bookingStatus === "pending-payment" ? "Finish payment" : "View confirmation"}
-                    </Link>
-                  </div>
-                </div>
-              </SurfaceCard>
-            );
-          })}
+                </Card>
+              );
+            })
+          )}
         </div>
       </main>
       <PublicFooter />
