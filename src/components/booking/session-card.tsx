@@ -72,7 +72,7 @@ export function SessionCard({ session }: { session: Session }) {
       </div>
 
       <div className="mt-auto flex flex-wrap gap-3">
-        <Link href={`/sessions/${session.id}`} className="btn-primary px-5 py-3">
+        <Link href={`/book/${session.id}`} className="btn-primary px-5 py-3">
           {ctaLabel}
         </Link>
         <Link href={`/liveboard/tv/${session.id}`} className="btn-secondary px-5 py-3">
