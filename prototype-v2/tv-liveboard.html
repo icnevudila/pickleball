@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TV Liveboard UX</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="tv">
+  <div class="tv-frame">
+    <header class="tv-head">
+      <div>
+        <div class="kicker"><span class="live-dot"></span>CourtFlow TV · <span data-live-label>LIVE</span></div>
+        <div class="tv-title">Friday Open Play</div>
+        <p style="margin:8px 0 0">18:00 - 21:00 · Intermediate · Rotation active</p>
+      </div>
+      <div class="clock"><span class="muted small">Local time</span><b data-clock>18:42:08</b></div>
+      <div class="tv-stats">
+        <div class="stat"><b>18/24</b><span>Checked in</span></div>
+        <div class="stat"><b>6</b><span>Waiting</span></div>
+      </div>
+    </header>
+
+    <section class="tv-grid">
+      <article class="tv-court">
+        <div class="row"><h3>Court 1</h3><span class="badge blue">Playing</span></div>
+        <div class="timer" data-countdown data-seconds="462">07:42</div>
+        <div class="teams">
+          <div class="team">
+            <div class="tv-player"><div class="avatar photo">AL</div><div><strong>Ali</strong><br><span class="muted">Team A</span></div></div>
+            <div class="tv-player"><div class="avatar">DN</div><div><strong>Deniz</strong><br><span class="muted">Team A</span></div></div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="team">
+            <div class="tv-player"><div class="avatar">MK</div><div><strong>Mark</strong><br><span class="muted">Team B</span></div></div>
+            <div class="tv-player"><div class="avatar photo">JS</div><div><strong>Josh</strong><br><span class="muted">Team B</span></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="tv-court available">
+        <div class="row"><h3>Court 2</h3><span class="badge">Available</span></div>
+        <div style="height:64px"></div>
+        <h2 style="font-size:56px">Next Up</h2>
+        <div class="grid cols-2">
+          <div class="tv-player"><div class="avatar">MR</div><div><strong>Maria</strong><br><span class="muted">Queue #1</span></div></div>
+          <div class="tv-player"><div class="avatar">KV</div><div><strong>Kevin</strong><br><span class="muted">Queue #2</span></div></div>
+          <div class="tv-player"><div class="avatar">SM</div><div><strong>Sam</strong><br><span class="muted">Queue #3</span></div></div>
+          <div class="tv-player"><div class="avatar">LO</div><div><strong>Leo</strong><br><span class="muted">Queue #4</span></div></div>
+        </div>
+      </article>
+
+      <article class="tv-court warning">
+        <div class="row"><h3>Court 3</h3><span class="badge warn">Ending Soon</span></div>
+        <div class="timer" data-countdown data-seconds="72">01:12</div>
+        <div class="teams">
+          <div class="team">
+            <div class="tv-player"><div class="avatar">AN</div><div><strong>Ana</strong><br><span class="muted">Team A</span></div></div>
+            <div class="tv-player"><div class="avatar photo">BN</div><div><strong>Ben</strong><br><span class="muted">Team A</span></div></div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="team">
+            <div class="tv-player"><div class="avatar">TC</div><div><strong>Theo</strong><br><span class="muted">Team B</span></div></div>
+            <div class="tv-player"><div class="avatar">KN</div><div><strong>Ken</strong><br><span class="muted">Team B</span></div></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="queue">
+      <div class="queue-card">
+        <div class="row"><h3>Now loading</h3><span class="badge"><span class="live-dot"></span>Court 2 ready</span></div>
+        <div class="pills"><span class="pill">Maria</span><span class="pill">Kevin</span><span class="pill">Sam</span><span class="pill">Leo</span></div>
+      </div>
+      <div class="queue-card">
+        <div class="row"><h3>Waiting queue</h3><span class="badge blue">6 players</span></div>
+        <div class="pills"><span class="pill">1. Maria</span><span class="pill">2. Kevin</span><span class="pill">3. Sam</span><span class="pill">4. Leo</span><span class="pill">5. Carlo</span><span class="pill">6. Mia</span></div>
+      </div>
+    </section>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
