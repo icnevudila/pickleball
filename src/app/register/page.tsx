@@ -4,42 +4,34 @@ import { PublicFooter } from "@/components/layout/public-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SurfaceCard } from "@/components/surface-card";
 
-const benefits = [
-  "Faster repeat booking with saved details",
-  "Booking history and payment visibility",
-  "Guest invites and waitlist promotion alerts",
-];
-
 export default function RegisterPage() {
   return (
     <div className="min-h-screen">
       <SiteHeader />
-      <main className="container-shell py-14">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <section className="space-y-6">
-            <p className="eyebrow">Member onboarding</p>
-            <h1 className="hero-title max-w-xl">Create your club profile before the next booking rush.</h1>
+      <main className="container-shell py-12 sm:py-16">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <section className="space-y-5">
+            <p className="eyebrow">Member sign up</p>
+            <h1 className="hero-title max-w-xl">Create a player profile.</h1>
             <p className="max-w-xl text-lg leading-8 text-[color:var(--muted)]">
-              Keep checkout lighter, track your reservations, and move faster when new courts or open sessions go live.
+              This route is only for players and members. It should make repeat booking easier, not open the staff
+              workspace.
             </p>
 
             <SurfaceCard className="p-6">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-[color:var(--muted)]">Why register</p>
-              <div className="mt-4 space-y-3">
-                {benefits.map((benefit) => (
-                  <div key={benefit} className="rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4 text-sm font-semibold text-[color:var(--foreground)]">
-                    {benefit}
-                  </div>
-                ))}
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-[color:var(--muted)]">Member benefits</p>
+              <div className="mt-4 space-y-3 text-sm text-[color:var(--foreground)]">
+                <p>Saved profile and avatar</p>
+                <p>Booking history and payment visibility</p>
+                <p>Faster repeat checkout</p>
               </div>
             </SurfaceCard>
           </section>
 
           <SurfaceCard className="p-8 sm:p-10">
-            <p className="eyebrow">Join the club</p>
-            <h2 className="mt-4 text-3xl font-extrabold tracking-[-0.06em] text-[color:var(--foreground)]">Set up your account</h2>
+            <h2 className="text-3xl font-extrabold tracking-[-0.06em] text-[color:var(--foreground)]">Create member account</h2>
             <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
-              This account is for players and members. Staff workspace access stays on the staff login route.
+              Sign up once, then use the same account for booking, waitlist, and player profile updates.
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -53,9 +45,9 @@ export default function RegisterPage() {
               ))}
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 grid gap-3">
               <Link href="/account" className="btn-primary">
-                Create member account
+                Create account
               </Link>
               <Link href="/sessions" className="btn-secondary">
                 Continue as guest

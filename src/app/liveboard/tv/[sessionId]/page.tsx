@@ -245,7 +245,7 @@ export default async function TvLiveboardPage({
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#0b1512] text-[var(--paper)]">
-      <LiveboardCueEngine events={events} />
+      <LiveboardCueEngine events={events} assignments={assignments} queue={queue} />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,106,77,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(200,255,77,0.08),transparent_32%)]" />
 
       <div className="relative grid min-h-screen grid-rows-[auto_1fr_auto] gap-4 p-4 sm:p-5 xl:p-6">

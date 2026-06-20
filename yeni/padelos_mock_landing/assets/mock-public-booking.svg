@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1462 884" width="1462" height="884" role="img" aria-label="PadelOS mockup mock-public-booking.svg">
+    
+    <defs>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+        <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#8A2D16" flood-opacity="0.12"/>
+      </filter>
+      <linearGradient id="creamGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#FFF8F1"/>
+        <stop offset="1" stop-color="#FFFFFF"/>
+      </linearGradient>
+      <linearGradient id="coralGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#FF724D"/>
+        <stop offset="1" stop-color="#F04F2A"/>
+      </linearGradient>
+    </defs>
+    
+    <style>
+  .bg { fill: #FFF8F1; }
+  .screen { fill: #ffffff; stroke: #EADDD2; stroke-width: 1.5; }
+  .surface { fill: #ffffff; stroke: #EADDD2; stroke-width: 1.2; }
+  .surface2 { fill: #FFFDFB; stroke: #EADDD2; stroke-width: 1; }
+  .ink { fill: #211A1D; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-weight: 750; }
+  .text { fill: #211A1D; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-weight: 600; }
+  .muted { fill: #82746D; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-weight: 500; }
+  .tiny { font-size: 17px; }
+  .small { font-size: 22px; }
+  .body { font-size: 28px; }
+  .h2 { font-size: 42px; letter-spacing: -1.5px; }
+  .h1 { font-size: 58px; letter-spacing: -2.4px; }
+  .pill { fill: #FFF1E9; stroke: #FFD8C9; stroke-width: 1; }
+  .accent { fill: #F04F2A; }
+  .accentDark { fill: #BF321C; }
+  .amber { fill: #FFB703; }
+  .green { fill: #16A34A; }
+  .blue { fill: #4F77FF; }
+  .line { stroke: #EADDD2; stroke-width: 1.5; }
+  .soft { fill: #FFF3EA; }
+  .shadow { filter: url(#shadow); }
+</style>
+    <rect width="1462" height="884" fill="url(#creamGrad)"/>
+    <g transform="translate(50,52)"><g class="shadow"><rect x="0" y="0" width="1362" height="780" rx="30" class="screen"/><rect x="0" y="0" width="1362" height="74" rx="28" fill="#FFFDFB"/><circle cx="34" cy="35" r="8" fill="#F87171"/><circle cx="61" cy="35" r="8" fill="#FBBF24"/><circle cx="88" cy="35" r="8" fill="#22C55E"/><text x="126" y="43" class="muted tiny">Public booking link</text><line x1="0" y1="74" x2="1362" y2="74" class="line"/><g transform="translate(0,74)"><text x="56" y="75" class="ink h1">Book a court</text><text x="56" y="122" class="muted small">Choose a slot, invite players and pay in under a minute.</text><rect x="56" y="170" width="400" height="510" rx="28" class="surface"/><text x="88" y="220" class="ink body">Barcelona Padel Club</text><text x="88" y="258" class="muted tiny">6 courts · open until 23:30</text><rect x="88" y="292" width="72" height="84" rx="20" fill="url(#coralGrad)" stroke="none"/><text x="124" y="328" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" font-weight="700" fill="#fff">Today</text><text x="124" y="358" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="850" fill="#fff">18</text><rect x="172" y="292" width="72" height="84" rx="20" fill="#FFF8F1" stroke="#EADDD2"/><text x="208" y="328" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" font-weight="700" fill="#211A1D">Tomorrow</text><text x="208" y="358" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="850" fill="#211A1D">19</text><rect x="256" y="292" width="72" height="84" rx="20" fill="#FFF8F1" stroke="#EADDD2"/><text x="292" y="328" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" font-weight="700" fill="#211A1D">Sat 22</text><text x="292" y="358" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="850" fill="#211A1D">20</text><rect x="340" y="292" width="72" height="84" rx="20" fill="#FFF8F1" stroke="#EADDD2"/><text x="376" y="328" text-anchor="middle" font-family="Inter,sans-serif" font-size="17" font-weight="700" fill="#211A1D">Sun 23</text><text x="376" y="358" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" font-weight="850" fill="#211A1D">21</text><text x="88" y="426" class="text small">Available slots</text><rect x="88" y="456" width="92" height="50" rx="17" fill="#FFFFFF" stroke="#EADDD2"/><text x="134" y="488" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" font-weight="800" fill="#211A1D">17:30</text><rect x="200" y="456" width="92" height="50" rx="17" fill="#FFFFFF" stroke="#EADDD2"/><text x="246" y="488" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" font-weight="800" fill="#211A1D">18:00</text><rect x="312" y="456" width="92" height="50" rx="17" fill="#FFFFFF" stroke="#EADDD2"/><text x="358" y="488" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" font-weight="800" fill="#211A1D">18:30</text><rect x="88" y="526" width="92" height="50" rx="17" fill="#F04F2A" stroke="#F04F2A"/><text x="134" y="558" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" font-weight="800" fill="#fff">19:00</text><rect x="200" y="526" width="92" height="50" rx="17" fill="#FFFFFF" stroke="#EADDD2"/><text x="246" y="558" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" font-weight="800" fill="#211A1D">19:30</text><rect x="312" y="526" width="92" height="50" rx="17" fill="#FFFFFF" stroke="#EADDD2"/><text x="358" y="558" text-anchor="middle" font-family="Inter,sans-serif" font-size="19" font-weight="800" fill="#211A1D">20:00</text><rect x="88" y="610" width="320" height="54" rx="27" fill="url(#coralGrad)"/><text x="248" y="645" fill="#fff" class="text small" text-anchor="middle">Reserve Court 03</text><rect x="500" y="170" width="812" height="510" rx="32" class="surface"/><text x="540" y="226" class="ink body">Court availability</text><text x="540" y="260" class="muted tiny">A clean schedule built for public booking links.</text><text x="540" y="336" class="muted tiny">Court 01</text><rect x="660" y="310" width="584" height="34" rx="17" fill="#FFF4EC"/><rect x="660" y="310" width="128" height="34" rx="17" fill="#16A34A" opacity="0.9"/><rect x="920" y="310" width="96" height="34" rx="17" fill="#16A34A" opacity="0.92"/><text x="540" y="398" class="muted tiny">Court 02</text><rect x="660" y="372" width="584" height="34" rx="17" fill="#FFF4EC"/><rect x="678" y="372" width="170" height="34" rx="17" fill="#F04F2A" opacity="0.9"/><rect x="932" y="372" width="116" height="34" rx="17" fill="#F04F2A" opacity="0.92"/><text x="540" y="460" class="muted tiny">Court 03</text><rect x="660" y="434" width="584" height="34" rx="17" fill="#FFF4EC"/><rect x="696" y="434" width="212" height="34" rx="17" fill="#FFB703" opacity="0.9"/><rect x="944" y="434" width="136" height="34" rx="17" fill="#16A34A" opacity="0.92"/><text x="540" y="522" class="muted tiny">Court 04</text><rect x="660" y="496" width="584" height="34" rx="17" fill="#FFF4EC"/><rect x="714" y="496" width="254" height="34" rx="17" fill="#16A34A" opacity="0.9"/><rect x="956" y="496" width="156" height="34" rx="17" fill="#F04F2A" opacity="0.92"/><text x="540" y="584" class="muted tiny">Court 05</text><rect x="660" y="558" width="584" height="34" rx="17" fill="#FFF4EC"/><rect x="732" y="558" width="296" height="34" rx="17" fill="#F04F2A" opacity="0.9"/><rect x="968" y="558" width="176" height="34" rx="17" fill="#16A34A" opacity="0.92"/><rect x="540" y="642" width="720" height="76" rx="22" class="soft"/><text x="570" y="686" class="text tiny">Shareable link: padelos.app/barcelona/book</text></g></g></g>
+    </svg>

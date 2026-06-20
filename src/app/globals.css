@@ -134,3 +134,88 @@ button {
     transform: translateX(-50%);
   }
 }
+
+.dark-theme {
+  --background: #0B1512;
+  --foreground: #E8E0D8;
+  --surface: #141E1A;
+  --surface-soft: #1A2622;
+  --surface-muted: #111C18;
+  --line: #1E2D27;
+  --line-strong: #2A3D35;
+  --muted: #6B7E74;
+  --brand-soft: rgba(240, 79, 42, 0.15);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out both;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out both;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-bold transition;
+  color: var(--muted);
+  background: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--surface-soft);
+  color: var(--foreground);
+}
+

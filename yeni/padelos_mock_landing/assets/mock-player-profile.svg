@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 936" width="1300" height="936" role="img" aria-label="PadelOS mockup mock-player-profile.svg">
+    
+    <defs>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+        <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#8A2D16" flood-opacity="0.12"/>
+      </filter>
+      <linearGradient id="creamGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#FFF8F1"/>
+        <stop offset="1" stop-color="#FFFFFF"/>
+      </linearGradient>
+      <linearGradient id="coralGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#FF724D"/>
+        <stop offset="1" stop-color="#F04F2A"/>
+      </linearGradient>
+    </defs>
+    
+    <style>
+  .bg { fill: #FFF8F1; }
+  .screen { fill: #ffffff; stroke: #EADDD2; stroke-width: 1.5; }
+  .surface { fill: #ffffff; stroke: #EADDD2; stroke-width: 1.2; }
+  .surface2 { fill: #FFFDFB; stroke: #EADDD2; stroke-width: 1; }
+  .ink { fill: #211A1D; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-weight: 750; }
+  .text { fill: #211A1D; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-weight: 600; }
+  .muted { fill: #82746D; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-weight: 500; }
+  .tiny { font-size: 17px; }
+  .small { font-size: 22px; }
+  .body { font-size: 28px; }
+  .h2 { font-size: 42px; letter-spacing: -1.5px; }
+  .h1 { font-size: 58px; letter-spacing: -2.4px; }
+  .pill { fill: #FFF1E9; stroke: #FFD8C9; stroke-width: 1; }
+  .accent { fill: #F04F2A; }
+  .accentDark { fill: #BF321C; }
+  .amber { fill: #FFB703; }
+  .green { fill: #16A34A; }
+  .blue { fill: #4F77FF; }
+  .line { stroke: #EADDD2; stroke-width: 1.5; }
+  .soft { fill: #FFF3EA; }
+  .shadow { filter: url(#shadow); }
+</style>
+    <rect width="1300" height="936" fill="url(#creamGrad)"/>
+    <g transform="translate(50,48)"><g class="shadow"><rect x="0" y="0" width="1200" height="840" rx="30" class="screen"/><rect x="0" y="0" width="1200" height="74" rx="28" fill="#FFFDFB"/><circle cx="34" cy="35" r="8" fill="#F87171"/><circle cx="61" cy="35" r="8" fill="#FBBF24"/><circle cx="88" cy="35" r="8" fill="#22C55E"/><text x="126" y="43" class="muted tiny">Player profile</text><line x1="0" y1="74" x2="1200" y2="74" class="line"/><g transform="translate(0,74)"><rect x="52" y="52" width="340" height="708" rx="28" class="surface"/><circle cx="222" cy="162" r="70" fill="#FFF1E9"/><text x="222" y="184" text-anchor="middle" font-family="Inter,sans-serif" font-size="64" font-weight="900" fill="#F04F2A">A</text><text x="222" y="270" class="ink h2" text-anchor="middle">Aylin Kaya</text><text x="222" y="310" class="muted small" text-anchor="middle">Level 3.8 · Right side</text><text x="92" y="360" class="muted tiny">Matches</text><text x="92" y="408" class="ink h2">42</text><text x="92" y="446" class="muted tiny">Win rate</text><text x="92" y="494" class="ink h2">64%</text><text x="92" y="532" class="muted tiny">Club rank</text><text x="92" y="580" class="ink h2">#2</text><rect x="92" y="652" width="260" height="54" rx="27" fill="url(#coralGrad)"/><text x="222" y="687" fill="#fff" class="text small" text-anchor="middle">Invite to match</text><rect x="428" y="52" width="720" height="324" rx="28" class="surface"/><text x="466" y="108" class="ink h2">Weekly ladder</text><text x="466" y="154" class="muted tiny">1</text><text x="530" y="154" class="text small">Mika R.</text><text x="1042" y="154" class="text tiny" text-anchor="end">2,420 pts</text><text x="466" y="204" class="muted tiny">2</text><text x="530" y="204" class="text small">Aylin K.</text><text x="1042" y="204" class="text tiny" text-anchor="end">2,180 pts</text><text x="466" y="254" class="muted tiny">3</text><text x="530" y="254" class="text small">Noah D.</text><text x="1042" y="254" class="text tiny" text-anchor="end">1,970 pts</text><text x="466" y="304" class="muted tiny">4</text><text x="530" y="304" class="text small">Tara S.</text><text x="1042" y="304" class="text tiny" text-anchor="end">1,840 pts</text><rect x="428" y="416" width="720" height="344" rx="28" class="surface"/><text x="466" y="472" class="ink h2">Activity feed</text><circle cx="486" cy="526" r="20" fill="#FFF1E9"/><text x="522" y="522" class="text small">Aylin won a close match</text><text x="522" y="554" class="muted tiny">6-4, 4-6, 10-7 · Court 03</text><circle cx="486" cy="604" r="20" fill="#FFF1E9"/><text x="522" y="600" class="text small">New club challenge unlocked</text><text x="522" y="632" class="muted tiny">Win 3 matches this week</text><circle cx="486" cy="682" r="20" fill="#FFF1E9"/><text x="522" y="678" class="text small">Mika joined Sunday ladder</text><text x="522" y="710" class="muted tiny">Advanced doubles</text></g></g></g>
+    </svg>

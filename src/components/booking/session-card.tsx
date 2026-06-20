@@ -27,17 +27,17 @@ export function SessionCard({ session }: { session: Session }) {
           <div>
             <h3 className="text-3xl font-extrabold tracking-[-0.07em] text-[color:var(--foreground)]">{session.name}</h3>
             <p className="mt-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[color:var(--muted)]">
-              {session.dayLabel} / {session.timeLabel} / {session.level}
+              {session.dayLabel} / {session.timeLabel}
             </p>
           </div>
         </div>
         <div className="rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] px-4 py-3 text-right">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">Seat</p>
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">Price</p>
           <p className="mt-1 text-xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{formatCurrency(session.price)}</p>
         </div>
       </div>
 
-      <p className="text-sm leading-7 text-[color:var(--muted)]">{session.hero}</p>
+      <p className="text-sm leading-7 text-[color:var(--muted)]">{session.level}</p>
 
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
@@ -66,7 +66,7 @@ export function SessionCard({ session }: { session: Session }) {
           />
         </div>
         <div className="flex items-center justify-between text-sm text-[color:var(--muted)]">
-          <span>Capacity signal stays visible before checkout.</span>
+          <span>Public booking route</span>
           <span className="font-bold text-[color:var(--foreground)]">{session.durationMinutes} min rounds</span>
         </div>
       </div>

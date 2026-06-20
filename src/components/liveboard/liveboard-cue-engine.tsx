@@ -1,14 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { liveboardEventPresets } from "@/lib/liveboard/event-presets";
-import type { RealtimeEvent } from "@/lib/types";
+import type { CourtAssignment, QueueEntry, RealtimeEvent } from "@/lib/types";
 
-function playTone(kind: "soft-chime" | "warning-double" | "success-pulse" | "alert-buzz") {
-  if (typeof window === "undefined") return;
+type ToneKey = "soft-chime" | "warning-double" | "success-pulse" | "alert-buzz";
 
-  const AudioContextCtor = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+function getAudioContextCtor() {
+  if (typeof window === "undefined") return null;
+
+  return window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext || null;
+}
+
+function playTone(kind: ToneKey) {
+  const AudioContextCtor = getAudioContextCtor();
 
   if (!AudioContextCtor) {
     return;
@@ -64,14 +70,65 @@ function speak(message: string) {
   utterance.rate = 1;
   utterance.pitch = 1;
   utterance.volume = 0.9;
+  utterance.lang = "en-GB";
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);
 }
 
-export function LiveboardCueEngine({ events }: { events: RealtimeEvent[] }) {
+function joinNames(queue: QueueEntry[]) {
+  return queue.map((entry) => entry.player.firstName).join(", ");
+}
+
+function cue(kind: ToneKey, voiceMessage?: string) {
+  playTone(kind);
+
+  if (voiceMessage) {
+    speak(voiceMessage);
+  }
+}
+
+export function LiveboardCueEngine({
+  events,
+  assignments,
+  queue,
+}: {
+  events: RealtimeEvent[];
+  assignments: CourtAssignment[];
+  queue: QueueEntry[];
+}) {
+  const [voiceEnabled, setVoiceEnabled] = useState(() => {
+    if (typeof window === "undefined") {
+      return true;
+    }
+
+    return window.localStorage.getItem("liveboard_voice_enabled") !== "false";
+  });
+  const [voiceArmed, setVoiceArmed] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    return window.localStorage.getItem("liveboard_voice_armed") === "true";
+  });
   const latestEvent = events[0];
+  const mountedAtRef = useRef(0);
   const initialEventIdRef = useRef<string | null>(null);
   const lastPlayedEventIdRef = useRef<string | null>(null);
+  const spokenCueKeysRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    mountedAtRef.current = Date.now();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("liveboard_voice_enabled", String(voiceEnabled));
+  }, [voiceEnabled]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("liveboard_voice_armed", String(voiceArmed));
+  }, [voiceArmed]);
 
   const preset = useMemo(() => {
     if (!latestEvent) return null;
@@ -80,7 +137,7 @@ export function LiveboardCueEngine({ events }: { events: RealtimeEvent[] }) {
   }, [latestEvent]);
 
   useEffect(() => {
-    if (!latestEvent) return;
+    if (!voiceEnabled || !voiceArmed || !latestEvent) return;
 
     if (!initialEventIdRef.current) {
       initialEventIdRef.current = latestEvent.id;
@@ -105,7 +162,95 @@ export function LiveboardCueEngine({ events }: { events: RealtimeEvent[] }) {
     }
 
     lastPlayedEventIdRef.current = latestEvent.id;
-  }, [latestEvent, preset]);
+  }, [latestEvent, preset, voiceArmed, voiceEnabled]);
 
-  return null;
+  useEffect(() => {
+    if (!voiceEnabled || !voiceArmed) return;
+
+    const interval = window.setInterval(() => {
+      const elapsedSeconds = Math.floor((Date.now() - mountedAtRef.current) / 1000);
+
+      assignments.forEach((assignment) => {
+        if (!assignment.endsInSeconds) {
+          if (assignment.status === "available" && assignment.nextUp?.length) {
+            const key = `${assignment.id}:ready`;
+
+            if (!spokenCueKeysRef.current.has(key)) {
+              spokenCueKeysRef.current.add(key);
+              cue(
+                "soft-chime",
+                `${assignment.courtName} is ready. ${assignment.nextUp.map((player) => player.firstName).join(", ")} please prepare.`,
+              );
+            }
+          }
+
+          return;
+        }
+
+        const remaining = Math.max(assignment.endsInSeconds - elapsedSeconds, 0);
+        const oneMinuteKey = `${assignment.id}:one-minute`;
+        const tenSecondKey = `${assignment.id}:ten-seconds`;
+        const timeUpKey = `${assignment.id}:time-up`;
+
+        if (remaining <= 60 && remaining > 10 && assignment.status === "ending-soon" && !spokenCueKeysRef.current.has(oneMinuteKey)) {
+          spokenCueKeysRef.current.add(oneMinuteKey);
+          cue("warning-double", `One minute remaining on ${assignment.courtName}. Next players be ready.`);
+        }
+
+        if (remaining <= 10 && remaining > 0 && !spokenCueKeysRef.current.has(tenSecondKey)) {
+          spokenCueKeysRef.current.add(tenSecondKey);
+          cue("warning-double", `${assignment.courtName}. Ten seconds remaining.`);
+        }
+
+        if (remaining === 0 && !spokenCueKeysRef.current.has(timeUpKey)) {
+          spokenCueKeysRef.current.add(timeUpKey);
+          cue("alert-buzz", `Time is up on ${assignment.courtName}. Please rotate the court now.`);
+        }
+      });
+
+      if (queue.length > 0) {
+        const queueKey = `queue-head:${queue[0].id}`;
+
+        if (!spokenCueKeysRef.current.has(queueKey)) {
+          spokenCueKeysRef.current.add(queueKey);
+          cue("success-pulse", `Queue ready. ${joinNames(queue.slice(0, 4))} are next in line.`);
+        }
+      }
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, [assignments, queue, voiceArmed, voiceEnabled]);
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 rounded-full border border-white/12 bg-[rgba(11,21,18,0.84)] px-3 py-2 text-white shadow-[0_16px_40px_rgba(0,0,0,0.28)] backdrop-blur">
+      <button
+        type="button"
+        className={`rounded-full px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] ${
+          voiceEnabled ? "bg-[var(--accent-lime)] text-[#0b1512]" : "bg-white/10 text-white"
+        }`}
+        onClick={() => setVoiceEnabled((current) => !current)}
+      >
+        {voiceEnabled ? "Voice on" : "Voice off"}
+      </button>
+      <button
+        type="button"
+        className={`rounded-full px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] ${
+          voiceArmed ? "bg-[var(--brand)] text-white" : "bg-white/10 text-white"
+        }`}
+        onClick={() => {
+          setVoiceArmed(true);
+          cue("soft-chime", "Liveboard voice ready.");
+        }}
+      >
+        {voiceArmed ? "Armed" : "Enable voice"}
+      </button>
+      <button
+        type="button"
+        className="rounded-full bg-white/10 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white"
+        onClick={() => cue("success-pulse", "Test announcement. Liveboard audio is working.")}
+      >
+        Test
+      </button>
+    </div>
+  );
 }
