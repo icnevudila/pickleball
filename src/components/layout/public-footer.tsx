@@ -10,8 +10,8 @@ export function PublicFooter() {
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
               <div
-                className="grid h-8 w-8 place-items-center rounded-[10px] text-xs font-black tracking-wider text-white"
-                style={{ background: "linear-gradient(145deg, var(--brand), #ff7654)" }}
+                className="grid h-8 w-8 place-items-center rounded-[8px] text-xs font-black tracking-wider text-white shadow-[var(--shadow-sm)]"
+                style={{ background: "linear-gradient(145deg, var(--brand), var(--brand-deep))" }}
               >
                 {club.logo}
               </div>

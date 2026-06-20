@@ -23,8 +23,8 @@ export function SiteHeader() {
         {/* Brand Logo */}
         <Link href="/" className="flex min-w-0 items-center gap-3 group">
           <div
-            className="grid h-11 w-11 place-items-center rounded-[16px] text-sm font-black tracking-[0.16em] text-white shadow-[0_12px_24px_rgba(240,79,42,0.2)] group-hover:scale-105 transition-transform duration-200"
-            style={{ background: "linear-gradient(145deg, var(--brand), #ff7654)" }}
+            className="grid h-11 w-11 place-items-center rounded-[12px] text-sm font-black tracking-[0.16em] text-white shadow-[var(--shadow-sm)] group-hover:scale-105 transition-transform duration-200"
+            style={{ background: "linear-gradient(145deg, var(--brand), var(--brand-deep))" }}
           >
             {club.logo}
           </div>

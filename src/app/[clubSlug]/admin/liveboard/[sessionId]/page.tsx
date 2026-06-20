@@ -59,7 +59,7 @@ export default async function AdminLiveboardPage({
               {queue.slice(0, 4).map((entry) => (
                 <div
                   key={entry.id}
-                  className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)] flex justify-between items-center"
+                  className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)] flex justify-between items-center"
                 >
                   <p className="font-extrabold text-[var(--foreground)] text-sm">
                     {entry.position}. {entry.player.firstName}
@@ -84,7 +84,7 @@ export default async function AdminLiveboardPage({
             {queue.map((entry) => (
               <div
                 key={entry.id}
-                className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)] flex flex-col justify-between min-h-[90px]"
+                className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)] flex flex-col justify-between min-h-[90px]"
               >
                 <p className="font-extrabold text-[var(--foreground)] text-xs">{entry.player.fullName}</p>
                 <p className="text-[10px] font-bold text-[var(--muted)] mt-2 uppercase tracking-wider">{entry.eta}</p>
@@ -102,7 +102,7 @@ export default async function AdminLiveboardPage({
             {events.map((event) => (
               <div
                 key={event.id}
-                className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)]"
+                className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)]"
               >
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[var(--muted)]">

@@ -13,9 +13,9 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const baseStyles = "backdrop-blur transition-all duration-300";
 
     const variants = {
-      surface: "page-panel rounded-[28px]",
-      warm: "warm-panel rounded-[28px]",
-      elevated: "rounded-[16px] border border-[var(--line)] bg-[var(--surface)] shadow-[0_24px_48px_rgba(83,39,23,0.12)]",
+      surface: "page-panel rounded-[16px] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)]",
+      warm: "warm-panel rounded-[16px] bg-[var(--surface-soft)] shadow-[var(--shadow-sm)]",
+      elevated: "rounded-[16px] border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-lg)]",
     };
 
     return (

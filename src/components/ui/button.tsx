@@ -33,7 +33,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
 
     const baseStyles =
-      "inline-flex items-center justify-center rounded-full font-extrabold transition-all duration-200 active:scale-98 disabled:pointer-events-none disabled:opacity-50 gap-2";
+      "inline-flex items-center justify-center rounded-[12px] font-extrabold transition-all duration-200 active:scale-98 disabled:pointer-events-none disabled:opacity-50 gap-2";
 
     const variants = {
       primary:

@@ -13,7 +13,7 @@ const sessionTone = {
   completed: "slate",
 } as const;
 
-export function SessionCard({ session }: { session: Session }) {
+export function SessionCard({ session, clubSlug }: { session: Session; clubSlug?: string }) {
   const spotsLeft = Math.max(session.capacity - session.booked, 0);
   const ctaLabel = session.status === "waitlist" ? "Join waitlist" : "Reserve seat";
 
@@ -31,51 +31,51 @@ export function SessionCard({ session }: { session: Session }) {
             </p>
           </div>
         </div>
-        <div className="rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] px-4 py-3 text-right">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">Price</p>
-          <p className="mt-1 text-xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{formatCurrency(session.price)}</p>
+        <div className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 text-right">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--muted)]">Price</p>
+          <p className="mt-1 text-xl font-extrabold tracking-[-0.05em] text-[var(--foreground)] font-mono">{formatCurrency(session.price)}</p>
         </div>
       </div>
 
-      <p className="text-sm leading-7 text-[color:var(--muted)]">{session.level}</p>
+      <p className="text-sm leading-7 text-[var(--muted)]">{session.level}</p>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">Booked</p>
-          <p className="mt-2 text-2xl font-extrabold tracking-[-0.06em] text-[color:var(--foreground)]">
+        <div className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] p-4">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--muted)]">Booked</p>
+          <p className="mt-2 text-2xl font-extrabold tracking-[-0.06em] text-[var(--foreground)] font-mono">
             {session.booked}/{session.capacity}
           </p>
         </div>
-        <div className="rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">Courts</p>
-          <p className="mt-2 text-2xl font-extrabold tracking-[-0.06em] text-[color:var(--foreground)]">{session.courts}</p>
+        <div className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] p-4">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--muted)]">Courts</p>
+          <p className="mt-2 text-2xl font-extrabold tracking-[-0.06em] text-[var(--foreground)] font-mono">{session.courts}</p>
         </div>
-        <div className="rounded-[20px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">Availability</p>
-          <p className="mt-2 text-2xl font-extrabold tracking-[-0.06em] text-[color:var(--foreground)]">
+        <div className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] p-4">
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[var(--muted)]">Availability</p>
+          <p className="mt-2 text-2xl font-extrabold tracking-[-0.06em] text-[var(--foreground)] font-mono">
             {session.status === "waitlist" ? "Waitlist" : `${spotsLeft} left`}
           </p>
         </div>
       </div>
 
       <div className="space-y-2">
-        <div className="h-2 rounded-full bg-[color:var(--brand-soft)]">
+        <div className="h-2 rounded-md bg-[var(--brand-soft)]">
           <div
-            className="h-full rounded-full"
-            style={{ width: formatPercent(session.booked, session.capacity), background: "linear-gradient(90deg,var(--brand),#ff7654)" }}
+            className="h-full rounded-md"
+            style={{ width: formatPercent(session.booked, session.capacity), background: "var(--brand)" }}
           />
         </div>
-        <div className="flex items-center justify-between text-sm text-[color:var(--muted)]">
+        <div className="flex items-center justify-between text-sm text-[var(--muted)]">
           <span>Public booking route</span>
-          <span className="font-bold text-[color:var(--foreground)]">{session.durationMinutes} min rounds</span>
+          <span className="font-bold text-[var(--foreground)] font-mono">{session.durationMinutes} min rounds</span>
         </div>
       </div>
 
       <div className="mt-auto flex flex-wrap gap-3">
-        <Link href={`/book/${session.id}`} className="btn-primary px-5 py-3">
+        <Link href={clubSlug ? `/${clubSlug}/book/${session.id}` : `/book/${session.id}`} className="btn-primary px-5 py-3">
           {ctaLabel}
         </Link>
-        <Link href={`/liveboard/tv/${session.id}`} className="btn-secondary px-5 py-3">
+        <Link href={clubSlug ? `/${clubSlug}/liveboard/tv/${session.id}` : `/liveboard/tv/${session.id}`} className="btn-secondary px-5 py-3">
           Liveboard
         </Link>
       </div>

@@ -156,7 +156,7 @@ export function StepPlayerDetails({ session, onNext, onBack, formData, setFormDa
               {formData.guests.map((guest: any) => (
                 <div
                   key={guest.id}
-                  className="flex items-center justify-between bg-[var(--surface-soft)] border border-[var(--line)] rounded-[16px] px-4 py-2.5 text-xs font-bold"
+                  className="flex items-center justify-between bg-[var(--surface-soft)] border border-[var(--line)] rounded-[12px] px-4 py-2.5 text-xs font-bold"
                 >
                   <span className="text-[var(--foreground)]">{guest.name}</span>
                   <button
@@ -213,7 +213,7 @@ export function StepBilling({ session, onNext, onBack, formData, setFormData }: 
 
         {/* Toggles */}
         <div className="space-y-3">
-          <label className="flex items-start gap-3 p-4 rounded-[20px] border border-[var(--line)] bg-[var(--surface-soft)] cursor-pointer hover:border-[var(--brand)] transition">
+          <label className="flex items-start gap-3 p-4 rounded-[12px] border border-[var(--line)] bg-[var(--surface-soft)] cursor-pointer hover:border-[var(--brand)] transition">
             <input
               type="radio"
               name="splitPayment"
@@ -232,7 +232,7 @@ export function StepBilling({ session, onNext, onBack, formData, setFormData }: 
           </label>
 
           {formData.guests.length > 0 && (
-            <label className="flex items-start gap-3 p-4 rounded-[20px] border border-[var(--line)] bg-[var(--surface-soft)] cursor-pointer hover:border-[var(--brand)] transition">
+            <label className="flex items-start gap-3 p-4 rounded-[12px] border border-[var(--line)] bg-[var(--surface-soft)] cursor-pointer hover:border-[var(--brand)] transition">
               <input
                 type="radio"
                 name="splitPayment"
@@ -292,7 +292,7 @@ export function StepSummary({ session, onBack, formData }: { session: Session; o
         </p>
 
         {formData.splitPayment && (
-          <div className="bg-[var(--surface-muted)] border border-[var(--line)] rounded-[20px] p-5 max-w-sm mx-auto text-left space-y-3">
+          <div className="bg-[var(--surface-muted)] border border-[var(--line)] rounded-[12px] p-5 max-w-sm mx-auto text-left space-y-3">
             <span className="text-xs font-black uppercase tracking-wider text-[var(--brand-deep)] flex items-center gap-1.5">
               <Split className="w-4 h-4" /> Split billing active
             </span>

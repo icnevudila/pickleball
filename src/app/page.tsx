@@ -1,222 +1,384 @@
 import Link from "next/link";
 import {
-  Calendar,
-  CreditCard,
-  Zap,
   Tv,
   Users,
-  Compass,
-  ArrowRight,
   Sparkles,
+  Flame,
+  Check,
+  Play,
+  Clock,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { SiteHeader } from "@/components/layout/site-header";
 import { PublicFooter } from "@/components/layout/public-footer";
-import { club, sessions } from "@/lib/mock-data";
-import { formatCurrency, formatPercent } from "@/lib/utils";
 
 export default function HomePage() {
-  const tonightSession = sessions.find((s) => s.id === "friday-open-play") || sessions[0];
-
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--background)]">
+    <div className="min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)] font-sans antialiased">
       <SiteHeader />
 
-      <main className="flex-1 pb-24 space-y-20">
-        {/* Centered spacious Hero Section */}
-        <section className="container-shell pt-16 pb-8 text-center space-y-8 max-w-4xl animate-fade-in">
-          <Badge tone="brand" className="animate-fade-in stagger-1">
-            {club.city} • Active Club System
-          </Badge>
+      <main className="flex-1 pb-24 space-y-16 lg:space-y-24">
+        {/* Active Scoreboard / Telemetry (Kitchen Line Üstü) */}
+        <section className="container-shell pt-12 animate-fade-in">
+          <div className="bg-[#141E1A] dark-theme border border-[var(--line)] rounded-[16px] p-6 sm:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6 shadow-[var(--shadow-md)]">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-[var(--accent-lime)]">
+                <span className="h-2.5 w-2.5 rounded-full bg-[var(--accent-lime)] animate-pulse" />
+                Live Platform Telemetry
+              </div>
+              <p className="text-xs text-[var(--muted)] font-semibold">Realtime network stats across all active clubs.</p>
+            </div>
+            
+            {/* Mono Stats Grid */}
+            <div className="grid grid-cols-3 gap-6 md:gap-12">
+              <div className="space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">Active Clubs</span>
+                <p className="text-2xl md:text-3xl font-black font-mono text-[var(--foreground)]">124</p>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">Games Today</span>
+                <p className="text-2xl md:text-3xl font-black font-mono text-[var(--foreground)]">1,842</p>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">Queue Avg</span>
+                <p className="text-2xl md:text-3xl font-black font-mono text-[var(--accent-lime)]">02:14</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SIGNATURE ELEMENT: Kitchen Line */}
+        <div className="container-shell">
+          <div className="kitchen-line" />
+        </div>
+
+        {/* Hero & Pitch */}
+        <section className="container-shell text-center space-y-6 max-w-4xl animate-fade-in stagger-1">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-[12px] border border-[var(--line)] bg-[var(--surface-soft)] text-xs font-black uppercase tracking-[0.16em] text-[var(--brand-deep)]">
+            <Flame className="w-4 h-4 text-[var(--brand)] fill-[var(--brand)]" /> FOR PICKLEBALL CLUB OPERATORS
+          </div>
           
-          <h1 className="hero-title text-5xl sm:text-6xl lg:text-7xl tracking-tight leading-none max-w-3xl mx-auto animate-fade-in stagger-2">
-            Book your court. <br className="hidden sm:inline" />
-            <span className="text-[var(--brand)]">Play your game.</span>
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-[-0.08em] leading-tight text-[var(--foreground)] max-w-3xl mx-auto">
+            Run the club.<br />
+            <span className="text-[var(--brand)]">Not the spreadsheet.</span>
           </h1>
           
-          <p className="text-sm sm:text-base md:text-lg text-[var(--muted)] max-w-2xl mx-auto leading-relaxed animate-fade-in stagger-3">
-            Seamless online booking, real-time queue updates, and automated court allocations. Built specifically for modern pickleball venues.
+          <p className="text-sm sm:text-base md:text-lg text-[var(--muted)] max-w-2xl mx-auto leading-relaxed font-semibold">
+            CourtOS handles court assignments, real-time lobby TV screens, and split-payment booking links — so your front desk can focus on players, not paperwork.
           </p>
           
-          <div className="flex flex-wrap items-center justify-center gap-4 animate-fade-in stagger-4">
-            <Button variant="primary" size="lg" asChild>
-              <Link href="/sessions">Book a Session</Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <Button 
+              variant="primary" 
+              size="lg" 
+              asChild 
+              className="rounded-[12px] px-8 py-4 font-bold text-sm shadow-[var(--shadow-md)]"
+            >
+              <Link href="/register">Start Free Trial</Link>
             </Button>
-            <Button variant="secondary" size="lg" asChild>
-              <Link href="/login">Staff Sign In</Link>
+            <Button 
+              variant="secondary" 
+              size="lg" 
+              asChild 
+              className="rounded-[12px] border border-[var(--line-strong)] bg-[var(--surface)] text-[var(--foreground)] px-8 py-4 font-bold text-sm"
+            >
+              <Link href="/login">Staff Login</Link>
             </Button>
           </div>
         </section>
 
-        {/* Featured Live Play Banner - Anchors the hero to the active platform */}
-        <section className="container-shell max-w-5xl animate-slide-up stagger-2">
-          <Card variant="warm" className="p-6 sm:p-8 border border-[var(--line-strong)] hover:shadow-xl transition-all duration-300 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--brand-soft)] rounded-full blur-3xl opacity-60"></div>
-            
-            <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr] items-center">
-              {/* Left detail */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge tone="live">Live Now</Badge>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">
-                    Tonight's Session
+        {/* HIGH-FIDELITY SPORTY PLATFORM MOCKUP */}
+        <section className="container-shell max-w-6xl py-8 animate-fade-in stagger-2">
+          <div className="border border-[var(--line-strong)] rounded-[16px] bg-[#141E1A] dark-theme p-4 sm:p-6 shadow-[var(--shadow-lg)] relative overflow-hidden">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="h-3 w-3 rounded-full bg-[var(--brand)] animate-pulse" />
+                <span className="text-xs font-black uppercase tracking-widest text-[var(--foreground)]">Sunset Court Club Manager</span>
+                <span className="bg-[var(--surface-soft)] text-xs text-[var(--brand)] font-black px-2 py-0.5 rounded-[4px] font-mono">1.04v</span>
+              </div>
+              <div className="flex items-center gap-2 text-[10px] text-[var(--muted)] font-mono">
+                <Clock className="w-3.5 h-3.5" /> 21:28:54
+              </div>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-3">
+              <div className="lg:col-span-2 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-black uppercase tracking-widest text-[var(--muted)]">Active Court Status</h3>
+                  <span className="text-[10px] font-mono text-[var(--accent-lime)] flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-lime)] animate-pulse" /> Live feeds synced
                   </span>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
-                  {tonightSession.name}
-                </h3>
-                <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed max-w-md">
-                  {tonightSession.hero}
-                </p>
-                <div className="flex items-center gap-4 text-xs font-extrabold text-[var(--muted)]">
-                  <span>Level: {tonightSession.level}</span>
-                  <span>•</span>
-                  <span>Time: {tonightSession.timeLabel}</span>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="border border-[var(--line)] rounded-[12px] bg-[var(--surface-soft)] p-4 space-y-3 relative overflow-hidden">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-extrabold uppercase text-[var(--foreground)]">Court 1 (West)</span>
+                      <span className="bg-[var(--brand-soft)] text-[var(--brand)] text-[9px] font-black uppercase px-2 py-0.5 rounded-[6px] tracking-wider">LIVE MATCH</span>
+                    </div>
+                    <div className="flex items-baseline justify-between border-b border-[var(--line)]/50 pb-2">
+                      <div className="text-xs font-bold text-[var(--muted)]">
+                        <p className="text-[var(--foreground)] uppercase">S. Kaya + A. Yılmaz</p>
+                        <p className="text-[10px]">vs</p>
+                        <p className="text-[var(--foreground)] uppercase">M. Demir + T. Çelik</p>
+                      </div>
+                      <span className="font-mono text-2xl font-black text-[var(--brand)]">11 : 8</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] text-[var(--muted)]">
+                      <span>Standard Open Play</span>
+                      <span className="font-mono font-extrabold flex items-center gap-1 text-[var(--accent-lime)]">
+                        <Play className="w-3 h-3 fill-current" /> 14:22 left
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="border border-[var(--line)] rounded-[12px] bg-[var(--surface-soft)] p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-extrabold uppercase text-[var(--foreground)]">Court 2 (East)</span>
+                      <span className="bg-[var(--accent-amber)]/20 text-[var(--accent-amber)] text-[9px] font-black uppercase px-2 py-0.5 rounded-[6px] tracking-wider">UP NEXT</span>
+                    </div>
+                    <div className="flex items-baseline justify-between border-b border-[var(--line)]/50 pb-2">
+                      <div className="text-xs font-bold text-[var(--muted)]">
+                        <p className="text-[var(--foreground)] uppercase">O. Şahin + E. Güler</p>
+                        <p className="text-[10px]">vs</p>
+                        <p className="text-[var(--foreground)] uppercase">Waiting for players...</p>
+                      </div>
+                      <span className="font-mono text-lg font-bold text-[var(--muted)]">-- : --</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] text-[var(--muted)]">
+                      <span>Advanced Drills</span>
+                      <span className="font-mono font-extrabold text-[var(--accent-amber)]">Preparing</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Right status & action */}
-              <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[24px] p-6 space-y-4">
-                <div className="flex justify-between text-xs font-black uppercase tracking-wider text-[var(--muted)]">
-                  <span>Capacity Filled</span>
-                  <span>{formatPercent(tonightSession.booked, tonightSession.capacity)}</span>
+              <div className="border border-[var(--line)] rounded-[12px] bg-[var(--surface-soft)] p-4 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-[var(--line)]/50 pb-2">
+                    <h3 className="text-xs font-black uppercase tracking-widest text-[var(--foreground)]">Rotation Queue</h3>
+                    <span className="bg-[var(--accent-lime)] text-[var(--background)] text-[9px] font-black uppercase px-2 py-0.5 rounded-[6px]">4 GROUPS</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--surface)]/5">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-black text-[var(--brand)]">1.</span>
+                        <span className="text-xs font-extrabold uppercase text-[var(--foreground)]">Caner K.</span>
+                      </div>
+                      <span className="text-[10px] text-[var(--muted)]">Group of 4</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--surface)]/5">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-black text-[var(--muted)]">2.</span>
+                        <span className="text-xs font-extrabold uppercase text-[var(--foreground)]">Selim A.</span>
+                      </div>
+                      <span className="text-[10px] text-[var(--muted)]">Group of 2</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--surface)]/5 opacity-60">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-black text-[var(--muted)]">3.</span>
+                        <span className="text-xs font-extrabold uppercase text-[var(--foreground)]">Deniz T.</span>
+                      </div>
+                      <span className="text-[10px] text-[var(--muted)]">Group of 4</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full bg-[var(--surface-soft)] rounded-full h-2.5 overflow-hidden border border-[var(--line)]">
-                  <div
-                    className="bg-gradient-to-r from-[var(--brand)] to-[#ff7654] h-full rounded-full"
-                    style={{ width: formatPercent(tonightSession.booked, tonightSession.capacity) }}
-                  ></div>
-                </div>
-                <div className="flex justify-between items-center pt-2">
-                  <span className="text-xl font-black font-mono">
-                    {formatCurrency(tonightSession.price)}
-                    <span className="text-xs font-bold text-[var(--muted)] font-sans"> /player</span>
-                  </span>
-                  <Button variant="primary" size="sm" asChild>
-                    <Link href={`/book/${tonightSession.id}`}>Book Slot</Link>
-                  </Button>
+
+                <div className="border-t border-[var(--line)]/50 pt-3 mt-4 flex items-center justify-between text-[10px] text-[var(--muted)]">
+                  <span>Est. next court clearance:</span>
+                  <span className="font-mono font-extrabold text-[var(--accent-lime)]">~4 min</span>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         </section>
 
-        {/* How It Works - Sleek linear stepper layout */}
+        {/* Features - B2B Operations Focus */}
         <section className="container-shell max-w-5xl py-6">
-          <div className="text-center max-w-xl mx-auto mb-16">
-            <Badge tone="slate" className="mb-3">
-              Process
-            </Badge>
-            <h2 className="section-title">How Pickle Pulse Works</h2>
-            <p className="text-xs text-[var(--muted)] mt-2">
-              A friction-free player experience from checkout directly to the court.
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-3 relative">
-            {[
-              {
-                step: "1",
-                title: "Choose Session",
-                description: "Pick an upcoming session slot matching your preference and skill level.",
-                icon: Calendar,
-              },
-              {
-                step: "2",
-                title: "Reserve & Split",
-                description: "Pay online. Easily add guest spots or split billing with friends.",
-                icon: CreditCard,
-              },
-              {
-                step: "3",
-                title: "Check in & Play",
-                description: "Check in on the lobby TV board, get assigned a court, and start playing.",
-                icon: Zap,
-              },
-            ].map((item, idx) => (
-              <div key={idx} className="flex flex-col items-center text-center space-y-4 group">
-                <div className="w-12 h-12 rounded-full bg-[var(--surface)] border-2 border-[var(--line)] flex items-center justify-center font-black text-sm text-[var(--brand)] shadow-md group-hover:border-[var(--brand)] transition-colors">
-                  <item.icon className="w-5 h-5" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-base font-black tracking-tight">{item.title}</h3>
-                  <p className="text-xs text-[var(--muted)] max-w-xs leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Bento Grid Features - Balanced layout */}
-        <section className="container-shell max-w-5xl">
-          <div className="text-center max-w-xl mx-auto mb-16">
-            <Badge tone="slate" className="mb-3">
-              Features
-            </Badge>
-            <h2 className="section-title">Modern Club Operations</h2>
-            <p className="text-xs text-[var(--muted)] mt-2">
-              Powering both customer booking interfaces and back-office staff workspaces.
+          <div className="text-center max-w-xl mx-auto mb-12">
+            <span className="bg-[var(--brand-soft)] text-[var(--brand-deep)] px-3 py-1 text-xs font-black uppercase tracking-[0.16em] rounded-[8px]">
+              OPERATIONS HUBS
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.07em] text-[var(--foreground)] mt-4">
+              Everything to power your desk ops.
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--muted)] font-semibold mt-2">
+              Say goodbye to messy whiteboard rotations, voice screaming, and checkout confusion.
             </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            <Card className="p-6 sm:p-8 border border-[var(--line-strong)] flex flex-col justify-between min-h-[220px]">
-              <div className="w-10 h-10 rounded-xl bg-[var(--surface-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--brand)] mb-6">
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[16px] p-6 flex flex-col justify-between min-h-[220px] hover:border-[var(--brand)] transition-all duration-300 shadow-[var(--shadow-sm)]">
+              <div className="w-10 h-10 rounded-[12px] bg-[var(--brand-soft)] flex items-center justify-center text-[var(--brand)] mb-6">
                 <Tv className="w-5 h-5" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-lg font-black">Live TV Board</h3>
-                <p className="text-xs text-[var(--muted)] leading-relaxed">
-                  Lobby TV dashboard displaying active matches, timers, waitlists, and voice cues.
+                <h3 className="text-lg font-extrabold tracking-tight text-[var(--foreground)]">Smart TV Liveboard</h3>
+                <p className="text-xs text-[var(--muted)] leading-relaxed font-semibold">
+                  Auto-broadcast court status timers and queue lines directly to lobby monitors. Keep players informed without desk questions.
                 </p>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-6 sm:p-8 border border-[var(--line-strong)] flex flex-col justify-between min-h-[220px]">
-              <div className="w-10 h-10 rounded-xl bg-[var(--surface-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--brand)] mb-6">
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[16px] p-6 flex flex-col justify-between min-h-[220px] hover:border-[var(--brand)] transition-all duration-300 shadow-[var(--shadow-sm)]">
+              <div className="w-10 h-10 rounded-[12px] bg-[var(--brand-soft)] flex items-center justify-center text-[var(--brand)] mb-6">
                 <Users className="w-5 h-5" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-lg font-black">Smart Queue</h3>
-                <p className="text-xs text-[var(--muted)] leading-relaxed">
-                  Automated FIFO player rotation queue. Reduces staff desk load to zero.
+                <h3 className="text-lg font-extrabold tracking-tight text-[var(--foreground)]">Active FIFO Queue</h3>
+                <p className="text-xs text-[var(--muted)] leading-relaxed font-semibold">
+                  Track drop-in groups, membership priorities, and player rotations automatically. One tap assigns courts.
                 </p>
               </div>
-            </Card>
+            </div>
 
-            <Card className="p-6 sm:p-8 border border-[var(--line-strong)] flex flex-col justify-between min-h-[220px]">
-              <div className="w-10 h-10 rounded-xl bg-[var(--surface-soft)] border border-[var(--line)] flex items-center justify-center text-[var(--brand)] mb-6">
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[16px] p-6 flex flex-col justify-between min-h-[220px] hover:border-[var(--brand)] transition-all duration-300 shadow-[var(--shadow-sm)]">
+              <div className="w-10 h-10 rounded-[12px] bg-[var(--brand-soft)] flex items-center justify-center text-[var(--brand)] mb-6">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-lg font-black">Split Payments</h3>
-                <p className="text-xs text-[var(--muted)] leading-relaxed">
-                  Let players split billing totals with their opponents directly via Stripe checkout.
+                <h3 className="text-lg font-extrabold tracking-tight text-[var(--foreground)]">Split Billing links</h3>
+                <p className="text-xs text-[var(--muted)] leading-relaxed font-semibold">
+                  Generate digital payment cards instantly. Let players invite partners and split court costs dynamically via Stripe.
                 </p>
               </div>
-            </Card>
+            </div>
           </div>
         </section>
 
-        {/* Call To Action Banner */}
-        <section className="container-shell max-w-4xl">
-          <Card variant="warm" className="p-8 sm:p-12 border border-[var(--line-strong)] text-center space-y-6">
-            <Badge tone="brand">Grow Club</Badge>
-            <h2 className="text-3xl font-black tracking-tight max-w-md mx-auto">
-              Ready to modernize your venue?
+        {/* Pricing Tiers with Monospace Values */}
+        <section className="container-shell max-w-5xl">
+          <div className="text-center max-w-xl mx-auto mb-12">
+            <span className="bg-[var(--brand-soft)] text-[var(--brand-deep)] px-3 py-1 text-xs font-black uppercase tracking-[0.16em] rounded-[8px]">
+              PRICING PLANS
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.07em] text-[var(--foreground)] mt-4">
+              Flexible tiers for any venue size.
             </h2>
-            <p className="text-xs text-[var(--muted)] max-w-xs mx-auto leading-relaxed">
-              Launch standalone booking widgets, realtime TV boards, and automated rotation queues.
+            <p className="text-xs sm:text-sm text-[var(--muted)] font-semibold mt-2">
+              Every plan features the full TV Board system. Pick based on your active court volume.
             </p>
-            <Button variant="primary" size="lg" asChild>
-              <Link href="/register">Create Account</Link>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3 items-stretch">
+            {/* Starter Plan */}
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[16px] p-6 flex flex-col justify-between hover:border-[var(--brand)] transition-all duration-300 shadow-[var(--shadow-sm)]">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-extrabold text-[var(--foreground)]">Starter</h3>
+                  <p className="text-xs text-[var(--muted)] font-semibold mt-1">For boutique local clubs.</p>
+                </div>
+                <div className="border-t border-[var(--line)] pt-4">
+                  <p className="text-3xl font-extrabold font-mono text-[var(--foreground)]">
+                    $79<span className="text-xs font-bold text-[var(--muted)] font-sans">/mo</span>
+                  </p>
+                </div>
+                <ul className="space-y-2 text-xs font-semibold text-[var(--muted)] pt-2">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Up to 2 active courts
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Mobile check-in link
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Basic FIFO queue
+                  </li>
+                </ul>
+              </div>
+              <Button variant="secondary" className="w-full mt-6 rounded-[12px] font-bold text-xs" asChild>
+                <Link href="/register">Choose Starter</Link>
+              </Button>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="bg-[var(--surface)] border-2 border-[var(--brand)] rounded-[16px] p-6 flex flex-col justify-between hover:shadow-[var(--shadow-md)] transition-all duration-300 relative">
+              <div className="absolute top-0 right-6 -translate-y-1/2 bg-[var(--brand)] text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-[6px]">
+                POPULAR CHOICE
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-extrabold text-[var(--foreground)]">Pro</h3>
+                  <p className="text-xs text-[var(--muted)] font-semibold mt-1">For active court complexes.</p>
+                </div>
+                <div className="border-t border-[var(--line)] pt-4">
+                  <p className="text-3xl font-extrabold font-mono text-[var(--foreground)]">
+                    $149<span className="text-xs font-bold text-[var(--muted)] font-sans">/mo</span>
+                  </p>
+                </div>
+                <ul className="space-y-2 text-xs font-semibold text-[var(--muted)] pt-2">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Up to 6 active courts
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Automated TV liveboard
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Split Stripe checkout
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Queue timers & voice alerts
+                  </li>
+                </ul>
+              </div>
+              <Button variant="primary" className="w-full mt-6 rounded-[12px] font-bold text-xs" asChild>
+                <Link href="/register">Get Started</Link>
+              </Button>
+            </div>
+
+            {/* Enterprise Plan */}
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[16px] p-6 flex flex-col justify-between hover:border-[var(--brand)] transition-all duration-300 shadow-[var(--shadow-sm)]">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-extrabold text-[var(--foreground)]">Enterprise</h3>
+                  <p className="text-xs text-[var(--muted)] font-semibold mt-1">Multi-branch franchises.</p>
+                </div>
+                <div className="border-t border-[var(--line)] pt-4">
+                  <p className="text-3xl font-extrabold font-mono text-[var(--foreground)]">
+                    $299<span className="text-xs font-bold text-[var(--muted)] font-sans">/mo</span>
+                  </p>
+                </div>
+                <ul className="space-y-2 text-xs font-semibold text-[var(--muted)] pt-2">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Unlimited courts & branches
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Custom domains & club branding
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-[var(--brand)]" /> Dedicated 24/7 priority support
+                  </li>
+                </ul>
+              </div>
+              <Button variant="secondary" className="w-full mt-6 rounded-[12px] font-bold text-xs" asChild>
+                <Link href="/register">Choose Enterprise</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Banner */}
+        <section className="container-shell max-w-4xl">
+          <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[16px] p-8 sm:p-12 text-center space-y-6 hover:shadow-[var(--shadow-md)] transition-all duration-300 shadow-[var(--shadow-sm)]">
+            <span className="bg-[var(--brand-soft)] text-[var(--brand-deep)] px-3 py-1 text-xs font-black uppercase tracking-[0.16em] rounded-[8px]">
+              JOIN THE FUTURE
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.07em] text-[var(--foreground)] max-w-md mx-auto">
+              Bring CourtOS to your sports venue.
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--muted)] max-w-xs mx-auto leading-relaxed font-semibold">
+              Optimize court assignments, minimize lobby friction, and boost booking revenue.
+            </p>
+            <Button 
+              variant="primary" 
+              size="lg" 
+              asChild
+              className="rounded-[12px] px-8 py-4 font-bold text-sm shadow-[var(--shadow-md)]"
+            >
+              <Link href="/register">Start Free Trial</Link>
             </Button>
-          </Card>
+          </div>
         </section>
       </main>
 
