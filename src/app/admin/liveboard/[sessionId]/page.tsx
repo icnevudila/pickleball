@@ -1,7 +1,8 @@
 import { CourtCard } from "@/components/liveboard/court-card";
 import { LiveboardAlertCenter } from "@/components/liveboard/liveboard-alert-center";
-import { SurfaceCard } from "@/components/surface-card";
-import { StatusBadge } from "@/components/status-badge";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getLiveboardSnapshot } from "@/lib/liveboard/source";
 
 export default async function AdminLiveboardPage({
@@ -14,31 +15,34 @@ export default async function AdminLiveboardPage({
 
   return (
     <div className="space-y-6">
-      <SurfaceCard className="p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="eyebrow">Liveboard control</p>
-            <h1 className="section-title mt-4">{session.name}</h1>
-            <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
+      {/* Session Title & Action Controls */}
+      <Card variant="surface" className="p-6 border border-[var(--line-strong)] animate-fade-in stagger-1">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-2">
+            <Badge tone="brand">Liveboard Control</Badge>
+            <h1 className="section-title text-3xl font-black mt-2">{session.name}</h1>
+            <p className="text-sm leading-relaxed text-[var(--muted)] max-w-2xl">
               This mirrors the public liveboard while keeping operator actions for end game, extend time, and queue control.
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <StatusBadge tone="lime">Suggest next group</StatusBadge>
-            <StatusBadge tone="amber">Pause rotation</StatusBadge>
-            <StatusBadge tone="rose">End session</StatusBadge>
+          <div className="flex flex-wrap gap-2.5 shrink-0">
+            <Button variant="secondary" size="sm">Suggest Group</Button>
+            <Button variant="ghost" size="sm">Pause Rotation</Button>
+            <Button variant="danger" size="sm">End Session</Button>
           </div>
         </div>
-      </SurfaceCard>
+      </Card>
 
-      <div className="grid gap-4 xl:grid-cols-3">
+      {/* Courts Live Status Grid */}
+      <div className="grid gap-6 xl:grid-cols-3">
         {assignments.map((assignment) => (
           <CourtCard key={assignment.id} assignment={assignment} />
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="space-y-4">
+      {/* Main Grid content */}
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="space-y-6">
           <LiveboardAlertCenter
             session={session}
             assignments={assignments}
@@ -46,48 +50,73 @@ export default async function AdminLiveboardPage({
             events={events}
           />
 
-          <SurfaceCard className="p-6">
-            <p className="text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">Now loading</p>
-            <div className="mt-5 space-y-3">
+          {/* Now Loading (Top Queue) */}
+          <Card variant="surface" className="p-6 border border-[var(--line-strong)]">
+            <h2 className="text-xl font-black tracking-tight text-[var(--foreground)] mb-6 border-b border-[var(--line)]/50 pb-4">
+              Now Loading
+            </h2>
+            <div className="space-y-3">
               {queue.slice(0, 4).map((entry) => (
-                <div key={entry.id} className="rounded-[22px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
-                  <p className="font-extrabold text-[color:var(--foreground)]">
+                <div
+                  key={entry.id}
+                  className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)] flex justify-between items-center"
+                >
+                  <p className="font-extrabold text-[var(--foreground)] text-sm">
                     {entry.position}. {entry.player.firstName}
                   </p>
-                  <p className="text-sm text-[color:var(--muted)]">{entry.eta}</p>
+                  <Badge tone="slate">{entry.eta}</Badge>
                 </div>
               ))}
             </div>
-          </SurfaceCard>
+          </Card>
         </div>
-        <SurfaceCard className="p-6">
-          <p className="text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">Waiting queue</p>
-          <p className="mt-2 text-sm text-[color:var(--muted)]">
-            Queue order, public-safe naming, and ETA cards stay aligned with the TV board.
+
+        {/* Total Queue Board */}
+        <Card variant="surface" className="p-6 border border-[var(--line-strong)]">
+          <div className="flex items-center justify-between gap-4 mb-6 border-b border-[var(--line)]/50 pb-4">
+            <h2 className="text-xl font-black tracking-tight text-[var(--foreground)]">Waiting Queue</h2>
+            <Badge tone="brand">Sync-active</Badge>
+          </div>
+          <p className="text-xs font-semibold text-[var(--muted)] leading-relaxed mb-6">
+            Queue order, public-safe naming, and ETA cards stay aligned with the TV board display.
           </p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {queue.map((entry) => (
-              <div key={entry.id} className="rounded-[22px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
-                <p className="font-extrabold text-[color:var(--foreground)]">{entry.player.fullName}</p>
-                <p className="text-sm text-[color:var(--muted)]">{entry.eta}</p>
+              <div
+                key={entry.id}
+                className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)] flex flex-col justify-between min-h-[90px]"
+              >
+                <p className="font-extrabold text-[var(--foreground)] text-xs">{entry.player.fullName}</p>
+                <p className="text-[10px] font-bold text-[var(--muted)] mt-2 uppercase tracking-wider">{entry.eta}</p>
               </div>
             ))}
           </div>
-        </SurfaceCard>
-        <SurfaceCard className="p-6 lg:col-span-2">
-          <p className="text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">Realtime event trail</p>
-          <div className="mt-5 grid gap-3">
+        </Card>
+
+        {/* Realtime Event Log Trail */}
+        <Card variant="surface" className="p-6 border border-[var(--line-strong)] lg:col-span-2">
+          <h2 className="text-xl font-black tracking-tight text-[var(--foreground)] mb-6 border-b border-[var(--line)]/50 pb-4">
+            Realtime Event Trail
+          </h2>
+          <div className="grid gap-3">
             {events.map((event) => (
-              <div key={event.id} className="rounded-[22px] border border-[color:var(--line)] bg-white p-4">
+              <div
+                key={event.id}
+                className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)]"
+              >
                 <div className="flex items-center justify-between gap-3">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--muted)]">{event.label}</p>
-                  <p className="text-xs font-bold text-[color:var(--brand-deep)]">{event.timestamp}</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[var(--muted)]">
+                    {event.label}
+                  </p>
+                  <p className="text-xs font-black text-[var(--brand-deep)]">{event.timestamp}</p>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--foreground)]">{event.detail}</p>
+                <p className="mt-2 text-xs font-semibold text-[var(--muted)] leading-relaxed">
+                  {event.detail}
+                </p>
               </div>
             ))}
           </div>
-        </SurfaceCard>
+        </Card>
       </div>
     </div>
   );

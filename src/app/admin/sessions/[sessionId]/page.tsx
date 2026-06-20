@@ -1,6 +1,7 @@
 import { CourtCard } from "@/components/liveboard/court-card";
-import { StatusBadge } from "@/components/status-badge";
-import { SurfaceCard } from "@/components/surface-card";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getAssignmentsForSession, getQueueForSession, getSessionById } from "@/lib/mock-data";
 
 export default async function AdminSessionDetailPage({
@@ -15,66 +16,77 @@ export default async function AdminSessionDetailPage({
 
   return (
     <div className="space-y-6">
-      <SurfaceCard className="p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="eyebrow">Session control</p>
-            <h1 className="section-title mt-4">{session.name}</h1>
-            <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
-              Queue, court assignment, and operator actions stay inside one session-specific workspace.
+      {/* Session Title & Action Controls */}
+      <Card variant="surface" className="p-6 border border-[var(--line-strong)] animate-fade-in stagger-1">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-2">
+            <Badge tone="brand">Session Control</Badge>
+            <h1 className="section-title text-3xl font-black mt-2">{session.name}</h1>
+            <p className="text-sm leading-relaxed text-[var(--muted)] max-w-2xl">
+              Queue management, active court assignments, and operator actions scoped to this workspace.
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <StatusBadge tone="cyan">Suggest next group</StatusBadge>
-            <StatusBadge tone="amber">Pause rotation</StatusBadge>
-            <StatusBadge tone="rose">End session</StatusBadge>
+          <div className="flex flex-wrap gap-2.5 shrink-0">
+            <Button variant="secondary" size="sm">Suggest Group</Button>
+            <Button variant="ghost" size="sm">Pause Rotation</Button>
+            <Button variant="danger" size="sm">End Session</Button>
           </div>
         </div>
-      </SurfaceCard>
+      </Card>
 
-      <div className="grid gap-4 xl:grid-cols-3">
+      {/* Courts Live Status Grid */}
+      <div className="grid gap-6 xl:grid-cols-3">
         {assignments.map((assignment) => (
           <CourtCard key={assignment.id} assignment={assignment} />
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <SurfaceCard className="p-6">
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">Next up</p>
-            <StatusBadge tone="lime">FIFO with override</StatusBadge>
+      {/* Queue Details */}
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        {/* Next Up (FIFO) */}
+        <Card variant="surface" className="p-6 border border-[var(--line-strong)]">
+          <div className="flex items-center justify-between gap-4 mb-6 border-b border-[var(--line)]/50 pb-4">
+            <h2 className="text-xl font-black tracking-tight text-[var(--foreground)]">Next Up</h2>
+            <Badge tone="lime">FIFO Mode</Badge>
           </div>
-          <div className="mt-5 space-y-3">
+          <div className="space-y-3">
             {queue.slice(0, 4).map((entry) => (
-              <div key={entry.id} className="flex items-center justify-between rounded-[22px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
+              <div
+                key={entry.id}
+                className="flex items-center justify-between rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)]"
+              >
                 <div>
-                  <p className="font-extrabold text-[color:var(--foreground)]">
+                  <p className="font-extrabold text-[var(--foreground)] text-sm">
                     {entry.position}. {entry.player.firstName}
                   </p>
-                  <p className="text-sm text-[color:var(--muted)]">{entry.eta}</p>
+                  <p className="text-xs text-[var(--muted)] font-semibold mt-0.5">{entry.eta}</p>
                 </div>
-                <StatusBadge tone="slate">{entry.player.skillLevel ?? "3.0"}</StatusBadge>
+                <Badge tone="slate">{entry.player.skillLevel ?? "3.0"}</Badge>
               </div>
             ))}
           </div>
-        </SurfaceCard>
+        </Card>
 
-        <SurfaceCard className="p-6">
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">Waiting queue</p>
-            <StatusBadge tone="cyan">Drag/drop in app</StatusBadge>
+        {/* Total Queue Board */}
+        <Card variant="surface" className="p-6 border border-[var(--line-strong)]">
+          <div className="flex items-center justify-between gap-4 mb-6 border-b border-[var(--line)]/50 pb-4">
+            <h2 className="text-xl font-black tracking-tight text-[var(--foreground)]">Waiting Queue</h2>
+            <Badge tone="brand">Interactive</Badge>
           </div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {queue.map((entry) => (
-              <div key={entry.id} className="rounded-[22px] border border-[color:var(--line)] bg-[color:var(--surface-muted)] p-4">
-                <p className="font-extrabold text-[color:var(--foreground)]">
+              <div
+                key={entry.id}
+                className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-4 transition-all hover:border-[var(--line-strong)] flex flex-col justify-between min-h-[90px]"
+              >
+                <p className="font-extrabold text-[var(--foreground)] text-xs">
                   {entry.position}. {entry.player.fullName}
                 </p>
-                <p className="mt-1 text-sm text-[color:var(--muted)]">{entry.eta}</p>
+                <p className="text-[10px] font-bold text-[var(--muted)] mt-2 uppercase tracking-wider">{entry.eta}</p>
               </div>
             ))}
           </div>
-        </SurfaceCard>
+        </Card>
       </div>
     </div>
   );

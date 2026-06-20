@@ -1,39 +1,65 @@
 import Link from "next/link";
 
-import { StatusBadge } from "@/components/status-badge";
-import { SurfaceCard } from "@/components/surface-card";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { sessions } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
+
+const sessionStatusTones = {
+  open: "lime",
+  "few-spots": "amber",
+  waitlist: "rose",
+  live: "live",
+  completed: "slate",
+} as const;
 
 export default function AdminSessionsPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <p className="eyebrow">Sessions</p>
-        <h1 className="section-title mt-3">Capacity, reservation pressure, and court assignment all start here.</h1>
+      <div className="space-y-2 animate-fade-in stagger-1">
+        <Badge tone="brand">Sessions</Badge>
+        <h1 className="section-title text-3xl font-black mt-2">
+          Capacity, reservation pressure, and court assignment all start here.
+        </h1>
+        <p className="text-sm text-[var(--muted)] leading-relaxed max-w-2xl">
+          Create, edit, and audit active open play schedules. Track player registrations and rotation queue bounds.
+        </p>
       </div>
 
       <div className="space-y-4">
-        {sessions.map((session) => (
-          <SurfaceCard key={session.id} className="p-6">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <div className="flex flex-wrap gap-3">
-                  <StatusBadge tone={session.status === "waitlist" ? "rose" : session.status === "few-spots" ? "amber" : "cyan"}>
+        {sessions.map((session, index) => (
+          <Card
+            key={session.id}
+            variant="surface"
+            className={`p-6 border border-[var(--line-strong)] hover:shadow-md transition-all duration-300 animate-slide-up stagger-${
+              (index % 3) + 1
+            }`}
+          >
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  <Badge tone={sessionStatusTones[session.status] || "slate"}>
                     {session.status}
-                  </StatusBadge>
-                  <StatusBadge tone="slate">{session.level}</StatusBadge>
+                  </Badge>
+                  <Badge tone="slate">{session.level}</Badge>
                 </div>
-                <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.05em] text-[color:var(--foreground)]">{session.name}</h2>
-                <p className="mt-2 text-sm leading-7 text-[color:var(--muted)]">
-                  {session.timeLabel} / {session.courts} courts / {session.booked}/{session.capacity} booked / {formatCurrency(session.price)}
-                </p>
+                <div>
+                  <h2 className="text-2xl font-black tracking-tight text-[var(--foreground)]">
+                    {session.name}
+                  </h2>
+                  <p className="text-xs font-semibold text-[var(--muted)] mt-1.5">
+                    {session.timeLabel} • {session.courts} courts • {session.booked}/{session.capacity} booked • <span className="font-extrabold text-[var(--foreground)] font-mono">{formatCurrency(session.price)}</span>
+                  </p>
+                </div>
               </div>
-              <Link href={`/admin/sessions/${session.id}`} className="btn-primary px-5 py-3">
-                Open session
-              </Link>
+              <div className="shrink-0">
+                <Button variant="primary" size="md" asChild>
+                  <Link href={`/admin/sessions/${session.id}`}>Open session</Link>
+                </Button>
+              </div>
             </div>
-          </SurfaceCard>
+          </Card>
         ))}
       </div>
     </div>

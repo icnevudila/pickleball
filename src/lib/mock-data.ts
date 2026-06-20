@@ -94,7 +94,7 @@ export const sessions: Session[] = [
   },
 ];
 
-const people: Person[] = [
+export const people: Person[] = [
   { id: "p1", fullName: "Ali Kara", firstName: "Ali", tag: "Member", skillLevel: "3.5", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=AliKara" },
   { id: "p2", fullName: "Deniz Yilmaz", firstName: "Deniz", tag: "Member", skillLevel: "3.5", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=DenizYilmaz" },
   { id: "p3", fullName: "Mark Stone", firstName: "Mark", tag: "Guest", skillLevel: "3.0", avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=MarkStone" },
