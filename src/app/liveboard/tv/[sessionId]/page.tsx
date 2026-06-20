@@ -252,7 +252,7 @@ export default async function TvLiveboardPage({
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/8 pb-4">
           <div className="flex items-end gap-4">
             <div className="bg-[var(--brand)] px-4 py-2 font-display text-2xl uppercase tracking-[0.04em] text-[#0b1512] [transform:skewX(-6deg)]">
-              PadelOS
+              Pickle Pulse
             </div>
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#60736b]">Live court status</p>
