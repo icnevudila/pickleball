@@ -19,7 +19,7 @@ export default function LoginPage() {
     setIsLoading(true);
     // Simulating login redirection
     setTimeout(() => {
-      window.location.href = "/admin";
+      window.location.href = "/kadikoy/admin/live";
     }, 800);
   };
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
           <div className="mt-6 pt-6 border-t border-[var(--line)] text-center">
             <Link 
-              href="/sessions" 
+              href="/kadikoy/sessions" 
               className="inline-flex items-center gap-1 text-xs font-bold text-[var(--brand)] hover:underline"
             >
               Go to public court booking <ArrowRight className="w-3.5 h-3.5" />

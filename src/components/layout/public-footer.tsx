@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { club } from "@/lib/mock-data";
 
-export function PublicFooter() {
+export function PublicFooter({ clubSlug }: { clubSlug?: string }) {
   return (
     <footer className="border-t border-[var(--line)] bg-[var(--surface-muted)] py-12 mt-auto">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -34,13 +34,13 @@ export function PublicFooter() {
               Quick Links
             </h4>
             <nav className="flex flex-col gap-2">
-              <Link href="/" className="text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+              <Link href={clubSlug ? `/${clubSlug}` : "/"} className="text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
                 Home
               </Link>
-              <Link href="/sessions" className="text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+              <Link href={clubSlug ? `/${clubSlug}/sessions` : "/sessions"} className="text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
                 Sessions
               </Link>
-              <Link href="/account/membership" className="text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+              <Link href={clubSlug ? `/${clubSlug}/memberships` : "/account/membership"} className="text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
                 Membership
               </Link>
               <Link href="/login" className="text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">

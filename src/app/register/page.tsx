@@ -27,7 +27,7 @@ export default function RegisterPage() {
     setIsLoading(true);
     // Simulating signup redirection to account dashboard
     setTimeout(() => {
-      window.location.href = "/account";
+      window.location.href = "/kadikoy/account";
     }, 800);
   };
 
@@ -152,7 +152,7 @@ export default function RegisterPage() {
                   Create Account
                 </Button>
                 <Button type="button" variant="secondary" className="w-full" asChild disabled={isLoading}>
-                  <Link href="/sessions">
+                  <Link href="/kadikoy/sessions">
                     Continue as Guest <ArrowRight className="w-4 h-4 ml-1" />
                   </Link>
                 </Button>

@@ -131,6 +131,7 @@ export default function BookSessionPage({
                   session={session}
                   formData={formData}
                   onBack={() => setStep(3)}
+                  clubSlug={resolvedParams.clubSlug}
                 />
               )}
             </Card>

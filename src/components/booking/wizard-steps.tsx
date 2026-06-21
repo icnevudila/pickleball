@@ -266,7 +266,7 @@ export function StepBilling({ session, onNext, onBack, formData, setFormData }: 
 }
 
 // Step 4: Summary & Checkout Complete
-export function StepSummary({ session, onBack, formData }: { session: Session; onBack: () => void; formData: any }) {
+export function StepSummary({ session, onBack, formData, clubSlug }: { session: Session; onBack: () => void; formData: any; clubSlug?: string }) {
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const totalPlayers = 1 + formData.guests.length;
@@ -304,7 +304,7 @@ export function StepSummary({ session, onBack, formData }: { session: Session; o
 
         <div className="pt-4">
           <Button variant="primary" asChild className="w-full max-w-xs">
-            <Link href="/account/bookings">Go to Reservations</Link>
+            <Link href={`/${clubSlug || "kadikoy"}/account/bookings`}>Go to Reservations</Link>
           </Button>
         </div>
       </div>

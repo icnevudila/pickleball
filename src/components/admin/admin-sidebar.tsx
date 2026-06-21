@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 
 const links = [
   { href: "/admin", label: "Overview" },
+  { href: "/admin/live", label: "Live Courts" },
   { href: "/admin/sessions", label: "Sessions" },
   { href: "/admin/courts", label: "Courts" },
   { href: "/admin/bookings", label: "Bookings" },

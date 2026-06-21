@@ -12,9 +12,9 @@ import { formatCurrency } from "@/lib/utils";
 export default async function SessionDetailPage({
   params,
 }: {
-  params: Promise<{ sessionId: string }>;
+  params: Promise<{ clubSlug: string; sessionId: string }>;
 }) {
-  const { sessionId } = await params;
+  const { clubSlug, sessionId } = await params;
   const session = getSessionById(sessionId);
 
   if (!session) {
@@ -140,7 +140,7 @@ export default async function SessionDetailPage({
           </div>
         </div>
       </main>
-      <PublicFooter />
+      <PublicFooter clubSlug={clubSlug} />
     </div>
   );
 }

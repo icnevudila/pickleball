@@ -1,76 +1,213 @@
-import { SessionCard } from "@/components/booking/session-card";
+import Link from "next/link";
+
+import { TenantHeader } from "@/components/layout/tenant-header";
 import { PublicFooter } from "@/components/layout/public-footer";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SurfaceCard } from "@/components/surface-card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { TypewriterText } from "@/components/ui/typewriter-text";
 import { sessions } from "@/lib/mock-data";
 
-export default async function SessionsPage({
-  params,
-}: {
+interface SessionsPageProps {
   params: Promise<{ clubSlug: string }>;
-}) {
+}
+
+export default async function SessionsPage({ params }: SessionsPageProps) {
   const { clubSlug } = await params;
 
-  // Capitalize clubSlug for presentation if necessary
-  const clubName = clubSlug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  // Formatting club name nicely from slug
+  const clubName = clubSlug
+    .split("-")
+    .map((word) => {
+      if (word.toLowerCase() === "istanbul") return "İstanbul";
+      if (word.toLowerCase() === "kadikoy") return "Kadıköy";
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+
+  const clubTitle = `${clubName} Social Club`;
+  const clubLogo = clubName.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2) || "PP";
+
+  // Calculate stats from mock sessions
+  const totalSessions = sessions.length;
+  const almostFull = sessions.filter(s => s.status === "few-spots" || s.booked >= s.capacity - 3).length;
+  const levelRange = "3.0 - 4.5+";
+
+  // Mock heatmap contributions/rhythm data
+  const heatmapDays = [
+    { day: "Mon", count: 3, level: "level1" },
+    { day: "Tue", count: 5, level: "level2" },
+    { day: "Wed", count: 8, level: "level4" },
+    { day: "Thu", count: 4, level: "level2" },
+    { day: "Fri", count: 9, level: "level4" },
+    { day: "Sat", count: 7, level: "level3" },
+    { day: "Sun", count: 5, level: "level2" },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]">
-      <SiteHeader />
-      <main className="container-shell py-10 sm:py-14 space-y-8 flex-1">
-        {/* Dynamic header simulating the dentist project layout */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-baseline gap-4 border-b border-[var(--line)] pb-6">
+    <div className="min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)] antialiased">
+      <TenantHeader clubSlug={clubSlug} clubName={clubTitle} clubLogo={clubLogo} />
+
+      <main className="flex-1 max-w-[1240px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        
+        {/* Page Head */}
+        <section className="flex flex-col sm:flex-row justify-between items-start sm:items-baseline gap-4 border-b border-[var(--line)] pb-5">
           <div className="space-y-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--brand)]">
-              {clubName} Public Portal
-            </span>
-            <h1 className="text-4xl font-extrabold tracking-[-0.08em] text-[var(--foreground)]">
-              Court Schedule & Bookings
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--brand-deep)]">Pickle Pulse</span>
+            <h1 className="text-3xl font-extrabold tracking-[-0.05em] text-[var(--ink)]">
+              Session <TypewriterText words={["Rhythm", "Pulse", "Occupancy", "Availability"]} className="text-[var(--brand)]" />
             </h1>
+            <p className="text-xs text-[var(--muted)] font-semibold mt-1">
+              Date-based Open Play / tournament / clinic sessions; a live occupancy board, not a static list.
+            </p>
           </div>
           <div className="flex items-center gap-2 text-xs font-bold text-[var(--muted)]">
             <span className="h-2 w-2 rounded-full bg-[var(--out-green)] animate-pulse" />
-            Showing available rounds today
+            Live sync active
           </div>
-        </div>
+        </section>
 
-        <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
-          <SurfaceCard className="p-6 sm:p-8 flex flex-col justify-center space-y-4">
-            <span className="inline-flex w-fit items-center rounded-[8px] bg-[var(--brand-soft)] px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-[var(--brand-deep)]">
-              Active sessions
-            </span>
-            <h2 className="text-3xl font-extrabold tracking-[-0.07em] text-[var(--foreground)]">
-              Choose a round.
-            </h2>
-            <p className="text-sm leading-relaxed text-[var(--muted)] font-semibold">
-              Select a scheduling block from the feed below. Check active capacity signals and available court counts before proceeding to the checkout wizard.
-            </p>
-          </SurfaceCard>
+        {/* Metrics Grid */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[10px] p-4 shadow-[var(--shadow-sm)]">
+            <span className="font-mono text-xl font-black text-[var(--ink)]">{totalSessions}</span>
+            <p className="text-[10px] text-[var(--muted)] font-bold uppercase tracking-wider mt-1">today sessions</p>
+          </div>
+          <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[10px] p-4 shadow-[var(--shadow-sm)]">
+            <span className="font-mono text-xl font-black text-[var(--ink)]">{almostFull}</span>
+            <p className="text-[10px] text-[var(--muted)] font-bold uppercase tracking-wider mt-1">almost full</p>
+          </div>
+          <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[10px] p-4 shadow-[var(--shadow-sm)]">
+            <span className="font-mono text-xl font-black text-[var(--brand-deep)]">18:00</span>
+            <p className="text-[10px] text-[var(--muted)] font-bold uppercase tracking-wider mt-1">hot slot</p>
+          </div>
+          <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[10px] p-4 shadow-[var(--shadow-sm)]">
+            <span className="font-mono text-xl font-black text-[var(--ink)]">{levelRange}</span>
+            <p className="text-[10px] text-[var(--muted)] font-bold uppercase tracking-wider mt-1">level range</p>
+          </div>
+        </section>
 
-          <SurfaceCard className="p-6 sm:p-8">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-[var(--muted)]">Core operations routing</p>
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
-              {[
-                ["Guest Checkout", "Fastest split-payment route for walk-ins."],
-                ["Member Pass", "Use saved membership details and points."],
-                ["Waitlist Queue", "Fallback reservation when court slots are full."],
-              ].map(([title, copy]) => (
-                <div key={title} className="rounded-[12px] border border-[var(--line)] bg-[var(--surface-muted)] p-5">
-                  <p className="text-base font-extrabold tracking-tight text-[var(--foreground)]">{title}</p>
-                  <p className="mt-3 text-xs leading-relaxed text-[var(--muted)] font-semibold">{copy}</p>
+        {/* Session Cards Grid */}
+        <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {sessions.map((session) => {
+            const progress = (session.booked / session.capacity) * 100;
+            
+            // Map values for realistic Lira prices
+            const displayPrice = session.price * 30;
+
+            const isFull = session.booked >= session.capacity;
+            const isFew = session.status === "few-spots";
+
+            const badgeTone = isFull
+              ? ("slate" as const)
+              : isFew
+              ? ("brand" as const)
+              : ("live" as const);
+
+            const badgeLabel = isFull
+              ? "Full"
+              : isFew
+              ? `${session.capacity - session.booked} spots`
+              : "Open";
+
+            return (
+              <Card key={session.id} variant="surface" className="flex flex-col justify-between overflow-hidden bg-[var(--surface)] border border-[var(--line)] rounded-[14px] shadow-[var(--shadow)]">
+                <header className="px-5 py-3.5 flex items-start justify-between gap-4 border-b border-[var(--line)] bg-[#fffdf9]">
+                  <div>
+                    <h3 className="font-extrabold text-[var(--ink)] tracking-tight">{session.name}</h3>
+                    <p className="text-[11px] text-[var(--muted)] font-semibold mt-0.5">
+                      {session.dayLabel} {session.timeLabel} · {session.booked}/{session.capacity} joined
+                    </p>
+                  </div>
+                  <Badge tone={badgeTone} className="text-[9px] px-2 py-0.5">{badgeLabel}</Badge>
+                </header>
+
+                <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="text-2xl font-black font-mono text-[var(--ink)]">
+                      TRY {displayPrice}
+                    </div>
+                    <p className="text-xs text-[var(--muted)] font-semibold leading-relaxed">
+                      Level {session.level} · coach on duty · court rotation included.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Progress Bar */}
+                    <div className="space-y-1">
+                      <div className="h-2 rounded-full bg-[var(--surface-3)] overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            isFull 
+                              ? "bg-slate-400" 
+                              : isFew 
+                              ? "bg-gradient-to-r from-[var(--brand)] to-[#e09d6b]" 
+                              : "bg-gradient-to-r from-[var(--green)] to-[#93bd5e]"
+                          }`} 
+                          style={{ width: `${progress}%` }} 
+                        />
+                      </div>
+                    </div>
+
+                    <Button 
+                      variant={isFull ? "secondary" : isFew ? "secondary" : "primary"} 
+                      className="w-full text-xs font-bold py-2 rounded-[9px]"
+                      asChild
+                    >
+                      <Link href={`/${clubSlug}/book`}>
+                        {isFull ? "Queue / Waitlist" : isFew ? "Reserve Spot" : "Join Session"}
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </SurfaceCard>
-        </div>
+              </Card>
+            );
+          })}
+        </section>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 pt-4">
-          {sessions.map((session) => (
-            <SessionCard key={session.id} session={session} clubSlug={clubSlug} />
-          ))}
-        </div>
+        {/* Heatmap / Week Rhythm Card */}
+        <Card variant="surface" className="p-5 border border-[var(--line)] rounded-[14px] bg-[var(--surface)] shadow-[var(--shadow)]">
+          <header className="pb-3 border-b border-[var(--line)]">
+            <h3 className="text-sm font-black uppercase tracking-widest text-[var(--ink)]">Week rhythm</h3>
+            <p className="text-xs text-[var(--muted)] font-semibold mt-0.5">
+              Pick a busy day without opening an Excel-looking calendar.
+            </p>
+          </header>
+          
+          <div className="pt-4 overflow-x-auto">
+            <div className="min-w-[600px] grid grid-cols-[100px_repeat(7,1fr)] gap-2">
+              <div className="bg-[#fff7ef] border border-[var(--line)] rounded-[9px] p-3 flex items-center justify-center text-xs font-black text-[var(--ink)]">
+                Active Days
+              </div>
+              
+              {heatmapDays.map((d) => {
+                // github-contribution levels
+                const levelColors = {
+                  level1: "bg-[#edf6f1] border-[#cbe4d9]",
+                  level2: "bg-[#fbf0d8] border-[#ead59c]",
+                  level3: "bg-[#fff0e8] border-[#ecc0ae]",
+                  level4: "bg-[#eaf8b6] border-[#d7ec7a]",
+                };
+
+                return (
+                  <div 
+                    key={d.day} 
+                    className={`border rounded-[9px] p-3 flex flex-col items-center justify-center min-h-[54px] text-center ${
+                      levelColors[d.level as keyof typeof levelColors]
+                    }`}
+                  >
+                    <span className="text-xs font-black text-[var(--ink)]">{d.day}</span>
+                    <span className="text-[10px] font-extrabold text-[var(--muted)] mt-1 font-mono">{d.count} sessions</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Card>
+
       </main>
-      <PublicFooter />
+
+      <PublicFooter clubSlug={clubSlug} />
     </div>
   );
 }

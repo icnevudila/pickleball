@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pickle Pulse — Randevular</title>
+  <style>
+:root{
+  --paper:#f6efe6;
+  --surface:#fffaf4;
+  --surface-2:#fbf3ea;
+  --surface-3:#f2e7dc;
+  --ink:#211b16;
+  --text:#3a312a;
+  --muted:#756a61;
+  --soft:#9b8f85;
+  --line:#e2d3c4;
+  --line-strong:#d1bdae;
+  --clay:#d95b35;
+  --clay-dark:#9d3d25;
+  --clay-soft:#fff0e8;
+  --green:#2f8066;
+  --green-soft:#edf6f1;
+  --lime:#dfff72;
+  --lime-soft:#f6ffd8;
+  --amber:#a97619;
+  --amber-soft:#fbf0d8;
+  --blue:#617987;
+  --blue-soft:#edf3f5;
+  --danger:#9f3b2d;
+  --danger-soft:#fff2ec;
+  --shadow:0 1px 0 rgba(49,36,24,.04);
+  --shadow-lift:0 12px 34px rgba(49,36,24,.075);
+  --radius:14px;
+  --radius-sm:9px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono","SFMono-Regular",ui-monospace,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(217,91,53,.10), transparent 29%),
+    radial-gradient(circle at 85% 5%, rgba(47,128,102,.08), transparent 28%),
+    linear-gradient(90deg, rgba(47,128,102,.04) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(47,128,102,.035) 1px, transparent 1px),
+    var(--paper);
+  background-size:auto,auto,64px 64px,64px 64px;
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid rgba(217,91,53,.28);outline-offset:2px}
+.topbar{
+  height:60px;
+  background:rgba(255,250,244,.92);
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:30;
+  backdrop-filter:blur(12px);
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}.mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#211b16 0%,#3a2a20 100%);color:var(--surface);display:grid;place-items:center;font-weight:720;font-size:10px;letter-spacing:.02em;position:relative;box-shadow:inset 0 -5px 12px rgba(255,255,255,.05)}
+.mark:after{content:"";position:absolute;right:-4px;bottom:-4px;width:13px;height:13px;border-radius:50%;background:var(--lime);border:2px solid var(--surface);box-shadow:inset 3px 0 0 rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.12)}
+.brand-title{font-size:14px;font-weight:680;letter-spacing:-.015em;color:var(--ink);white-space:nowrap}.brand-sub{font-size:11px;color:var(--muted);margin-top:1px}.top-actions{display:flex;gap:8px;align-items:center}.btn{height:34px;border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:0 12px;font-size:12px;font-weight:620;display:inline-flex;align-items:center;justify-content:center;gap:7px;color:#332b25;white-space:nowrap;transition:background .12s ease,border-color .12s ease,color .12s ease,transform .12s ease}.btn:hover{background:#fff5ed;border-color:#c8ae9b;transform:translateY(-1px)}.btn:active{transform:translateY(0)}.btn-primary{background:var(--clay);border-color:var(--clay);color:#fff}.btn-primary:hover{background:#c94f2f;border-color:#c94f2f;color:#fff}.btn-dark{background:var(--ink);border-color:var(--ink);color:#fff}.btn-lime{background:var(--lime);border-color:#cadb54;color:#211b16}.btn-quiet{background:transparent;border-color:transparent;color:var(--muted)}.btn-small{height:30px;padding:0 10px;font-size:12px;border-radius:7px}.btn-danger{color:var(--danger);border-color:#e0bdaf;background:#fff6f1}.app-shell{max-width:1780px;margin:18px auto 44px;padding:0 22px;display:grid;grid-template-columns:208px minmax(760px,1fr) 376px;gap:16px;align-items:start}.sidebar{position:sticky;top:78px}.nav-group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:6px;box-shadow:var(--shadow)}.nav button{width:100%;height:34px;border:0;background:transparent;border-radius:8px;text-align:left;display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:#6d625a;font-weight:550}.nav button:hover{background:var(--surface-2);color:var(--ink)}.nav button.active{background:#2a231e;color:#fff;font-weight:680}.nav-count{font-family:var(--mono);font-size:10px;color:inherit;opacity:.68}.desk-card{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}.desk-card-title{font-weight:700;color:var(--ink);margin-bottom:5px}.desk-card-text{color:var(--muted);font-size:12px;line-height:1.45}.mini-rule{height:1px;background:var(--line);margin:11px 0}.main{min-width:0}.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:2px 0 12px}.eyebrow{font-size:12px;color:var(--muted);margin-bottom:3px}h1{margin:0;font-size:25px;font-weight:760;letter-spacing:-.04em;line-height:1.06;color:var(--ink)}.subline{color:var(--muted);font-size:13px;margin-top:6px}.pulse-word{color:var(--clay-dark)}
+.op-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}.op-metric{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 11px;box-shadow:var(--shadow);min-width:0;position:relative;overflow:hidden}.op-metric:after{content:"";position:absolute;right:-24px;top:-24px;width:56px;height:56px;border-radius:50%;background:rgba(217,91,53,.06)}.op-value{font-weight:760;color:var(--ink);letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.op-label{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.metric-hot{border-color:#e3b197;background:linear-gradient(180deg,#fffaf5 0%,#fff3eb 100%)}.metric-green{border-color:#bddbcc;background:#f4fbf7}.metric-dark{background:#211b16;border-color:#211b16;color:#fff}.metric-dark .op-value,.metric-dark .op-label{color:#fff}.announce{display:grid;grid-template-columns:1fr auto;gap:8px;background:var(--surface);border:1px solid var(--line);padding:8px;border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow)}.announce input{height:36px;border:1px solid var(--line);background:#fffdf9;border-radius:8px;padding:0 11px;outline:none;color:#3a332d}.announce input:focus{border-color:#d99375}.floor-filter{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:13px}.filter-label{font-size:11px;color:var(--muted);font-weight:650;margin-right:2px}.filter{border:1px solid var(--line);background:var(--surface);border-radius:999px;height:28px;padding:0 10px;font-size:12px;font-weight:620;color:#564b43}.filter:hover{background:var(--surface-2)}.filter.active{border-color:#d49a83;color:var(--clay-dark);background:#fff3ed}.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 8px;font-size:11px;font-weight:680;color:#514941;white-space:nowrap}.pill.green{background:var(--green-soft);border-color:#cbe4d9;color:#23624f}.pill.amber{background:var(--amber-soft);border-color:#ead59c;color:#755308}.pill.blue{background:var(--blue-soft);border-color:#cad9df;color:#435f6f}.pill.orange{background:var(--clay-soft);border-color:#ecc0ae;color:#94402a}.pill.lime{background:var(--lime-soft);border-color:#d8e86b;color:#374013}.pill.dark{background:#2a231e;border-color:#2a231e;color:#fff}
+.priority-strip{display:grid;grid-template-columns:1.22fr .92fr .92fr;gap:9px;margin:0 0 12px}.priority-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;box-shadow:var(--shadow);min-width:0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:relative;overflow:hidden}.priority-card:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#bba99b}.priority-card.primary{border-color:#e3b197;background:linear-gradient(180deg,#fffaf5 0%,#fff3eb 100%)}.priority-card.primary:before{background:var(--clay)}.priority-card.ready{border-color:#bddbcc;background:#f4fbf7}.priority-card.ready:before{background:var(--green)}.priority-card.warn{border-color:#e1c486;background:#fff8e8}.priority-card.warn:before{background:var(--amber)}.priority-kicker{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:760;color:#75675d;text-transform:uppercase;letter-spacing:.055em;margin-bottom:4px}.priority-dot{width:7px;height:7px;border-radius:999px;background:var(--clay);box-shadow:0 0 0 3px rgba(217,91,53,.1)}.priority-card.ready .priority-dot{background:var(--green);box-shadow:0 0 0 3px rgba(47,128,102,.1)}.priority-card.warn .priority-dot{background:var(--amber);box-shadow:0 0 0 3px rgba(169,118,25,.12)}.priority-title{font-size:13px;font-weight:760;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.priority-copy{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}.priority-action{height:29px;border-radius:999px;border:1px solid var(--line-strong);background:#fffdf9;color:#3a312a;padding:0 10px;font-size:11px;font-weight:720;white-space:nowrap}.priority-card.primary .priority-action{background:var(--clay);border-color:var(--clay);color:#fff}
+.booking-board{display:grid;grid-template-columns:minmax(420px,1fr) 360px;gap:12px;align-items:start}.timeline-panel,.court-radar,.rail-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:12px 13px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);background:#fffdf9}.panel-title{font-size:15px;font-weight:760;letter-spacing:-.02em;color:var(--ink)}.panel-sub{font-size:12px;color:var(--muted);margin-top:2px}.timeline{display:grid;gap:10px;padding:12px}.hour-block{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;align-items:start}.hour-stamp{position:sticky;top:76px;font-family:var(--mono);font-size:12px;font-weight:760;color:#5d5149;background:#fffdf9;border:1px solid var(--line);border-radius:9px;padding:8px 7px;text-align:center}.hour-stamp small{display:block;margin-top:3px;font-family:var(--sans);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}.booking-stack{display:grid;gap:8px}.booking-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:#fffdf9;box-shadow:var(--shadow);transition:.16s ease;min-width:0}.booking-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-lift);border-color:#d3bfaf}.booking-card.selected{border-color:#d89072;box-shadow:0 0 0 3px rgba(217,91,53,.12),var(--shadow-lift)}.booking-card.attention{background:#fff5ef;border-color:#e2aa93}.booking-card.attention:before,.booking-card.conflict:before,.booking-card.checked:before,.booking-card.pending:before{content:"";position:absolute;inset:0 auto 0 0;width:4px}.booking-card.attention:before{background:var(--clay)}.booking-card.conflict{background:#fff8e6;border-color:#ddc07e}.booking-card.conflict:before{background:var(--amber)}.booking-card.checked{background:#f2faf6;border-color:#c1ddce}.booking-card.checked:before{background:var(--green)}.booking-card.pending{background:#f7fbfd;border-color:#cbdce2}.booking-card.pending:before{background:var(--blue)}.booking-watermark{position:absolute;right:11px;top:5px;font-family:var(--mono);font-size:48px;font-weight:900;letter-spacing:-.09em;color:rgba(33,27,22,.045);pointer-events:none}.booking-top{display:flex;justify-content:space-between;gap:12px;padding:12px 13px 10px;border-bottom:1px solid var(--line);position:relative;z-index:1}.booking-title{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.booking-meta{font-size:12px;color:var(--muted);margin-top:2px;display:flex;gap:6px;flex-wrap:wrap}.booking-status{display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;justify-content:flex-end}.status{font-size:10px;font-weight:760;border-radius:999px;padding:3px 7px;border:1px solid transparent;line-height:1.2;text-transform:uppercase;letter-spacing:.02em}.status.paid{background:var(--green-soft);color:#23624f;border-color:#cbe4d9}.status.pending{background:var(--blue-soft);color:#435f6f;border-color:#cad9df}.status.split{background:var(--amber-soft);color:#755308;border-color:#ead59c}.status.risk{background:var(--clay-soft);color:#94402a;border-color:#ecc0ae}.status.cancelled{background:#f1e4df;color:#784136;border-color:#dec0b7}.status.check{background:var(--lime-soft);color:#374013;border-color:#d8e86b}.booking-body{display:grid;grid-template-columns:1fr 138px;gap:12px;padding:12px 13px}.players{display:grid;gap:7px;min-width:0}.player-row{height:38px;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:0 8px}.avatar{width:28px;height:28px;border-radius:50%;border:1px solid #d8c8bb;background:#f0e7dd;color:#352d26;display:grid;place-items:center;font-size:10px;font-weight:800;letter-spacing:-.01em;box-shadow:0 0 0 2px #fffdf9}.avatar.a{background:#f4e4dc;color:#793b2a}.avatar.b{background:#e8f1ec;color:#24624f}.avatar.c{background:#e8eef1;color:#3c5968}.avatar.d{background:#f4ecd4;color:#6e540c}.player-name{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:720;color:#342d27}.player-note{font-family:var(--mono);font-size:10px;color:#7d7168;background:#fffdf9;border:1px solid var(--line);border-radius:999px;padding:2px 6px}.booking-clock{border-radius:13px;background:#211b16;color:#fff7e8;display:grid;place-items:center;text-align:center;padding:10px;align-self:stretch;min-height:92px;box-shadow:inset 0 -14px 26px rgba(255,255,255,.035)}.booking-clock .time{font-family:var(--mono);font-size:25px;font-weight:820;letter-spacing:-.075em;line-height:1}.booking-clock .label{font-size:10px;text-transform:uppercase;letter-spacing:.055em;font-weight:800;color:#d8c8bb;margin-top:3px}.booking-clock.hot{background:#7b3b27;color:#fff1e8;animation:pulseHot 1.2s ease-in-out infinite}.booking-clock.soon{background:#755308;color:#fff3c4}.booking-actions{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px 13px;border-top:1px solid var(--line);background:#fffaf5}.action-left,.action-right{display:flex;gap:7px;align-items:center}.mini-link{height:28px;border:1px solid var(--line);background:#fffdf9;border-radius:999px;padding:0 9px;font-size:11px;font-weight:700}.mini-link:hover{background:#fff4ee}.card-hidden{display:none}.court-radar{position:sticky;top:78px}.radar-grid{display:grid;gap:8px;padding:12px}.court-lane{position:relative;border:1px solid var(--line);background:#fffdf9;border-radius:12px;padding:10px;overflow:hidden}.court-lane:before{content:attr(data-court);position:absolute;right:7px;top:-3px;font-family:var(--mono);font-size:40px;font-weight:900;letter-spacing:-.1em;color:rgba(33,27,22,.045)}.lane-top{display:flex;justify-content:space-between;gap:8px;align-items:center;position:relative}.lane-title{font-weight:800;color:var(--ink);letter-spacing:-.015em}.lane-load{font-size:11px;color:var(--muted);font-weight:700}.lane-bars{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:9px;position:relative}.lane-bar{height:28px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);position:relative;overflow:hidden}.lane-bar.fill{background:#2a231e;border-color:#2a231e}.lane-bar.next{background:var(--clay);border-color:var(--clay);animation:breath 1.25s ease-in-out infinite}.lane-bar.soft{background:#f2d2bf;border-color:#eab89f}.lane-bar.open{background:var(--green-soft);border-color:#cbe4d9}.lane-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.legend{font-size:10px;color:var(--muted);font-weight:700}.legend:before{content:"";display:inline-block;width:7px;height:7px;border-radius:99px;background:#2a231e;margin-right:4px}.legend.open:before{background:var(--green)}.legend.next:before{background:var(--clay)}
+.right-rail{min-width:0;position:sticky;top:78px;display:grid;gap:12px;align-self:start}.rail-head{padding:12px 13px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);background:#fffdf9}.rail-title{font-size:14px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}.rail-sub{font-size:12px;color:var(--muted);margin-top:2px}.rail-body{padding:12px 13px;display:grid;gap:10px}.command-card{background:#211b16;color:#fff7e8;border-radius:15px;padding:14px;border:1px solid #211b16;box-shadow:0 14px 34px rgba(33,27,22,.12);position:relative;overflow:hidden}.command-card:after{content:"";position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;background:rgba(223,255,114,.18)}.command-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.075em;font-weight:900;color:var(--lime);position:relative}.command-title{font-size:19px;font-weight:850;line-height:1.05;letter-spacing:-.045em;margin-top:6px;position:relative}.command-copy{color:#d8c8bb;font-size:12px;margin-top:6px;position:relative}.command-actions{display:flex;gap:7px;margin-top:12px;position:relative}.command-actions .btn{border-color:rgba(255,255,255,.18)}.rail-label{display:block;font-size:11px;color:#73675e;font-weight:760;margin-bottom:5px}.rail-input,.rail-select{width:100%;height:34px;border:1px solid var(--line-strong);background:#fffdf9;border-radius:8px;padding:0 10px;outline:none;color:#332c27}.rail-input:focus,.rail-select:focus{border-color:#d99375}.rail-form{display:grid;gap:7px}.rail-two{display:grid;grid-template-columns:1fr 1fr;gap:7px}.rail-divider{height:1px;background:var(--line);margin:2px 0}.rail-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.rail-note{font-size:11px;color:#7b7068;line-height:1.35}.payment-list,.activity-list{display:grid;gap:7px}.payment-row,.activity-row{border:1px solid var(--line);background:#fffdf9;border-radius:10px;padding:9px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:center}.payment-row.hot{border-color:#e2aa93;background:#fff4ee}.payment-main{min-width:0}.payment-title{font-size:12px;font-weight:780;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.payment-sub{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.amount{font-family:var(--mono);font-size:11px;font-weight:800;color:#322a24;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 7px}.activity-row{grid-template-columns:42px minmax(0,1fr);font-size:11px;color:#6f645d}.activity-kind{font-family:var(--mono);font-weight:800;color:var(--clay-dark);font-size:10px}.toast{position:fixed;right:24px;bottom:22px;background:#211b16;color:white;border-radius:10px;padding:10px 12px;box-shadow:0 14px 30px rgba(0,0,0,.16);font-weight:700;transform:translateY(16px);opacity:0;pointer-events:none;transition:.18s ease;z-index:40}.toast.show{transform:translateY(0);opacity:1}.mobile-note{display:none}.empty-state{border:1px dashed var(--line-strong);border-radius:10px;background:#fffdf9;padding:14px;text-align:center;color:#85776e;font-size:12px}
+@keyframes pulseHot{0%,100%{box-shadow:0 0 0 0 rgba(217,91,53,.22),inset 0 -14px 26px rgba(255,255,255,.035)}50%{box-shadow:0 0 0 5px rgba(217,91,53,.10),inset 0 -14px 26px rgba(255,255,255,.035)}}@keyframes breath{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+@media(max-width:1440px){.app-shell{grid-template-columns:196px minmax(640px,1fr) 340px}.booking-board{grid-template-columns:1fr}.court-radar{position:static}.op-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.priority-strip{grid-template-columns:1fr}.booking-body{grid-template-columns:1fr}.booking-clock{min-height:auto}}
+@media(max-width:1180px){.topbar{padding:0 20px}.app-shell{grid-template-columns:1fr}.sidebar{display:none}.right-rail{position:static}.page-head{flex-direction:column}.mobile-note{display:block;color:var(--muted);font-size:12px;margin-bottom:12px}.booking-board{grid-template-columns:1fr}}
+@media(max-width:680px){.top-actions .btn span{display:none}.op-strip{grid-template-columns:1fr}.announce{grid-template-columns:1fr}.hour-block{grid-template-columns:1fr}.hour-stamp{position:static;text-align:left}.booking-top,.booking-actions{flex-direction:column;align-items:flex-start}.action-left,.action-right{width:100%;justify-content:space-between}.priority-strip{grid-template-columns:1fr}.app-shell{padding:0 14px}.booking-status{justify-content:flex-start}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">PP</div>
+      <div>
+        <div class="brand-title">Pickle Pulse Kadıköy</div>
+        <div class="brand-sub">Reservations · court rhythm</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn btn-small" id="todayBtn"><span>Today</span></button>
+      <button class="btn btn-primary btn-small" id="newBookingTop"><span>New booking</span></button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="nav-group nav">
+        <button><span>Overview</span><span class="nav-count">01</span></button>
+        <button><span>Live desk</span><span class="nav-count">02</span></button>
+        <button><span>Calendar</span><span class="nav-count">03</span></button>
+        <button class="active"><span>Reservations</span><span class="nav-count">04</span></button>
+        <button><span>Courts</span><span class="nav-count">05</span></button>
+        <button><span>Members</span><span class="nav-count">06</span></button>
+        <button><span>Payments</span><span class="nav-count">07</span></button>
+        <button><span>Settings</span><span class="nav-count">08</span></button>
+      </div>
+      <div class="desk-card">
+        <div class="desk-card-title">Reservation command</div>
+        <div class="desk-card-text">Randevu ekranı sadece liste değil; ödeme, check-in, çakışma ve sıradaki aksiyonu aynı anda gösterir.</div>
+        <div class="mini-rule"></div>
+        <span class="pill dark">Live Desk family</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="mobile-note">Dar ekranda randevu timeline, court radar ve komuta paneli alt alta akar.</div>
+      <section class="page-head">
+        <div>
+          <div class="eyebrow">Kadıköy club desk</div>
+          <h1>Randevu akışı <span class="pulse-word">kontrol altında</span></h1>
+          <div class="subline">Check-in, ödeme riski ve court doluluğu tek komuta ekranında.</div>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-small" id="rushBtn">Rush scan</button>
+          <button class="btn btn-dark btn-small" id="exportBtn">Desk print</button>
+        </div>
+      </section>
+
+      <section class="op-strip">
+        <div class="op-metric metric-hot"><div class="op-value" id="metricToday">18 bookings</div><div class="op-label">Today on schedule</div></div>
+        <div class="op-metric metric-green"><div class="op-value" id="metricChecked">7 checked-in</div><div class="op-label">Players already inside</div></div>
+        <div class="op-metric"><div class="op-value" id="metricPending">₺2.450 pending</div><div class="op-label">Split / card attention</div></div>
+        <div class="op-metric metric-dark"><div class="op-value" id="metricNext">Next: C4 · 08:50</div><div class="op-label">Nearest court movement</div></div>
+      </section>
+
+      <section class="announce">
+        <input id="searchBox" placeholder="Randevu, oyuncu, telefon veya court ara..." />
+        <button class="btn btn-primary" id="searchBtn">Search desk</button>
+      </section>
+
+      <section class="priority-strip" id="priorityStrip"></section>
+
+      <section class="floor-filter" id="filters">
+        <span class="filter-label">View</span>
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="attention">Needs action</button>
+        <button class="filter" data-filter="checked">Checked-in</button>
+        <button class="filter" data-filter="pending">Payment</button>
+        <button class="filter" data-filter="conflict">Conflict</button>
+        <button class="filter" data-filter="cancelled">Cancelled</button>
+        <span class="pill blue">Booking radar</span>
+      </section>
+
+      <section class="booking-board">
+        <div class="timeline-panel">
+          <header class="panel-head">
+            <div>
+              <div class="panel-title">Today timeline</div>
+              <div class="panel-sub">Saat akışı, check-in ve ödeme riskiyle birlikte okunur.</div>
+            </div>
+            <span class="pill orange" id="attentionPill">4 need action</span>
+          </header>
+          <div class="timeline" id="timeline"></div>
+        </div>
+
+        <aside class="court-radar">
+          <header class="panel-head">
+            <div>
+              <div class="panel-title">Court radar</div>
+              <div class="panel-sub">Bugünün doluluk şeridi.</div>
+            </div>
+            <span class="pill lime">Live</span>
+          </header>
+          <div class="radar-grid" id="courtRadar"></div>
+        </aside>
+      </section>
+    </main>
+
+    <aside class="right-rail" id="rightRail"></aside>
+  </div>
+
+  <div class="toast" id="toast">Updated</div>
+
+  <script>
+    const tones=['a','b','c','d'];
+    const initials=(name)=>String(name).split(/[\s/.]+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    let selectedId='B-0842';
+    let activeFilter='all';
+    const bookings=[
+      {id:'B-0831',hour:'08:00',court:'C1',title:'Open Play · Morning Rush',time:'08:00 – 09:00',left:6*60+12,type:'Open Play',status:'checked',payment:'paid',players:[['Alex R.','3.7'],['Daniel K.','3.4'],['Mark S.','3.9'],['Josh P.','3.2']],notes:'All inside · warm-up started',amount:'₺0'},
+      {id:'B-0842',hour:'08:00',court:'C2',title:'Mixed Doubles Reservation',time:'08:30 – 09:30',left:2*60+46,type:'Doubles',status:'attention',payment:'split',players:[['Zoe T.','3.1'],['Emma A.','3.6'],['Brad C.','3.8'],['Chad Y.','3.5']],notes:'2 split links unpaid · check-in ready',amount:'₺900'},
+      {id:'B-0850',hour:'08:00',court:'C4',title:'Walk-in hold',time:'08:50 – 09:40',left:12*60+5,type:'Walk-in',status:'pending',payment:'pending',players:[['Sarah L.','3.2'],['Mike T.','3.4'],['John D.','3.0'],['Ethan R.','3.3']],notes:'Hold expires in 12m · card missing',amount:'₺1.200'},
+      {id:'B-0902',hour:'09:00',court:'C3',title:'Women’s Doubles',time:'09:00 – 10:00',left:18*60+33,type:'Doubles',status:'conflict',payment:'paid',players:[['Lisa M.','2.9'],['Anna K.','3.1'],['Jane D.','3.4'],['Mary S.','3.2']],notes:'Court 3 overlaps coach block',amount:'₺0'},
+      {id:'B-0914',hour:'09:00',court:'C1',title:'Beginner Clinic',time:'09:15 – 10:15',left:25*60,type:'Clinic',status:'pending',payment:'paid',players:[['Mia Y.','2.5'],['Ava D.','2.7'],['Lucas K.','2.8'],['Oliver B.','2.9']],notes:'Coach assigned · waiting check-in',amount:'₺0'},
+      {id:'B-1011',hour:'10:00',court:'C2',title:'Singles Ladder',time:'10:00 – 11:00',left:53*60,type:'Singles',status:'checked',payment:'paid',players:[['Liam T.','3.8'],['Noah S.','3.6']],notes:'Players inside · leaderboard match',amount:'₺0'},
+      {id:'B-1030',hour:'10:00',court:'C4',title:'Corporate Group',time:'10:30 – 12:00',left:82*60,type:'Group',status:'attention',payment:'pending',players:[['Deniz P.','—'],['Ece K.','—'],['Mert A.','—'],['Selin V.','—']],notes:'Invoice approval needed before call',amount:'₺4.800'},
+      {id:'B-1115',hour:'11:00',court:'C3',title:'Cancelled reservation',time:'11:15 – 12:15',left:0,type:'Cancelled',status:'cancelled',payment:'cancelled',players:[['Kemal Y.','3.0'],['Ozan B.','3.2']],notes:'Late cancel · no refund policy',amount:'₺0'}
+    ];
+    const activity=[
+      {kind:'PAY',text:'Zoe / Emma split link reminded'},
+      {kind:'CHECK',text:'Court 1 morning players checked in'},
+      {kind:'RISK',text:'Court 3 coach block overlap detected'},
+      {kind:'HOLD',text:'Court 4 walk-in hold created'}
+    ];
+    function fmt(sec){const s=Math.max(0,sec|0);const m=Math.floor(s/60);const r=s%60;return `${m}:${String(r).padStart(2,'0')}`}
+    function statusLabel(b){
+      if(b.status==='attention')return 'Action';
+      if(b.status==='conflict')return 'Conflict';
+      if(b.status==='checked')return 'Checked';
+      if(b.status==='cancelled')return 'Cancelled';
+      return 'Pending';
+    }
+    function paymentBadge(b){
+      if(b.payment==='paid')return '<span class="status paid">Paid</span>';
+      if(b.payment==='split')return '<span class="status split">Split due</span>';
+      if(b.payment==='cancelled')return '<span class="status cancelled">Void</span>';
+      return '<span class="status pending">Pay wait</span>';
+    }
+    function stateBadge(b){
+      const cls=b.status==='attention'?'risk':b.status==='conflict'?'split':b.status==='checked'?'check':b.status==='cancelled'?'cancelled':'pending';
+      return `<span class="status ${cls}">${statusLabel(b)}</span>`;
+    }
+    function playerRow(p,i){return `<div class="player-row"><span class="avatar ${tones[i%tones.length]}">${initials(p[0])}</span><span class="player-name">${p[0]}</span><span class="player-note">${p[1]}</span></div>`}
+    function bookingCard(b){
+      const hot=b.status==='attention'||b.left<5*60;
+      const soon=b.left<15*60 && b.left>=5*60;
+      return `<article class="booking-card ${b.status} ${selectedId===b.id?'selected':''}" data-id="${b.id}" data-status="${b.status}" data-payment="${b.payment}" data-search="${(b.title+' '+b.court+' '+b.time+' '+b.players.map(p=>p[0]).join(' ')).toLowerCase()}">
+        <div class="booking-watermark">${b.court}</div>
+        <div class="booking-top">
+          <div style="min-width:0">
+            <div class="booking-title">${b.title}</div>
+            <div class="booking-meta"><span>${b.id}</span><span>·</span><span>${b.time}</span><span>·</span><span>${b.type}</span></div>
+          </div>
+          <div class="booking-status">${stateBadge(b)}${paymentBadge(b)}</div>
+        </div>
+        <div class="booking-body">
+          <div class="players">${b.players.map(playerRow).join('')}</div>
+          <div class="booking-clock ${hot?'hot':soon?'soon':''}"><div><div class="time">${b.status==='cancelled'?'VOID':fmt(b.left)}</div><div class="label">${hot?'Prep now':soon?'On deck':'Until start'}</div></div></div>
+        </div>
+        <div class="booking-actions">
+          <div class="action-left"><span class="pill ${b.status==='attention'?'orange':b.status==='checked'?'green':b.status==='conflict'?'amber':'blue'}">${b.notes}</span></div>
+          <div class="action-right">
+            <button class="mini-link" data-action="check" data-id="${b.id}">Check-in</button>
+            <button class="mini-link" data-action="pay" data-id="${b.id}">Mark paid</button>
+            <button class="mini-link" data-action="open" data-id="${b.id}">Open</button>
+          </div>
+        </div>
+      </article>`;
+    }
+    function renderTimeline(){
+      const groups=[...new Set(bookings.map(b=>b.hour))];
+      document.getElementById('timeline').innerHTML=groups.map(h=>{
+        const items=bookings.filter(b=>b.hour===h);
+        return `<div class="hour-block"><div class="hour-stamp">${h}<small>${items.length} bookings</small></div><div class="booking-stack">${items.map(bookingCard).join('')}</div></div>`;
+      }).join('');
+      bindTimeline();
+      applyFilter();
+    }
+    function renderPriority(){
+      const action=bookings.find(b=>b.status==='attention')||bookings[0];
+      const conflict=bookings.find(b=>b.status==='conflict');
+      const pay=bookings.find(b=>b.payment==='pending'||b.payment==='split');
+      const items=[
+        {tone:'primary',kicker:'Action now',title:`${action.court} · ${action.time}`,copy:action.notes,action:'Resolve',id:action.id},
+        conflict?{tone:'warn',kicker:'Conflict',title:`${conflict.court} overlap`,copy:conflict.notes,action:'Fix court',id:conflict.id}:null,
+        pay?{tone:'ready',kicker:'Payment',title:`${pay.amount} pending`,copy:`${pay.title} · ${pay.id}`,action:'Collect',id:pay.id}:null
+      ].filter(Boolean);
+      document.getElementById('priorityStrip').innerHTML=items.map(x=>`<article class="priority-card ${x.tone}"><div style="min-width:0"><div class="priority-kicker"><span class="priority-dot"></span>${x.kicker}</div><div class="priority-title">${x.title}</div><div class="priority-copy">${x.copy}</div></div><button class="priority-action" data-select="${x.id}">${x.action}</button></article>`).join('');
+      document.querySelectorAll('[data-select]').forEach(b=>b.onclick=()=>selectBooking(b.dataset.select));
+    }
+    function renderRadar(){
+      const courts=['C1','C2','C3','C4'];
+      document.getElementById('courtRadar').innerHTML=courts.map(c=>{
+        const count=bookings.filter(b=>b.court===c && b.status!=='cancelled').length;
+        const bars=Array.from({length:6},(_,i)=>{
+          const cls=i<count?'fill':i===count?'next':'open';
+          return `<span class="lane-bar ${cls}"></span>`;
+        }).join('');
+        return `<div class="court-lane" data-court="${c}"><div class="lane-top"><div class="lane-title">${c.replace('C','Court ')}</div><div class="lane-load">${count}/6 blocks</div></div><div class="lane-bars">${bars}</div><div class="lane-legend"><span class="legend">booked</span><span class="legend next">next move</span><span class="legend open">open</span></div></div>`;
+      }).join('');
+    }
+    function selected(){return bookings.find(b=>b.id===selectedId)||bookings[0]}
+    function renderRail(){
+      const b=selected();
+      const pending=bookings.filter(x=>x.payment==='pending'||x.payment==='split');
+      document.getElementById('rightRail').innerHTML=`
+        <section class="rail-card"><div class="rail-body"><div class="command-card"><div class="command-kicker">Next booking action</div><div class="command-title">${b.court} · ${statusLabel(b)}</div><div class="command-copy">${b.title}<br>${b.time} · ${b.notes}</div><div class="command-actions"><button class="btn btn-lime btn-small" data-action="check" data-id="${b.id}">Check-in</button><button class="btn btn-primary btn-small" data-action="pay" data-id="${b.id}">Collect</button></div></div></div></section>
+        <section class="rail-card"><header class="rail-head"><div><div class="rail-title">Quick booking</div><div class="rail-sub">Walk-in veya telefon randevusu.</div></div><span class="pill blue">Fast</span></header><div class="rail-body"><div class="rail-form"><label class="rail-label">Player / phone</label><input class="rail-input" id="quickName" placeholder="Name or 05xx..." /></div><div class="rail-two"><div><label class="rail-label">Court</label><select class="rail-select" id="quickCourt"><option>C1</option><option>C2</option><option>C3</option><option>C4</option></select></div><div><label class="rail-label">Time</label><select class="rail-select" id="quickTime"><option>Now + 10</option><option>09:00</option><option>10:00</option><option>11:00</option></select></div></div><button class="btn btn-primary" id="quickCreate">Create hold</button><div class="rail-note">Hold oluşturunca Live Desk kuyruğuna gönderilecek aksiyon hazır kalır.</div></div></section>
+        <section class="rail-card"><header class="rail-head"><div><div class="rail-title">Payment attention</div><div class="rail-sub">Masaya düşmeden çöz.</div></div><span class="pill orange">${pending.length}</span></header><div class="rail-body"><div class="payment-list">${pending.map(x=>`<div class="payment-row ${x.status==='attention'?'hot':''}"><div class="payment-main"><div class="payment-title">${x.title}</div><div class="payment-sub">${x.id} · ${x.court} · ${x.notes}</div></div><span class="amount">${x.amount}</span></div>`).join('')||'<div class="empty-state">Ödeme bekleyen yok.</div>'}</div></div></section>
+        <section class="rail-card"><header class="rail-head"><div><div class="rail-title">Desk activity</div><div class="rail-sub">Son hareketler</div></div></header><div class="rail-body"><div class="activity-list">${activity.map(a=>`<div class="activity-row"><div class="activity-kind">${a.kind}</div><div>${a.text}</div></div>`).join('')}</div></div></section>`;
+      bindRail();
+    }
+    function metrics(){
+      const checked=bookings.filter(b=>b.status==='checked').length;
+      const attention=bookings.filter(b=>['attention','conflict'].includes(b.status)).length;
+      const pending=bookings.filter(b=>b.payment==='pending'||b.payment==='split').reduce((sum,b)=>sum+Number(b.amount.replace(/[₺.]/g,'').replace(',','.'))||0,0);
+      const next=bookings.filter(b=>b.left>0&&b.status!=='cancelled').sort((a,b)=>a.left-b.left)[0];
+      document.getElementById('metricToday').textContent=`${bookings.length} bookings`;
+      document.getElementById('metricChecked').textContent=`${checked} checked-in`;
+      document.getElementById('metricPending').textContent=`₺${pending.toLocaleString('tr-TR')} pending`;
+      document.getElementById('metricNext').textContent=next?`Next: ${next.court} · ${next.time.split(' ')[0]}`:'All clear';
+      document.getElementById('attentionPill').textContent=`${attention} need action`;
+    }
+    function selectBooking(id){selectedId=id; renderTimeline(); renderRail(); notify(`${id} selected`); const card=document.querySelector(`[data-id="${id}"]`); if(card) card.scrollIntoView({block:'center',behavior:'smooth'});}
+    function action(kind,id){
+      const b=bookings.find(x=>x.id===id); if(!b)return;
+      if(kind==='check'){b.status='checked'; b.notes='Checked-in · ready for court'; activity.unshift({kind:'CHECK',text:`${b.id} checked in`}); notify(`${b.id}: check-in tamam`)}
+      if(kind==='pay'){b.payment='paid'; b.amount='₺0'; if(b.status==='attention')b.status='pending'; activity.unshift({kind:'PAY',text:`${b.id} marked paid`}); notify(`${b.id}: ödeme kapandı`)}
+      if(kind==='open'){selectedId=id; notify(`${b.id}: detail panel opened`)}
+      renderAll();
+    }
+    function bindTimeline(){
+      document.querySelectorAll('.booking-card').forEach(card=>card.onclick=(e)=>{if(e.target.closest('button'))return; selectBooking(card.dataset.id)});
+      document.querySelectorAll('[data-action]').forEach(btn=>btn.onclick=(e)=>{e.stopPropagation(); action(btn.dataset.action,btn.dataset.id)});
+    }
+    function bindRail(){
+      document.querySelectorAll('[data-action]').forEach(btn=>btn.onclick=()=>action(btn.dataset.action,btn.dataset.id));
+      const qc=document.getElementById('quickCreate'); if(qc) qc.onclick=()=>{const name=document.getElementById('quickName').value.trim()||'Walk-in Player'; const court=document.getElementById('quickCourt').value; const id='B-'+Math.floor(1200+Math.random()*800); bookings.unshift({id,hour:'08:00',court,title:'Walk-in quick hold',time:'Now + 10 · 40m',left:10*60,type:'Walk-in',status:'pending',payment:'pending',players:[[name,'—'],['Waiting opponent','—']],notes:'Quick hold · confirm payment',amount:'₺600'}); selectedId=id; activity.unshift({kind:'HOLD',text:`${name} hold created on ${court}`}); renderAll(); notify('Quick hold oluşturuldu')};
+    }
+    function applyFilter(){
+      const q=document.getElementById('searchBox').value.trim().toLowerCase();
+      document.querySelectorAll('.booking-card').forEach(card=>{
+        const st=card.dataset.status, pay=card.dataset.payment;
+        const matchesFilter=activeFilter==='all'||st===activeFilter||(activeFilter==='attention'&&['attention','conflict'].includes(st))||(activeFilter==='pending'&&['pending','split'].includes(pay));
+        const matchesText=!q||card.dataset.search.includes(q);
+        card.classList.toggle('card-hidden',!(matchesFilter&&matchesText));
+      });
+    }
+    function bindGlobal(){
+      document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]'); if(!b)return; activeFilter=b.dataset.filter; document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active')); b.classList.add('active'); applyFilter(); notify(`${b.textContent} view`)});
+      document.getElementById('searchBox').addEventListener('input',applyFilter);
+      document.getElementById('searchBtn').onclick=()=>{applyFilter(); notify('Desk search updated')};
+      document.getElementById('rushBtn').onclick=()=>{activeFilter='attention'; document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x.dataset.filter==='attention')); applyFilter(); notify('Rush scan: sadece aksiyon isteyenler')};
+      document.getElementById('exportBtn').onclick=()=>notify('Desk print hazırlandı');
+      document.getElementById('newBookingTop').onclick=()=>{document.getElementById('quickName')?.focus(); notify('Quick booking panel hazır')};
+      document.getElementById('todayBtn').onclick=()=>notify('Bugünün randevuları açık');
+    }
+    function notify(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(window._toast); window._toast=setTimeout(()=>t.classList.remove('show'),2100)}
+    function renderAll(){metrics(); renderPriority(); renderRadar(); renderTimeline(); renderRail();}
+    bindGlobal(); renderAll();
+    setInterval(()=>{bookings.forEach(b=>{if(b.left>0)b.left-=1}); metrics(); document.querySelectorAll('.booking-card').forEach(card=>{const b=bookings.find(x=>x.id===card.dataset.id); const clock=card.querySelector('.booking-clock .time'); const label=card.querySelector('.booking-clock .label'); const box=card.querySelector('.booking-clock'); if(b&&clock){clock.textContent=b.status==='cancelled'?'VOID':fmt(b.left); box.classList.toggle('hot',b.status==='attention'||b.left<5*60); box.classList.toggle('soon',b.left<15*60&&b.left>=5*60); label.textContent=(b.status==='attention'||b.left<5*60)?'Prep now':b.left<15*60?'On deck':'Until start';}})},1000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pickle Pulse — Front Desk</title>
+  <style>
+:root{
+  --paper:#f6efe6;
+  --surface:#fffaf4;
+  --surface-2:#fbf3ea;
+  --surface-3:#f2e7dc;
+  --ink:#211b16;
+  --text:#3a312a;
+  --muted:#756a61;
+  --soft:#9b8f85;
+  --line:#e2d3c4;
+  --line-strong:#d1bdae;
+  --clay:#d95b35;
+  --clay-dark:#9d3d25;
+  --clay-soft:#fff0e8;
+  --green:#2f8066;
+  --green-soft:#edf6f1;
+  --amber:#a97619;
+  --amber-soft:#fbf0d8;
+  --blue:#617987;
+  --blue-soft:#edf3f5;
+  --danger:#9f3b2d;
+  --urgent:#b84a2f;
+  --urgent-soft:#fff2ec;
+  --cream-hi:#fff7e8;
+  --mint-hi:#eaf5ef;
+  --shadow:0 1px 0 rgba(49,36,24,.04);
+  --radius:12px;
+  --radius-sm:8px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"SF Mono","SFMono-Regular",ui-monospace,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid rgba(217,91,53,.28);outline-offset:2px}
+.topbar{
+  height:60px;
+  background:rgba(255,250,244,.92);
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:30;
+  backdrop-filter:blur(12px);
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{
+  width:30px;height:30px;border-radius:9px;background:var(--ink);color:var(--surface);
+  display:grid;place-items:center;font-weight:640;font-size:10px;letter-spacing:.02em;
+}
+.brand-title{font-size:14px;font-weight:640;letter-spacing:-.015em;color:var(--ink);white-space:nowrap}
+.brand-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.btn{
+  height:34px;border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;
+  padding:0 12px;font-size:12px;font-weight:560;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  color:#332b25;white-space:nowrap;transition:background .12s ease,border-color .12s ease,color .12s ease;
+}
+.btn:hover{background:#fff5ed;border-color:#c8ae9b}
+.btn:active{background:#f6eadf}
+.btn-primary{background:var(--clay);border-color:var(--clay);color:white}
+.btn-primary.is-hot{box-shadow:0 0 0 3px rgba(217,91,53,.12)}
+.btn-primary:hover{background:#c94f2f;border-color:#c94f2f;color:white}
+.btn-quiet{background:transparent;border-color:transparent;color:var(--muted)}
+.btn-quiet:hover{background:var(--surface-2);border-color:transparent;color:var(--text)}
+.btn-small{height:30px;padding:0 10px;font-size:12px;border-radius:7px}
+.btn-danger{color:var(--danger);border-color:#e0bdaf;background:#fff6f1}
+.link-btn{text-decoration:none}
+.app-shell{
+  max-width:1780px;
+  margin:18px auto 44px;
+  padding:0 22px;
+  display:grid;
+  grid-template-columns:208px minmax(720px,1fr) 360px;
+  gap:16px;
+  align-items:start;
+}
+.sidebar{
+  background:transparent;
+  position:sticky;
+  top:78px;
+}
+.nav-group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:6px;box-shadow:var(--shadow)}
+.nav button{
+  width:100%;height:34px;border:0;background:transparent;border-radius:8px;text-align:left;
+  display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:#6d625a;font-weight:520;
+}
+.nav button:hover{background:var(--surface-2);color:var(--ink)}
+.nav button.active{background:#2a231e;color:#fff;font-weight:600}
+.nav-count{font-family:var(--mono);font-size:10px;color:inherit;opacity:.68}
+.desk-card{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
+.desk-card-title{font-weight:620;color:var(--ink);margin-bottom:5px}
+.desk-card-text{color:var(--muted);font-size:12px;line-height:1.45}
+.main{min-width:0}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:2px 0 12px}
+.eyebrow{font-size:12px;color:var(--muted);margin-bottom:3px}
+h1{margin:0;font-size:22px;font-weight:640;letter-spacing:-.028em;line-height:1.12;color:var(--ink)}
+.subline{color:var(--muted);font-size:13px;margin-top:5px}
+.op-strip{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:12px;
+}
+.op-metric{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 10px;box-shadow:var(--shadow);min-width:0}
+.op-value{font-weight:640;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.op-label{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.announce{
+  display:grid;grid-template-columns:1fr auto;gap:8px;background:var(--surface);border:1px solid var(--line);
+  padding:8px;border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow);
+}
+.announce input{height:36px;border:1px solid var(--line);background:#fffdf9;border-radius:8px;padding:0 11px;outline:none;color:#3a332d}
+.announce input:focus{border-color:#d99375}
+.floor-filter{
+  display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:transparent;margin-bottom:13px;
+}
+.filter-label{font-size:11px;color:var(--muted);font-weight:580;margin-right:2px}
+.filter{border:1px solid var(--line);background:var(--surface);border-radius:999px;height:28px;padding:0 10px;font-size:12px;font-weight:540;color:#564b43}
+.filter:hover{background:var(--surface-2)}
+.filter.active{border-color:#d49a83;color:var(--clay-dark);background:#fff3ed}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 8px;font-size:11px;font-weight:560;color:#514941;white-space:nowrap}
+.pill.green{background:var(--green-soft);border-color:#cbe4d9;color:#23624f}
+.pill.amber{background:var(--amber-soft);border-color:#ead59c;color:#755308}
+.pill.blue{background:var(--blue-soft);border-color:#cad9df;color:#435f6f}
+.pill.orange{background:var(--clay-soft);border-color:#ecc0ae;color:#94402a}
+
+.priority-strip{
+  display:grid;
+  grid-template-columns:1.25fr .9fr .9fr;
+  gap:9px;
+  margin:0 0 12px;
+}
+.priority-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:10px 11px;
+  box-shadow:var(--shadow);
+  min-width:0;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+.priority-card.primary{
+  border-color:#e3b197;
+  background:linear-gradient(180deg,#fffaf5 0%,#fff3eb 100%);
+}
+.priority-card.ready{
+  border-color:#bddbcc;
+  background:#f4fbf7;
+}
+.priority-card.warn{
+  border-color:#e1c486;
+  background:#fff8e8;
+}
+.priority-kicker{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  font-weight:650;
+  color:#75675d;
+  text-transform:uppercase;
+  letter-spacing:.045em;
+  margin-bottom:4px;
+}
+.priority-dot{width:7px;height:7px;border-radius:999px;background:var(--clay);box-shadow:0 0 0 3px rgba(217,91,53,.1)}
+.priority-card.ready .priority-dot{background:var(--green);box-shadow:0 0 0 3px rgba(47,128,102,.1)}
+.priority-card.warn .priority-dot{background:var(--amber);box-shadow:0 0 0 3px rgba(169,118,25,.12)}
+.priority-title{font-size:13px;font-weight:640;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.priority-copy{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+.priority-action{height:29px;border-radius:999px;border:1px solid var(--line-strong);background:#fffdf9;color:#3a312a;padding:0 10px;font-size:11px;font-weight:590;white-space:nowrap}
+.priority-card.primary .priority-action{background:var(--clay);border-color:var(--clay);color:#fff}
+.priority-action:hover{filter:brightness(.98)}
+
+.court-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(520px,100%),1fr));gap:12px}
+.court-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:relative;min-width:0;transition:border-color .14s ease,background .14s ease,box-shadow .14s ease,transform .14s ease}
+.court-card:hover{border-color:#d3bfaf;box-shadow:0 8px 24px rgba(49,36,24,.055);transform:translateY(-1px)}
+.court-card.call-ready{border-color:#d9a58f;background:#fff8f2}
+.court-card.call-ready:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--clay)}
+.court-card.queue-ready{border-color:#dfc282;background:#fffaf0}
+.court-card.queue-ready:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--amber)}
+.court-card.live{border-top:3px solid var(--green)}
+.court-card.ending{border-top:3px solid var(--amber)}
+.court-card.open{border-top:3px solid var(--blue)}
+.court-card.hidden{display:none}
+.court-head{padding:12px 13px 10px;display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);background:#fffdf9}
+.court-card.call-ready .court-head{background:#fff4ed}
+.court-card.queue-ready .court-head{background:#fff8e6}
+.court-title{font-weight:640;font-size:15px;letter-spacing:-.015em;color:var(--ink)}
+.court-sub{color:var(--muted);font-size:12px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+.court-status{display:flex;align-items:flex-start;gap:6px}
+.status{font-size:10px;font-weight:620;border-radius:999px;padding:3px 7px;border:1px solid transparent;line-height:1.2;text-transform:capitalize}
+.status.live{background:var(--green-soft);color:#23624f;border-color:#cbe4d9}
+.status.ending{background:var(--amber-soft);color:#755308;border-color:#ead59c}
+.status.open{background:var(--blue-soft);color:#435f6f;border-color:#cad9df}
+.court-index{font-family:var(--mono);font-size:10px;color:var(--soft);padding-top:4px}
+
+.court-alert{
+  margin:10px 13px 0;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:8px 9px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:#fffdf9;
+}
+.court-alert.ready{background:#fff1e8;border-color:#e5b6a0;color:#7b3726}
+.court-alert.warn{background:#fff7df;border-color:#dfc282;color:#6e4d07}
+.court-alert.ok{background:#eef8f3;border-color:#c6e1d4;color:#235f4c}
+.alert-main{min-width:0}
+.alert-title{font-size:12px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alert-sub{font-size:11px;color:currentColor;opacity:.72;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alert-badge{font-family:var(--mono);font-size:10px;border:1px solid currentColor;border-radius:999px;padding:2px 6px;opacity:.72;white-space:nowrap}
+
+.section{padding:12px 13px;border-bottom:1px solid var(--line)}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-bottom:8px}
+.label{font-size:11px;color:#73675e;font-weight:620}
+.hint{font-size:11px;color:#8d8177}
+.score-toggle{height:25px;border-radius:999px;border:1px solid var(--line);background:#fffaf6;color:#80695e;padding:0 8px;font-size:11px;font-weight:560}
+.score-toggle.on{background:#fff1ea;border-color:#ecc0ae;color:var(--clay-dark)}
+.match-box{background:#fffdf9;border:1px solid var(--line);border-radius:10px;padding:12px}
+.match-row{display:grid;grid-template-columns:1fr 126px 1fr;gap:12px;align-items:center;text-align:center}
+.team{min-width:0;display:grid;gap:6px;justify-items:center}
+.avatars{height:32px;display:flex;justify-content:center;align-items:center}
+.avatar{width:30px;height:30px;border-radius:50%;border:1px solid #d8c8bb;background:#f0e7dd;color:#352d26;display:grid;place-items:center;font-size:10px;font-weight:620;letter-spacing:-.01em;margin-left:-5px;box-shadow:0 0 0 2px #fffdf9;position:relative;overflow:hidden}
+.avatar:first-child{margin-left:0}
+.avatar.tone-a{background:#f4e4dc;color:#793b2a}.avatar.tone-b{background:#e8f1ec;color:#24624f}.avatar.tone-c{background:#e8eef1;color:#3c5968}.avatar.tone-d{background:#f4ecd4;color:#6e540c}.avatar.tone-e{background:#ece5ef;color:#57436d}
+.names{font-size:12px;font-weight:570;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;color:#342d27}
+.timer{font-family:var(--mono);font-size:34px;font-weight:580;letter-spacing:-.065em;color:var(--ink);line-height:1}
+.timer.ending{color:#9a6b12}.timer.live{color:#276d58}.timer.open{color:#536f7d}
+.time-label{font-size:11px;color:#8d8177;font-weight:560;margin-top:3px}
+.set-line{margin-top:7px;font-size:11px;color:#6d625b;font-weight:560;display:flex;justify-content:center;gap:5px;align-items:center}
+.set-pill{font-family:var(--mono);background:var(--surface);border:1px solid var(--line-strong);border-radius:6px;padding:2px 6px;color:#312b27;font-weight:560}
+.score-area{margin-top:11px;padding-top:10px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.record-label{font-size:11px;color:#7e7167;font-weight:620}
+.scoreline{display:flex;align-items:center;gap:8px}
+.score-input{width:44px;height:32px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);text-align:center;font-family:var(--mono);font-size:14px;font-weight:580;outline:none}
+.dash{color:#a29286;font-weight:650}
+.ghost-button{height:29px;border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:0 10px;font-weight:560;font-size:12px;display:inline-flex;align-items:center;gap:6px}
+.ghost-button:hover{background:var(--surface-2)}
+.available-box{border:1px dashed #d7c5b7;border-radius:10px;background:#fffdf9;min-height:128px;display:grid;place-items:center;text-align:center;color:#83756b;padding:16px}
+.available-box strong{display:block;color:#2b241f;margin:4px 0;font-weight:620;font-size:16px;letter-spacing:-.02em}
+.queue{padding:11px 13px;border-bottom:1px solid var(--line);background:#fffaf5}
+.queue-list{display:grid;gap:6px}
+.queue-row{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;align-items:start;border:1px solid var(--line);border-radius:8px;padding:8px;background:#fffdf9}
+.queue-row.first{background:#fff5ef;border-color:#e4bba8}
+.queue-row.first .queue-number{color:var(--clay-dark)}
+.queue-row.first .queue-title:after{content:"  ready";font-size:10px;color:var(--clay-dark);font-weight:640;text-transform:uppercase;letter-spacing:.035em}
+.queue-number{font-family:var(--mono);font-size:11px;color:#6d625b;font-weight:560;text-align:center;padding-top:1px}
+.queue-main{min-width:0}
+.queue-title{font-size:12px;font-weight:590;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#332c27}
+.queue-sub{font-size:11px;color:#7c7068;margin-top:1px}
+.mini-avatars{display:flex;margin-top:6px}.mini-avatars .avatar{width:20px;height:20px;font-size:7px;border-width:1px;margin-left:-3px;box-shadow:0 0 0 1px #fffdf9}.mini-avatars .avatar:first-child{margin-left:0}
+.schedule{padding:11px 13px;border-bottom:1px solid var(--line)}
+.slot-row{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px}
+.slot{min-width:132px;border:1px solid var(--line);border-radius:8px;background:#fffdf9;padding:8px}
+.slot.current{border-color:#dea68e;background:#fff5ee}.slot.past{opacity:.54}.slot-time{font-family:var(--mono);font-size:11px;font-weight:560}.slot-tag{float:right;font-size:10px;color:#7d7168;font-weight:560;margin-top:1px}.slot-match{font-size:11px;color:#685d55;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-actions{padding:10px 13px;display:flex;align-items:center;gap:8px;justify-content:space-between;background:#fffdf9}
+.action-left,.action-right{display:flex;align-items:center;gap:7px}.action-right{margin-left:auto}
+
+.rail-highlight-list{display:grid;gap:7px}
+.rail-highlight{
+  display:grid;
+  grid-template-columns:10px minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#fffdf9;
+  padding:8px;
+}
+.rail-highlight.hot{border-color:#e2aa93;background:#fff4ee}.rail-highlight.warn{border-color:#ddc07e;background:#fff8e6}.rail-highlight.ready{border-color:#c1ddce;background:#f2faf6}
+.rail-hit-dot{width:8px;height:8px;border-radius:99px;background:#9c8d80}.rail-highlight.hot .rail-hit-dot{background:var(--clay)}.rail-highlight.warn .rail-hit-dot{background:var(--amber)}.rail-highlight.ready .rail-hit-dot{background:var(--green)}
+.rail-hit-title{font-size:12px;font-weight:640;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rail-hit-sub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.rail-hit-btn{height:26px;border:1px solid var(--line-strong);background:#fffdf9;border-radius:999px;font-size:11px;font-weight:590;padding:0 8px;white-space:nowrap}.rail-highlight.hot .rail-hit-btn{background:var(--clay);border-color:var(--clay);color:#fff}
+
+.right-rail{min-width:0;position:sticky;top:78px;display:grid;gap:12px;align-self:start}
+.rail-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.rail-head{padding:12px 13px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);background:#fffdf9}
+.rail-title{font-size:14px;font-weight:640;letter-spacing:-.015em;color:var(--ink)}
+.rail-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:440}
+.rail-body{padding:12px 13px;display:grid;gap:10px}
+.rail-label{display:block;font-size:11px;color:#73675e;font-weight:620;margin-bottom:5px}
+.rail-select,.rail-input{width:100%;height:34px;border:1px solid var(--line-strong);background:#fffdf9;border-radius:8px;padding:0 10px;outline:none;color:#332c27}
+.rail-select:focus,.rail-input:focus{border-color:#d99375}
+.rail-form{display:grid;gap:7px}.rail-two{display:grid;grid-template-columns:1fr 1fr;gap:7px}.rail-divider{height:1px;background:var(--line);margin:2px 0}.rail-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.rail-note{font-size:11px;color:#7b7068;line-height:1.35}
+.player-pool{display:grid;gap:6px;max-height:168px;overflow:auto;padding-right:2px;scrollbar-width:thin}
+.pool-row{height:33px;border:1px solid var(--line);background:#fffdf9;border-radius:8px;padding:0 8px;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500}
+.pool-row input{accent-color:var(--clay)}.pool-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pool-rating{margin-left:auto;font-family:var(--mono);font-size:10px;color:#7d7168;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:1px 6px}
+.rail-queue-list{display:grid;gap:7px}
+.rail-queue-row{border:1px solid var(--line);background:#fffdf9;border-radius:8px;padding:9px;display:grid;gap:7px}
+.rail-queue-row.next{border-color:#e1b39f;background:#fff5ef}
+.rail-queue-top{display:flex;align-items:flex-start;gap:8px}.rail-num{font-family:var(--mono);font-size:11px;color:#6d625b;font-weight:560;min-width:17px;text-align:center;padding-top:1px}.rail-match{font-size:12px;font-weight:580;line-height:1.28;min-width:0;color:#312a24}.rail-match small{display:block;color:#7b7068;font-size:11px;font-weight:440;margin-top:3px}.rail-queue-actions{display:flex;gap:6px;justify-content:flex-end}
+.ticker-list{display:grid;gap:7px}.ticker-item{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px;border-top:1px solid var(--line);padding-top:7px;font-size:11px;color:#6f645d}.ticker-item:first-child{border-top:0;padding-top:0}.ticker-kind{font-family:var(--mono);font-weight:560;color:var(--clay-dark);font-size:10px}.ticker-text{min-width:0;line-height:1.3}
+.empty-state{border:1px dashed var(--line-strong);border-radius:8px;background:#fffdf9;padding:12px;text-align:center;color:#85776e;font-size:12px}
+.toast{position:fixed;right:24px;bottom:22px;background:#211b16;color:white;border-radius:10px;padding:10px 12px;box-shadow:0 14px 30px rgba(0,0,0,.16);font-weight:560;transform:translateY(16px);opacity:0;pointer-events:none;transition:.18s ease;z-index:40}.toast.show{transform:translateY(0);opacity:1}
+.mobile-note{display:none}
+@media(max-width:1440px){.app-shell{grid-template-columns:196px minmax(620px,1fr) 340px}.court-grid{grid-template-columns:1fr}.op-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.priority-strip{grid-template-columns:1fr}}
+@media(max-width:1180px){.topbar{padding:0 20px}.app-shell{grid-template-columns:1fr}.sidebar{display:none}.right-rail{position:static}.page-head{flex-direction:column}.mobile-note{display:block;color:var(--muted);font-size:12px;margin-bottom:12px}}
+@media(max-width:680px){.top-actions .btn span{display:none}.op-strip{grid-template-columns:1fr}.priority-strip{grid-template-columns:1fr}.announce{grid-template-columns:1fr}.match-row{grid-template-columns:1fr;gap:10px}.timer{font-size:32px}.card-actions{align-items:stretch;flex-direction:column}.action-left,.action-right{width:100%;justify-content:space-between}.btn-primary{flex:1;justify-content:center}}
+
+
+/* === Pickle Pulse character layer: scoreboard + stronger queue urgency === */
+body{
+  background:
+    radial-gradient(circle at 14% 12%, rgba(223,255,114,.16), transparent 26%),
+    radial-gradient(circle at 86% 7%, rgba(217,91,53,.10), transparent 24%),
+    linear-gradient(90deg, rgba(47,128,102,.055) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(47,128,102,.045) 1px, transparent 1px),
+    var(--paper);
+  background-size:auto,auto,64px 64px,64px 64px,auto;
+}
+.mark{
+  position:relative;
+  background:linear-gradient(135deg,#211b16 0%,#3a2a20 100%);
+  box-shadow:inset 0 -5px 12px rgba(255,255,255,.05),0 7px 18px rgba(33,27,22,.12);
+}
+.mark:after{
+  content:"";
+  position:absolute;
+  right:-5px;
+  bottom:-5px;
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:#dfff72;
+  border:2px solid var(--surface);
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.16);
+}
+h1{font-size:25px;font-weight:720;letter-spacing:-.04em}
+.btn-primary{font-weight:680;box-shadow:0 7px 16px rgba(217,91,53,.12)}
+.btn-primary.is-hot{animation:buttonPulse 1.25s ease-in-out infinite;box-shadow:0 0 0 4px rgba(217,91,53,.14),0 10px 22px rgba(217,91,53,.18)}
+@keyframes buttonPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+.court-card{box-shadow:0 1px 0 rgba(49,36,24,.04),0 14px 34px rgba(49,36,24,.035)}
+.court-card:hover{box-shadow:0 16px 38px rgba(49,36,24,.09);transform:translateY(-2px)}
+.court-card.selected{outline:3px solid rgba(33,27,22,.10);border-color:#9c6d56}
+.court-card.soon{border-color:#d7a342;background:#fff8e8}
+.court-card.critical{border-color:#b84a2f;background:linear-gradient(180deg,#fff7ef 0%,#fff0e7 100%);box-shadow:0 0 0 3px rgba(184,74,47,.12),0 18px 44px rgba(184,74,47,.14)}
+.court-card.critical:after{
+  content:"TIME LOW";
+  position:absolute;
+  top:10px;
+  right:78px;
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:760;
+  letter-spacing:.08em;
+  color:#fff;
+  background:#b84a2f;
+  border-radius:999px;
+  padding:3px 7px;
+  box-shadow:0 5px 14px rgba(184,74,47,.25);
+}
+.court-card.open-ready{border-color:#c84f2f;background:linear-gradient(180deg,#fff8f2 0%,#ffefe6 100%);box-shadow:0 0 0 3px rgba(217,91,53,.12),0 18px 42px rgba(217,91,53,.10)}
+.court-card.open-ready .court-head{background:#fff0e8}
+.court-card.open-ready:after{
+  content:"CALL NOW";
+  position:absolute;
+  top:10px;
+  right:78px;
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:760;
+  letter-spacing:.08em;
+  color:#fff;
+  background:#211b16;
+  border-radius:999px;
+  padding:3px 7px;
+}
+.court-head{align-items:flex-start}
+.court-left-meta{
+  display:inline-flex;
+  align-items:center;
+  margin-top:5px;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:650;
+  color:#8b6f62;
+  background:#fff6ef;
+  border:1px solid #efd1c3;
+  border-radius:999px;
+  padding:2px 7px;
+}
+.court-card.critical .court-left-meta{background:#b84a2f;color:white;border-color:#b84a2f;animation:hardBlink 1s steps(2,end) infinite}
+@keyframes hardBlink{50%{filter:brightness(1.24)}}
+.match-box{padding:14px;border-color:#d8c4b4;box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}
+.match-row{grid-template-columns:1fr 148px 1fr;gap:15px}
+.avatars{height:48px}
+.avatar{
+  width:44px;height:44px;
+  border:2px solid #fffdf9;
+  font-size:12px;
+  font-weight:760;
+  margin-left:-8px;
+  box-shadow:0 0 0 1px #d8c8bb,0 8px 18px rgba(49,36,24,.10);
+  transition:transform .14s ease, box-shadow .14s ease;
+}
+.avatar:hover{transform:translateY(-2px) scale(1.06);box-shadow:0 0 0 1px #caa990,0 12px 22px rgba(49,36,24,.14);z-index:5}
+.avatar.tone-a{background:linear-gradient(145deg,#f8e1d7,#d95b35);color:#4d1d12}
+.avatar.tone-b{background:linear-gradient(145deg,#e8f5ee,#2f8066);color:#143f32}
+.avatar.tone-c{background:linear-gradient(145deg,#e8eef1,#617987);color:#203946}
+.avatar.tone-d{background:linear-gradient(145deg,#fff1c9,#a97619);color:#4d3603}
+.avatar.tone-e{background:linear-gradient(145deg,#f1e6f4,#8d6aa0);color:#3f2e4e}
+.names{font-size:13px;font-weight:680;color:#211b16}
+.timer{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:112px;
+  padding:7px 10px 8px;
+  border-radius:13px;
+  background:#211b16;
+  color:#fff7e8;
+  font-size:37px;
+  font-weight:760;
+  line-height:.95;
+  letter-spacing:-.075em;
+  box-shadow:inset 0 -10px 18px rgba(255,255,255,.035),0 9px 22px rgba(33,27,22,.18);
+}
+.timer.live{background:#1f5f4b;color:#eafff5}
+.timer.ending,.timer.soon{background:#7b4f08;color:#fff3c4}
+.timer.critical{background:#b84a2f;color:#fff;animation:timerBang .8s ease-in-out infinite;box-shadow:0 0 0 4px rgba(184,74,47,.14),0 12px 26px rgba(184,74,47,.22)}
+.timer.open{background:#435f6f;color:#f1fbff}
+@keyframes timerBang{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+.time-label{font-weight:720;text-transform:uppercase;letter-spacing:.045em;color:#6c5e54}
+.queue{background:linear-gradient(180deg,#fffaf5 0%,#fff7ef 100%)}
+.queue-row{
+  grid-template-columns:31px minmax(0,1fr) auto;
+  padding:10px;
+  border-radius:10px;
+  transition:transform .12s ease,border-color .12s ease,background .12s ease,box-shadow .12s ease;
+  cursor:pointer;
+}
+.queue-row:hover{transform:translateX(2px);border-color:#cfa08d;background:#fff3ec;box-shadow:0 7px 18px rgba(49,36,24,.06)}
+.queue-row.first{background:#fff1e8;border-color:#d95b35;box-shadow:inset 4px 0 0 #d95b35}
+.queue-row.first .queue-title{font-weight:760;color:#211b16}
+.queue-number{font-size:12px;background:#211b16;color:#fff;border-radius:999px;height:23px;display:grid;place-items:center;padding:0;margin-top:1px}
+.queue-row.first .queue-number{color:#fff;background:#d95b35}
+.queue-title:after{white-space:nowrap}
+.queue-sub{font-weight:560}
+.queue-chip{
+  justify-self:end;
+  align-self:center;
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:760;
+  letter-spacing:.055em;
+  color:#7c3422;
+  background:#ffe5d8;
+  border:1px solid #e9b39c;
+  border-radius:999px;
+  padding:3px 6px;
+}
+.mini-avatars{display:flex;margin-top:8px}
+.mini-avatars .avatar{width:28px;height:28px;font-size:8px;border-width:2px;margin-left:-5px;box-shadow:0 0 0 1px #d8c8bb,0 5px 10px rgba(49,36,24,.08)}
+.rail-highlight.hot,.rail-queue-row.next{box-shadow:inset 4px 0 0 #d95b35}
+.pool-row:hover,.rail-queue-row:hover{border-color:#cfa08d;background:#fff4ed}
+.status{font-weight:760;letter-spacing:.02em}
+.status.ending{background:#fff0d0;color:#6d4300;border-color:#dfa749}
+.status.live{background:#e8f8f0;color:#145441;border-color:#a9d9c5}
+.status.open{background:#ecf5f8;color:#365c6b;border-color:#bdd4dd}
+.priority-card.primary{box-shadow:0 0 0 3px rgba(217,91,53,.08),0 12px 28px rgba(217,91,53,.08)}
+@media(max-width:680px){.match-row{grid-template-columns:1fr;gap:12px}.timer{font-size:34px}.avatars{height:46px}.avatar{width:42px;height:42px}.court-card.critical:after,.court-card.open-ready:after{right:14px;top:42px}}
+
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">PP</div>
+      <div>
+        <div class="brand-title">Pickle Pulse Kadıköy</div>
+        <div class="brand-sub">Court pulse · live desk</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn btn-small link-btn" href="display.html" target="_blank"><span>Lobby display</span></a>
+      <button class="btn btn-small" id="settingsButton">Desk settings</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-group nav">
+        <button><span>Overview</span><span class="nav-count">01</span></button>
+        <button class="active"><span>Live desk</span><span class="nav-count">02</span></button>
+        <button><span>Calendar</span><span class="nav-count">03</span></button>
+        <button><span>Reservations</span><span class="nav-count">04</span></button>
+        <button><span>Courts</span><span class="nav-count">05</span></button>
+        <button><span>Members</span><span class="nav-count">06</span></button>
+        <button><span>Payments</span><span class="nav-count">07</span></button>
+        <button><span>Settings</span><span class="nav-count">08</span></button>
+      </div>
+      <div class="desk-card">
+        <div class="desk-card-title">Quiet ops mode</div>
+        <div class="desk-card-text">Global sıra + kort pinleme beraber çalışır. Amaç net: bekleyen görünür, süre yaklaşınca ekran bağırır.</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="mobile-note">Desktop görünümde sol navigasyon ve iki kolonlu court board aktif olur.</div>
+      <section class="page-head">
+        <div>
+          <div class="eyebrow">Kadıköy club desk</div>
+          <h1>Kortlar canlı, sıra akıyor</h1>
+          <div class="subline">Kadıköy desk akışı: court, queue ve lobby display tek ritimde.</div>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-small" id="refreshBtn">Sync</button>
+          <button class="btn btn-small" id="collapseBtn">Desk focus</button>
+        </div>
+      </section>
+
+      <section class="op-strip">
+        <div class="op-metric"><div class="op-value" id="activeCount">3 courts live</div><div class="op-label">Current play</div></div>
+        <div class="op-metric"><div class="op-value" id="waitingCount">6 waiting</div><div class="op-label">Across desk queue</div></div>
+        <div class="op-metric"><div class="op-value">Next opening ~14m</div><div class="op-label">Projected from timers</div></div>
+        <div class="op-metric"><div class="op-value">TV synced</div><div class="op-label">Lobby display online</div></div>
+      </section>
+
+      <section class="announce">
+        <input id="announceInput" placeholder="Lobby announcement..." />
+        <button class="btn btn-primary" id="announceBtn">Send to TV</button>
+      </section>
+
+      <section class="priority-strip" id="priorityStrip" aria-label="Desk highlights"></section>
+
+      <section class="floor-filter" id="filters">
+        <span class="filter-label">View</span>
+        <button class="filter active" data-filter="all">All courts</button>
+        <button class="filter" data-filter="live">Live</button>
+        <button class="filter" data-filter="ending">Ending soon</button>
+        <button class="filter" data-filter="open">Open</button>
+        <button class="filter" data-filter="waiting">Has queue</button>
+        <span class="pill blue">Hybrid queue</span>
+      </section>
+
+      <section class="court-grid" id="courtGrid"></section>
+    </main>
+
+    <aside class="right-rail" id="queueDesk" aria-label="Queue desk"></aside>
+  </div>
+
+  <div class="toast" id="toast">Updated</div>
+
+  <script>
+    const tones = ['tone-a','tone-b','tone-c','tone-d','tone-e'];
+    const initials = (name) => name.split(/[\s/.]+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    const data = [
+      {id:1,title:'Court 1 · Center',status:'live',type:"Men's doubles · 08:00 – 09:00",timer:12*60+18,set:'11–7',score:[11,7],teams:[['Alex R.','Daniel K.'],['Mark S.','Josh P.']],queue:[{match:'Sarah L. / Mike T. vs John D. / Ethan R.',sub:'Mixed doubles · pinned to Court 1',players:['Sarah L.','Mike T.','John D.','Ethan R.']},{match:'Olivia H. / Emma A. vs Lisa M. / Anna K.',sub:"Women's doubles · flexible",players:['Olivia H.','Emma A.','Lisa M.','Anna K.']}],slots:[['07:00 – 08:00','past','Brad / Chad vs Lisa / Anna'],['08:00 – 09:00','current','Alex / Daniel vs Mark / Josh'],['09:00 – 10:00','upcoming','Sarah / Mike vs John / Ethan'],['10:00 – 11:00','upcoming','Olivia / Emma vs Liam / Noah']]},
+      {id:2,title:'Court 2',status:'live',type:'Mixed doubles · 08:00 – 09:00',timer:7*60+53,set:'9–11',score:[9,11],teams:[['Zoe T.','Emma A.'],['Brad C.','Chad Y.']],queue:[{match:'Olivia H. / Ethan R. vs Waiting opponent',sub:'Mixed doubles · needs one player',players:['Olivia H.','Ethan R.','Waiting opponent']}],slots:[['07:00 – 08:00','past','David vs Chris'],['08:00 – 09:00','current','Zoe / Emma vs Brad / Chad'],['09:00 – 10:00','upcoming','Olivia / Ethan vs Waiting opponent'],['10:00 – 11:00','upcoming','Jane / Mary vs Lisa / Anna']]},
+      {id:3,title:'Court 3',status:'ending',type:"Women’s doubles · 08:00 – 09:00",timer:3*60+28,set:'6–11',score:[6,11],teams:[['Lisa M.','Anna K.'],['Jane D.','Mary S.']],queue:[{match:'Mia Y. / Ava D. vs Lucas K. / Oliver B.',sub:'Global queue · first available court',players:['Mia Y.','Ava D.','Lucas K.','Oliver B.']}],slots:[['07:00 – 08:00','past','Zoe / Emma vs Sarah / Mike'],['08:00 – 09:00','current','Lisa / Anna vs Jane / Mary'],['09:00 – 10:00','upcoming','Mia / Ava vs Lucas / Oliver']]},
+      {id:4,title:'Court 4',status:'open',type:'Open court · ready for next match',timer:0,set:'',score:[0,0],teams:[[],[]],queue:[{match:'Sarah L. / Mike T. vs John D. / Ethan R.',sub:'Doubles rotation · flexible',players:['Sarah L.','Mike T.','John D.','Ethan R.']},{match:'Liam T. vs Noah S.',sub:'Singles · pinned to Court 4',players:['Liam T.','Noah S.']}],slots:[['08:00 – 09:00','past','David vs Chris'],['09:00 – 10:00','current','Sarah & Mike vs John & Ethan'],['10:00 – 11:00','upcoming','Liam vs Noah']]}
+    ];
+    let courts = JSON.parse(JSON.stringify(data));
+    let activeFilter = 'all';
+    let selectedCourtId = 4;
+    let playerPool = [
+      {name:'Lucas K.', rating:'3.5', checked:false},
+      {name:'Oliver B.', rating:'3.0', checked:false},
+      {name:'Liam T.', rating:'3.8', checked:false},
+      {name:'Noah S.', rating:'3.6', checked:false},
+      {name:'Mia Y.', rating:'2.9', checked:false},
+      {name:'Ava D.', rating:'3.2', checked:false}
+    ];
+    let ticker = [
+      {kind:'LIVE', text:'Court 3 ending soon, queue is ready'},
+      {kind:'QUEUE', text:'Sarah / Mike pinned to Court 4'},
+      {kind:'TV', text:'Lobby display synced 08:42'}
+    ];
+
+    function fmt(sec){const s=Math.max(0,sec|0);const m=Math.floor(s/60);const r=s%60;return `${m}:${String(r).padStart(2,'0')}`}
+    function urgencyClass(c){
+      if(c.status==='open' && c.queue.length) return 'open-ready';
+      if(c.status==='ending' && c.timer<=120) return 'critical';
+      if((c.status==='ending' || c.timer<5*60) && c.timer>0) return 'soon';
+      return '';
+    }
+    function timerClass(c){
+      const u=urgencyClass(c);
+      if(u==='critical') return 'critical';
+      if(u==='soon') return 'soon';
+      return c.status;
+    }
+    function timerLabel(c){
+      if(c.status==='open') return c.queue.length?'Call next now':'Court open';
+      if(c.timer<=120) return 'Critical time';
+      if(c.timer<=5*60) return 'Ending soon';
+      return 'Time left';
+    }
+    function leftMeta(c){
+      if(c.status==='open') return c.queue.length?'queue ready':'ready now';
+      if(c.timer<=120) return `${fmt(c.timer)} · finish now`;
+      if(c.timer<=5*60) return `${fmt(c.timer)} · ending`;
+      return `${fmt(c.timer)} left`;
+    }
+    function avatar(name,i){return `<span class="avatar ${tones[i%tones.length]}" title="${name}">${initials(name)}</span>`}
+    function miniAvatars(players){return `<div class="mini-avatars">${players.map((p,i)=>avatar(p,i)).join('')}</div>`}
+    function teamBlock(players, offset=0){return `<div class="team"><div class="avatars">${players.map((p,i)=>avatar(p,i+offset)).join('')}</div><div class="names">${players.join(' / ') || '—'}</div></div>`}
+    function matchBox(c){
+      if(c.status==='open') return `<div class="available-box"><div><span class="label">Available now</span><strong>Ready for next match</strong><div>${c.queue[0]?.match || 'No match waiting'}</div><div>${c.queue[0]?.sub || 'Keep court open'}</div></div></div>`;
+      return `<div class="match-box"><div class="match-row">${teamBlock(c.teams[0],0)}<div class="clock"><div class="timer ${timerClass(c)}" data-timer="${c.id}">${fmt(c.timer)}</div><div class="time-label">${timerLabel(c)}</div><div class="set-line">Set <span class="set-pill">${c.set}</span></div></div>${teamBlock(c.teams[1],2)}</div><div class="score-area"><div class="record-label">Record final score</div><div class="scoreline"><input class="score-input" data-score="${c.id}:0" value="${c.score[0]}" inputmode="numeric" /><span class="dash">–</span><input class="score-input" data-score="${c.id}:1" value="${c.score[1]}" inputmode="numeric" /></div><button class="ghost-button" data-endset="${c.id}">Save set</button></div></div>`
+    }
+    function queueRows(c){return c.queue.length ? c.queue.map((q,i)=>`<div class="queue-row ${i===0?'first':''}" data-pick-queue="${c.id}:${i}"><div class="queue-number">${i+1}</div><div class="queue-main"><div class="queue-title">${q.match}</div><div class="queue-sub">${q.sub}</div>${miniAvatars(q.players)}</div><span class="queue-chip">${i===0?'NEXT':'WAIT'}</span></div>`).join('') : `<div class="queue-row"><div class="queue-number">—</div><div class="queue-main"><div class="queue-title">No one waiting</div><div class="queue-sub">Court can stay open after this match</div></div></div>`}
+    function slots(c){return c.slots.map(([time,status,match])=>`<div class="slot ${status}"><div><span class="slot-time">${time}</span><span class="slot-tag">${status}</span></div><div class="slot-match">${match}</div></div>`).join('')}
+    function addTicker(kind,text){ticker.unshift({kind,text}); ticker=ticker.slice(0,5)}
+    function courtPriority(c){
+      if(c.status==='open' && c.queue.length) return {type:'ready', card:'call-ready', title:'Court open · queue ready', sub:`${c.queue[0].match}`, badge:'CALL'};
+      if(c.status==='ending' && c.queue.length && c.timer<=120) return {type:'warn', card:'queue-ready', title:'Critical time · call next', sub:`${fmt(c.timer)} left · ${c.queue[0].match}`, badge:'NOW'};
+      if(c.status==='ending' && c.queue.length) return {type:'warn', card:'queue-ready', title:'Ending soon · next ready', sub:`${fmt(c.timer)} left · ${c.queue[0].match}`, badge:'WATCH'};
+      if(c.status==='live' && c.timer<10*60 && c.queue.length) return {type:'warn', card:'queue-ready', title:'Next group prepared', sub:`${fmt(c.timer)} left · ${c.queue.length} waiting`, badge:'NEXT'};
+      if(c.status==='open') return {type:'ok', card:'', title:'Open court', sub:'No pressure — keep available', badge:'OPEN'};
+      return null;
+    }
+    function deskHighlights(){
+      const ready=courts.find(c=>c.status==='open'&&c.queue.length);
+      const ending=[...courts].filter(c=>c.status==='ending').sort((a,b)=>a.timer-b.timer)[0];
+      const busiest=[...courts].sort((a,b)=>b.queue.length-a.queue.length)[0];
+      const items=[];
+      if(ready) items.push({tone:'primary', kicker:'Action now', title:`${ready.title} is ready`, copy:ready.queue[0].match, action:'Call next', call:ready.id});
+      if(ending) items.push({tone:'warn', kicker:'Watch', title:`${ending.title} ends in ${fmt(ending.timer)}`, copy:ending.queue.length?`${ending.queue.length} waiting on court`:'No queue pinned yet', action:'Open card', call:null});
+      if(busiest) items.push({tone:'ready', kicker:'Queue load', title:`${busiest.queue.length} waiting on ${busiest.title}`, copy:busiest.queue[0]?.match || 'No immediate queue', action:'Pin', call:null});
+      return items.slice(0,3);
+    }
+    function renderHighlights(){
+      const el=document.getElementById('priorityStrip'); if(!el) return;
+      const items=deskHighlights();
+      el.innerHTML=items.map((h,i)=>`<article class="priority-card ${h.tone}"><div style="min-width:0"><div class="priority-kicker"><span class="priority-dot"></span>${h.kicker}</div><div class="priority-title">${h.title}</div><div class="priority-copy">${h.copy}</div></div><button class="priority-action" ${h.call?`data-call-highlight="${h.call}"`:''}>${h.action}</button></article>`).join('');
+      el.querySelectorAll('[data-call-highlight]').forEach(btn=>btn.onclick=()=>callNext(Number(btn.dataset.callHighlight)));
+    }
+    function railHighlights(){
+      const ready=courts.find(c=>c.status==='open'&&c.queue.length);
+      const ending=[...courts].filter(c=>c.status==='ending').sort((a,b)=>a.timer-b.timer)[0];
+      const rows=[];
+      if(ready) rows.push(`<div class="rail-highlight hot"><span class="rail-hit-dot"></span><div style="min-width:0"><div class="rail-hit-title">${ready.title} open</div><div class="rail-hit-sub">${ready.queue[0].match}</div></div><button class="rail-hit-btn" data-rail-call="${ready.id}">Call</button></div>`);
+      if(ending) rows.push(`<div class="rail-highlight warn"><span class="rail-hit-dot"></span><div style="min-width:0"><div class="rail-hit-title">${ending.title} · ${fmt(ending.timer)}</div><div class="rail-hit-sub">${ending.queue.length?ending.queue[0].match:'No pinned queue'}</div></div><button class="rail-hit-btn" data-select-court="${ending.id}">View</button></div>`);
+      rows.push(`<div class="rail-highlight ready"><span class="rail-hit-dot"></span><div style="min-width:0"><div class="rail-hit-title">TV display synced</div><div class="rail-hit-sub">Lobby board receives desk announcements</div></div><button class="rail-hit-btn" id="railTvBtn">OK</button></div>`);
+      return `<section class="rail-card"><header class="rail-head"><div><div class="rail-title">Desk highlights</div><div class="rail-sub">Only what needs attention</div></div></header><div class="rail-body"><div class="rail-highlight-list">${rows.join('')}</div></div></section>`;
+    }
+    function queueLabel(players){if(players.length>=4) return `${players[0]} / ${players[1]} vs ${players[2]} / ${players[3]}`; if(players.length===3 && players[2]==='Waiting opponent') return `${players[0]} / ${players[1]} vs Waiting opponent`; if(players.length===3) return `${players[0]} / ${players[1]} vs ${players[2]} / Waiting opponent`; return `${players[0]} vs ${players[1]}`}
+    function queuePlayersToCourt(players, sub='Walk-in match · flexible queue'){
+      const clean=players.map(x=>String(x||'').trim()).filter(Boolean); if(clean.length<2){notify('En az 2 oyuncu seçmek lazım'); return}
+      const court=courts.find(c=>c.id===selectedCourtId)||courts[0]; const match=queueLabel(clean);
+      court.queue.push({match,sub:clean.length>=4?'Doubles rotation · flexible queue':sub,players:clean});
+      playerPool=playerPool.filter(p=>!clean.includes(p.name)).map(p=>({...p,checked:false})); addTicker('QUEUE',`${match} → ${court.title}`); render(); notify(`${court.title}: queue eklendi`)
+    }
+    function renderQueueDesk(){
+      const rail=document.getElementById('queueDesk'); const court=courts.find(c=>c.id===selectedCourtId)||courts[0]; selectedCourtId=court.id; const selected=playerPool.filter(p=>p.checked); const totalWaiting=courts.reduce((sum,c)=>sum+c.queue.length,0);
+      rail.innerHTML=`${railHighlights()}<section class="rail-card"><header class="rail-head"><div><div class="rail-title">Desk queue</div><div class="rail-sub">Hybrid: global queue + court pin</div></div><span class="pill orange">${totalWaiting} waiting</span></header><div class="rail-body"><div><label class="rail-label" for="queueCourt">Target court</label><select class="rail-select" id="queueCourt">${courts.map(c=>`<option value="${c.id}" ${c.id===selectedCourtId?'selected':''}>${c.title} · ${c.status}</option>`).join('')}</select></div><div class="rail-form"><label class="rail-label" for="walkName">Walk-in player</label><div style="display:grid;grid-template-columns:1fr auto;gap:8px"><input class="rail-input" id="walkName" placeholder="Name / member..." /><button class="btn btn-small" id="addWalkBtn">Add</button></div></div><div class="rail-form"><div class="rail-row"><span class="rail-label" style="margin:0">Quick pair</span><span class="rail-note">queue direct</span></div><div class="rail-two"><input class="rail-input" id="partnerA" placeholder="Player A" /><input class="rail-input" id="partnerB" placeholder="Player B" /></div><button class="btn btn-primary btn-small" id="addPairBtn">Add pair</button></div><div class="rail-divider"></div><div class="rail-row"><span class="rail-label" style="margin:0">Available players</span><span class="pill blue">${selected.length} selected</span></div><div class="player-pool">${playerPool.length?playerPool.map((p,i)=>`<label class="pool-row"><input type="checkbox" data-pool="${i}" ${p.checked?'checked':''}/><span class="pool-name">${p.name}</span><span class="pool-rating">${p.rating}</span></label>`).join(''):`<div class="empty-state">No loose players. Add a walk-in first.</div>`}</div><button class="btn btn-primary btn-small" id="queueSelectedBtn">Queue selected</button><div class="rail-note">2 kişi singles, 4 kişi doubles. 3 kişi olursa sistem bekleyen rakip bırakır.</div></div></section><section class="rail-card"><header class="rail-head"><div><div class="rail-title">Next on court</div><div class="rail-sub">${court.title}</div></div><button class="btn btn-small" data-rail-call="${court.id}">Call next</button></header><div class="rail-body"><div class="rail-queue-list">${court.queue.length?court.queue.map((q,i)=>`<div class="rail-queue-row ${i===0?'next':''}"><div class="rail-queue-top"><div class="rail-num">${i+1}</div><div class="rail-match">${q.match}<small>${q.sub}</small>${miniAvatars(q.players)}</div></div><div class="rail-queue-actions"><button class="btn btn-small" data-remove-queue="${court.id}:${i}">Remove</button></div></div>`).join(''):`<div class="empty-state">Bu kortta bekleyen yok.</div>`}</div></div></section><section class="rail-card"><header class="rail-head"><div><div class="rail-title">Recent actions</div><div class="rail-sub">Desk activity</div></div></header><div class="rail-body"><div class="ticker-list">${ticker.map(t=>`<div class="ticker-item"><div class="ticker-kind">${t.kind}</div><div class="ticker-text">${t.text}</div></div>`).join('')}</div></div></section>`;
+      bindRailEvents();
+    }
+    function bindRailEvents(){
+      const courtSelect=document.getElementById('queueCourt'); if(courtSelect) courtSelect.onchange=()=>{selectedCourtId=Number(courtSelect.value);renderQueueDesk()};
+      document.querySelectorAll('[data-pool]').forEach(input=>input.onchange=()=>{playerPool[Number(input.dataset.pool)].checked=input.checked;renderQueueDesk()});
+      const addWalk=document.getElementById('addWalkBtn'); if(addWalk) addWalk.onclick=()=>{const input=document.getElementById('walkName'); const name=input.value.trim(); if(!name){notify('Walk-in adı boş');return} if(playerPool.some(p=>p.name.toLowerCase()===name.toLowerCase())){notify('Bu oyuncu zaten listede');return} playerPool.push({name,rating:'—',checked:true}); addTicker('INFO',`${name} available players listesine eklendi`); renderQueueDesk(); notify(`${name} eklendi`)};
+      const addPair=document.getElementById('addPairBtn'); if(addPair) addPair.onclick=()=>{const a=document.getElementById('partnerA').value.trim(); const b=document.getElementById('partnerB').value.trim(); if(!a||!b){notify('Pair için iki isim lazım');return} queuePlayersToCourt([a,b,'Waiting opponent'],'Pair · waiting opponent')};
+      const queueSelected=document.getElementById('queueSelectedBtn'); if(queueSelected) queueSelected.onclick=()=>queuePlayersToCourt(playerPool.filter(p=>p.checked).map(p=>p.name));
+      document.querySelectorAll('[data-remove-queue]').forEach(btn=>btn.onclick=()=>{const [id,idx]=btn.dataset.removeQueue.split(':').map(Number); const c=courts.find(x=>x.id===id); if(!c)return; const removed=c.queue.splice(idx,1)[0]; if(removed)addTicker('INFO',`${removed.match} removed from ${c.title}`); render(); notify('Queue item kaldırıldı')});
+      document.querySelectorAll('[data-rail-call]').forEach(btn=>btn.onclick=()=>callNext(Number(btn.dataset.railCall)));
+      document.querySelectorAll('[data-select-court]').forEach(btn=>btn.onclick=()=>{selectedCourtId=Number(btn.dataset.selectCourt);renderQueueDesk();notify('Court selected')});
+      const railTv=document.getElementById('railTvBtn'); if(railTv) railTv.onclick=()=>notify('TV display synced');
+    }
+    function courtAlert(c){
+      const p=courtPriority(c);
+      if(!p) return '';
+      return `<div class="court-alert ${p.type}"><div class="alert-main"><div class="alert-title">${p.title}</div><div class="alert-sub">${p.sub}</div></div><span class="alert-badge">${p.badge}</span></div>`;
+    }
+    function courtCard(c){
+      const p=courtPriority(c);
+      const hi=p?.card || '';
+      const hot=(c.status==='open'&&c.queue.length)||(c.status==='ending'&&c.queue.length);
+      return `<article class="court-card ${c.status} ${hi} ${urgencyClass(c)} ${selectedCourtId===c.id?'selected':''}" data-court-id="${c.id}" data-status="${c.status}" data-waiting="${c.queue.length>0}"><header class="court-head"><div><div class="court-title">${c.title}</div><div class="court-sub">${c.type}</div><span class="court-left-meta" data-left-meta="${c.id}">${leftMeta(c)}</span></div><div class="court-status"><span class="status ${c.status}">${c.status==='ending'?'ending soon':c.status}</span><span class="court-index">#${String(c.id).padStart(2,'0')}</span></div></header>${courtAlert(c)}<section class="section"><div class="section-title"><div><div class="label">Now playing</div><div class="hint">Timer syncs to lobby display</div></div><button class="score-toggle" data-toggle="${c.id}">Score off</button></div>${matchBox(c)}</section><section class="queue"><div class="section-title"><div class="label">Waiting on this court (${c.queue.length})</div>${c.queue.length?`<span class="pill ${hot?'orange':'blue'}">${hot?'ready':'queued'}</span>`:''}</div><div class="queue-list">${queueRows(c)}</div></section><section class="schedule"><div class="section-title"><div class="label">Hourly schedule</div></div><div class="slot-row">${slots(c)}</div></section><footer class="card-actions"><div class="action-left"><button class="btn btn-small" data-add="${c.id}">+5 min</button>${c.status==='open'?`<button class="btn btn-primary btn-small ${hot?'is-hot':''}" data-call="${c.id}">Call players</button>`:`<button class="btn btn-primary btn-small ${hot?'is-hot':''}" data-call="${c.id}">Finish & call</button><button class="btn btn-small" data-end="${c.id}">End only</button>`}</div><div class="action-right"><button class="btn btn-small" data-tv="${c.id}">Preview</button></div></footer></article>`
+    }
+    function render(){document.getElementById('courtGrid').innerHTML=courts.map(courtCard).join(''); document.getElementById('activeCount').textContent=`${courts.filter(c=>c.status!=='open').length} courts live`; document.getElementById('waitingCount').textContent=`${courts.reduce((s,c)=>s+c.queue.length,0)} waiting`; renderHighlights(); applyFilter(); bindCardEvents(); renderQueueDesk(); updateLiveUrgency()}
+    function updateLiveUrgency(){
+      courts.forEach(c=>{
+        const card=document.querySelector(`[data-court-id="${c.id}"]`);
+        if(card){
+          card.classList.remove('soon','critical','open-ready','selected');
+          const u=urgencyClass(c); if(u) card.classList.add(u);
+          if(selectedCourtId===c.id) card.classList.add('selected');
+          card.dataset.status=c.status;
+          card.dataset.waiting=String(c.queue.length>0);
+        }
+        const timer=document.querySelector(`[data-timer="${c.id}"]`);
+        if(timer){timer.textContent=fmt(c.timer); timer.className=`timer ${timerClass(c)}`;}
+        const meta=document.querySelector(`[data-left-meta="${c.id}"]`);
+        if(meta) meta.textContent=leftMeta(c);
+      });
+    }
+    function applyFilter(){document.querySelectorAll('.court-card').forEach(card=>{const status=card.dataset.status; const waiting=card.dataset.waiting==='true'; card.classList.toggle('hidden',!(activeFilter==='all'||activeFilter===status||(activeFilter==='waiting'&&waiting)))})}
+    function notify(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove('show'),2100)}
+    function callNext(id){const c=courts.find(x=>x.id===Number(id)); if(!c){notify('Court bulunamadı');return} const next=c.queue.shift(); if(next){const parts=next.match.split(' vs '); c.teams=[(parts[0]||'').split(' / ').filter(Boolean),(parts[1]||'').split(' / ').filter(Boolean)]; c.status='live'; c.timer=55*60; c.type=next.sub; c.set='0–0'; c.score=[0,0]; selectedCourtId=c.id; addTicker('LIVE',`${c.title}: ${next.match} called`); render(); notify(`${c.title}: sıradaki maç çağrıldı`)} else notify('Bu kortta bekleyen yok')}
+    function bindCardEvents(){document.querySelectorAll('.court-card').forEach(card=>card.onclick=(e)=>{if(e.target.closest('button,input'))return; selectedCourtId=Number(card.dataset.courtId); renderQueueDesk(); updateLiveUrgency(); notify(`Court ${selectedCourtId} seçildi`)}); document.querySelectorAll('[data-pick-queue]').forEach(row=>row.onclick=(e)=>{e.stopPropagation(); const [id,idx]=row.dataset.pickQueue.split(':').map(Number); selectedCourtId=id; renderQueueDesk(); notify(`Queue #${idx+1} seçildi`)}); document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const c=courts.find(x=>x.id==b.dataset.add); c.timer+=300; if(c.status==='open')c.status='live'; render(); notify(`${c.title}: +5 dakika eklendi`)}); document.querySelectorAll('[data-end]').forEach(b=>b.onclick=()=>{const c=courts.find(x=>x.id==b.dataset.end); c.status='open'; c.timer=0; c.teams=[[],[]]; render(); notify(`${c.title}: court open`)}); document.querySelectorAll('[data-call]').forEach(b=>b.onclick=()=>callNext(Number(b.dataset.call))); document.querySelectorAll('[data-tv]').forEach(b=>{const c=courts.find(x=>x.id==b.dataset.tv); b.onclick=()=>notify(`${c.title} lobby preview hazır`)}); document.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{b.classList.toggle('on'); b.textContent=b.classList.contains('on')?'Score on':'Score off'}); document.querySelectorAll('[data-endset]').forEach(b=>b.onclick=()=>notify(`Court ${b.dataset.endset}: set kaydedildi`)); document.querySelectorAll('[data-score]').forEach(input=>input.onchange=()=>{const [id,idx]=input.dataset.score.split(':'); const c=courts.find(x=>x.id==id); c.score[+idx]=Math.max(0,parseInt(input.value||'0',10)); notify(`${c.title}: skor güncellendi`)})}
+    document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]'); if(!b)return; activeFilter=b.dataset.filter; document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active')); b.classList.add('active'); applyFilter()});
+    document.getElementById('announceBtn').onclick=()=>{const v=document.getElementById('announceInput').value.trim(); notify(v?`TV: ${v}`:'Anons metni boş')};
+    document.getElementById('refreshBtn').onclick=()=>notify('Courts refreshed');
+    document.getElementById('settingsButton').onclick=()=>notify('Settings');
+    document.getElementById('collapseBtn').onclick=()=>{document.getElementById('sidebar').style.display='none';document.querySelector('.app-shell').style.gridTemplateColumns='minmax(0,1fr) 360px';notify('Focus mode')};
+    setInterval(()=>{let needsRender=false;courts.forEach(c=>{const before=`${c.status}:${urgencyClass(c)}`; if(c.timer>0)c.timer-=1; if(c.timer>0&&c.timer<5*60&&c.status==='live')c.status='ending'; const after=`${c.status}:${urgencyClass(c)}`; if(before!==after)needsRender=true;}); updateLiveUrgency(); if(needsRender){renderHighlights();renderQueueDesk();applyFilter();}},1000);
+    render();
+  </script>
+</body>
+</html>
