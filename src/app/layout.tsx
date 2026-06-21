@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Manrope, Sora } from "next/font/google";
+import { IBM_Plex_Mono, Manrope, Sora, Instrument_Serif } from "next/font/google";
 
 import "./globals.css";
 
@@ -19,6 +19,13 @@ const monoFont = IBM_Plex_Mono({
   weight: ["400", "500", "700"],
 });
 
+const serifFont = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
+});
+
 export const metadata: Metadata = {
   title: "Pickle Pulse",
   description:
@@ -31,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} h-full`}>
+    <html lang="en" className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} ${serifFont.variable} h-full`}>
       <body className="min-h-full bg-[var(--background)] text-[var(--foreground)] antialiased">{children}</body>
     </html>
   );

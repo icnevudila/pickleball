@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 import { TenantHeader } from "@/components/layout/tenant-header";
 import { PublicFooter } from "@/components/layout/public-footer";
+import { LandingHeroActions } from "@/components/booking/landing-hero-actions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -45,54 +46,47 @@ export default async function ClubLandingPage({ params }: ClubLandingPageProps) 
         
         {/* Main Grid: Hero Card + Court Pulse */}
         <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] items-stretch">
-          
-          {/* Hero Card */}
-          <div className="dark-card flex flex-col justify-between p-8 sm:p-10 relative overflow-hidden bg-gradient-to-b from-[#fffaf5] to-[#fff1e8] border border-[#e3b197] rounded-[20px] shadow-[0_12px_30px_rgba(49,36,24,0.075)]">
-            <div className="absolute right-[-80px] top-[-80px] w-[230px] h-[230px] rounded-full bg-[rgba(223,255,114,0.36)] pointer-events-none" />
-            <div className="absolute left-[-90px] bottom-[-120px] w-[260px] h-[260px] rounded-full bg-[rgba(217,91,53,0.1)] pointer-events-none" />
+                  {/* Hero Banner Section (1920x600 Website Hero format compliant) */}
+          <div className="lg:col-span-2 relative min-h-[380px] md:min-h-[460px] flex flex-col justify-between p-8 sm:p-12 md:p-16 overflow-hidden bg-gradient-to-br from-[#FFFDFB] via-[#FFF5EE] to-[#FFEBE0] border border-[#EAC4B0] rounded-[24px] shadow-[0_16px_36px_rgba(240,79,42,0.06)]">
+            {/* Design elements matching the Gradient / Minimalist aesthetic */}
+            <div className="absolute right-[-40px] top-[-40px] w-[320px] h-[320px] rounded-full bg-gradient-to-br from-[rgba(240,79,42,0.09)] to-[rgba(200,255,77,0.12)] blur-3xl pointer-events-none" />
+            <div className="absolute left-[-60px] bottom-[-60px] w-[280px] h-[280px] rounded-full bg-[rgba(240,79,42,0.04)] blur-2xl pointer-events-none" />
             
-            <div className="relative z-10 space-y-6">
-              <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.16em] text-[var(--muted)]">
-                <span className="h-2 w-2 rounded-full bg-[var(--brand)]" />
+            {/* Top Zone: Branding & Quick Specs */}
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-[#B83A22]">
+                <span className="h-2 w-2 rounded-full bg-[var(--brand)] animate-pulse" />
                 {clubName} Pickleball Club
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.065em] leading-[0.98] text-[var(--ink)]">
-                Pickleball, <TypewriterText words={["not random", "perfectly synced", "always in rhythm"]} className="text-[var(--brand)]" />.
-              </h1>
-              <p className="text-sm sm:text-base text-[var(--muted)] max-w-xl leading-relaxed font-semibold">
-                Court availability, sessions, memberships, and lobby broadcasts in a single flow. Players arrive, check the board, and step onto the court.
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Button variant="primary" asChild className="rounded-[9px] px-6 py-2.5 text-sm">
-                  <Link href={`/${clubSlug}/book`}>Find an open court</Link>
-                </Button>
-                <Button variant="secondary" asChild className="rounded-[9px] px-6 py-2.5 text-sm bg-white border-[var(--line-strong)] text-[var(--foreground)]">
-                  <Link href={`/register`}>Sign up</Link>
-                </Button>
-                <Button variant="ghost" asChild className="rounded-[9px] px-4 py-2.5 text-sm text-[var(--muted)] hover:text-[var(--foreground)]">
-                  <Link href={`/login`}>Sign in</Link>
-                </Button>
-              </div>
+              <Badge tone="lime" className="font-mono text-[10px] tracking-wider uppercase px-2.5 py-0.5 border border-[#C8FF4D]/30 bg-[#C8FF4D]/10 text-[#4B7300]">
+                Court Ops Live
+              </Badge>
             </div>
 
-            {/* Quick Metrics Grid */}
-            <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-8 border-t border-[#ead7c7]/50">
-              <div className="bg-[rgba(255,253,249,0.72)] border border-[#ead7c7] rounded-[14px] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                <span className="font-mono text-2xl font-black text-[var(--clay-dark)]">4</span>
-                <p className="text-xs text-[var(--muted)] font-semibold mt-1">live courts</p>
-              </div>
-              <div className="bg-[rgba(255,253,249,0.72)] border border-[#ead7c7] rounded-[14px] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                <span className="font-mono text-2xl font-black text-[var(--clay-dark)]">18</span>
-                <p className="text-xs text-[var(--muted)] font-semibold mt-1">today sessions</p>
-              </div>
-              <div className="bg-[rgba(255,253,249,0.72)] border border-[#ead7c7] rounded-[14px] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                <span className="font-mono text-2xl font-black text-[var(--clay-dark)]">7 min</span>
-                <p className="text-xs text-[var(--muted)] font-semibold mt-1">next open slot</p>
-              </div>
-              <div className="bg-[rgba(255,253,249,0.72)] border border-[#ead7c7] rounded-[14px] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                <span className="font-mono text-2xl font-black text-[var(--clay-dark)]">TV</span>
-                <p className="text-xs text-[var(--muted)] font-semibold mt-1">lobby liveboard</p>
+            {/* Middle Zone: Core Value Proposition & Subtext */}
+            <div className="relative z-10 max-w-2xl my-8 md:my-12 space-y-4">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.075em] leading-[0.95] text-[var(--foreground)]">
+                Pickleball, <br className="hidden sm:inline" />
+                <span className="text-[var(--brand)] bg-gradient-to-r from-[var(--brand)] to-[var(--brand-deep)] bg-clip-text text-transparent">not random.</span>
+              </h1>
+              <p className="text-sm sm:text-base text-[var(--muted)] leading-relaxed font-semibold max-w-xl">
+                Court availability, sessions, memberships, and lobby broadcasts in a single flow. Players arrive, check the board, and step onto the court.
+              </p>
+            </div>
+            
+            {/* Bottom Zone: Call to Action (CTA) & Quick Stats */}
+            <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pt-6 border-t border-[#EAC4B0]/40">
+              <LandingHeroActions clubSlug={clubSlug} />
+              
+              <div className="flex flex-wrap gap-3">
+                <div className="bg-[#FFFDFB]/80 border border-[#EAC4B0]/60 rounded-[12px] px-4 py-2 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="font-mono text-sm font-black text-[#1A1614]">4 Live Courts</span>
+                </div>
+                <div className="bg-[#FFFDFB]/80 border border-[#EAC4B0]/60 rounded-[12px] px-4 py-2 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-orange-500" />
+                  <span className="font-mono text-sm font-black text-[#1A1614]">18 Sessions Today</span>
+                </div>
               </div>
             </div>
           </div>
@@ -144,6 +138,44 @@ export default async function ClubLandingPage({ params }: ClubLandingPageProps) 
               </div>
             </div>
           </Card>
+        </section>
+
+        {/* Social Proof Strip / Club Highlights (Dental layout match with Sunset Court style) */}
+        <section className="border-y border-[#F0D6CA]/50 bg-[#FFF8F1]/40 py-8 rounded-[16px]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center text-center">
+            <div className="space-y-1">
+              <div className="text-lg font-black tracking-tight text-[var(--ink)]">
+                All-In-One Flow
+              </div>
+              <div className="text-xs font-semibold text-[var(--muted)]">
+                Bookings to live scoreboard
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-lg font-black tracking-tight text-[var(--ink)]">
+                Instant Check-in
+              </div>
+              <div className="text-xs font-semibold text-[var(--muted)]">
+                Smart QR code kiosk flow
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-lg font-black tracking-tight text-[var(--ink)]">
+                Real-Time TV
+              </div>
+              <div className="text-xs font-semibold text-[var(--muted)]">
+                Lobby queue & audio updates
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-lg font-black tracking-tight text-[var(--ink)]">
+                Split Payments
+              </div>
+              <div className="text-xs font-semibold text-[var(--muted)]">
+                Divide match rates easily
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Metric Strip */}

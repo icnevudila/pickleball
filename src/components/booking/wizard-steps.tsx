@@ -275,6 +275,29 @@ export function StepSummary({ session, onBack, formData, clubSlug }: { session: 
   const handleCheckout = () => {
     setIsProcessing(true);
     setTimeout(() => {
+      if (typeof window !== "undefined") {
+        const bookingsKey = `pickle_bookings_${clubSlug || "kadikoy"}`;
+        const existingBookings = localStorage.getItem(bookingsKey);
+        const currentBookings = existingBookings ? JSON.parse(existingBookings) : [];
+        
+        const newBooking = {
+          id: `bkg-${Date.now()}`,
+          sessionId: session.id,
+          sessionName: session.name,
+          timeLabel: session.timeLabel,
+          dateLabel: session.dateLabel,
+          hostName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          guestCount: formData.guests.length,
+          bookingStatus: "confirmed",
+          paymentStatus: "paid",
+          pricePaid: priceToPay,
+        };
+        
+        localStorage.setItem(bookingsKey, JSON.stringify([newBooking, ...currentBookings]));
+        window.dispatchEvent(new Event("storage"));
+      }
       setIsProcessing(false);
       setIsSuccess(true);
     }, 1500);

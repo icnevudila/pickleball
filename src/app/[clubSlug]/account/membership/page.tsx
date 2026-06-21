@@ -99,31 +99,31 @@ export default function MembershipPage({ params }: MembershipPageProps) {
           label="Weekend Pro"
           value="Active Plan"
           icon={<Star className="w-5 h-5 text-amber-500" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
         <StatCard
           label="Credits Remaining"
           value="8 credits"
           icon={<CreditCard className="w-5 h-5 text-[var(--brand)]" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
         <StatCard
           label="Estimated Savings"
           value="TRY 820"
           icon={<Sparkles className="w-5 h-5 text-[var(--out-green)]" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
         <StatCard
           label="Renewal Schedule"
           value="9 days left"
           icon={<Sparkles className="w-5 h-5 text-slate-400" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
       </section>
 
       {/* Priority cards row */}
       <section className="grid gap-4 md:grid-cols-3">
-        <article className="rounded-[16px] border border-[#bddbcc] bg-[#f4fbf7] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4">
+        <article className="rounded-[20px] border border-[#bddbcc] bg-gradient-to-b from-[#f4fbf7] to-[#e8f6ee] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4 hover:shadow-md transition-all duration-300">
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[var(--green)]">
               <span className="h-2 w-2 rounded-full bg-[var(--green)]" />
@@ -132,35 +132,35 @@ export default function MembershipPage({ params }: MembershipPageProps) {
             <h3 className="font-extrabold text-[var(--foreground)] text-base">8 credits left</h3>
             <p className="text-xs text-[var(--muted)] font-semibold mt-1">No pressure to upgrade tier</p>
           </div>
-          <Button variant="secondary" size="sm" className="w-full rounded-[9px] text-xs font-bold py-2 bg-white border-[var(--line-strong)]">
+          <Button variant="secondary" size="sm" className="w-full rounded-[12px] text-xs font-extrabold py-2 border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 shadow-sm bg-white">
             Keep Plan
           </Button>
         </article>
 
-        <article className="rounded-[16px] border border-[#e1c486] bg-[#fff8e8] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4">
+        <article className="rounded-[20px] border border-[#e1c486] bg-gradient-to-b from-[#fff8e8] to-[#fff4dd] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4 hover:shadow-md transition-all duration-300">
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-amber-700">
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
+              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
               Auto Renewal
             </div>
             <h3 className="font-extrabold text-[var(--foreground)] text-base">Card will be charged</h3>
             <p className="text-xs text-[var(--muted)] font-semibold mt-1">Renewal scheduled for next month</p>
           </div>
-          <Button variant="secondary" size="sm" className="w-full rounded-[9px] text-xs font-bold py-2 bg-white border-[var(--line-strong)]">
+          <Button variant="secondary" size="sm" className="w-full rounded-[12px] text-xs font-extrabold py-2 border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 shadow-sm bg-white">
             Manage Card
           </Button>
         </article>
 
-        <article className="rounded-[16px] border border-[#e3b197] bg-gradient-to-b from-[#fffaf5] to-[#fff3eb] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4">
+        <article className="rounded-[20px] border border-[#e3b197] bg-gradient-to-b from-[#fffcf9] to-[#fff3eb] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4 hover:shadow-md transition-all duration-300">
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[#9d3d25]">
-              <span className="h-2 w-2 rounded-full bg-[var(--brand)]" />
+              <span className="h-2 w-2 rounded-full bg-[var(--brand)] animate-pulse" />
               Tier Recommendation
             </div>
             <h3 className="font-extrabold text-[var(--foreground)] text-base">Unlimited may fit</h3>
             <p className="text-xs text-[var(--muted)] font-semibold mt-1">Based on weekend play logs</p>
           </div>
-          <Button variant="primary" size="sm" className="w-full rounded-[9px] text-xs font-bold py-2 bg-[var(--brand)]">
+          <Button variant="primary" size="sm" className="w-full rounded-[12px] text-xs font-extrabold py-2 bg-[var(--brand)] shadow-[var(--shadow-btn)] active:scale-95 transition-transform">
             Compare Tiers
           </Button>
         </article>
@@ -168,13 +168,13 @@ export default function MembershipPage({ params }: MembershipPageProps) {
 
       {/* Current plan detail vs savings block */}
       <section className="grid gap-6 lg:grid-cols-2">
-        <Card variant="surface" className="p-6 border border-[var(--line-strong)] rounded-[16px] shadow-[var(--shadow-sm)] space-y-4">
+        <Card variant="surface" className="p-6 border border-[var(--line)] rounded-[20px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300 space-y-4">
           <div className="flex justify-between items-start border-b border-[var(--line)]/50 pb-4">
             <div>
               <h3 className="text-base font-extrabold text-[var(--ink)] tracking-tight">Weekend Pro</h3>
               <p className="text-xs text-[var(--muted)] font-semibold mt-0.5">Current plan · renews soon</p>
             </div>
-            <Badge tone="lime">Active</Badge>
+            <Badge tone="lime" className="font-black">Active</Badge>
           </div>
 
           <div className="space-y-2">
@@ -186,17 +186,17 @@ export default function MembershipPage({ params }: MembershipPageProps) {
           </div>
         </Card>
 
-        <Card variant="surface" className="p-6 border border-[var(--line-strong)] rounded-[16px] shadow-[var(--shadow-sm)] space-y-4">
+        <Card variant="surface" className="p-6 border border-[var(--line)] rounded-[20px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300 space-y-4">
           <div className="flex justify-between items-start border-b border-[var(--line)]/50 pb-4">
             <div>
               <h3 className="text-base font-extrabold text-[var(--ink)] tracking-tight">Plan value</h3>
               <p className="text-xs text-[var(--muted)] font-semibold mt-0.5">What you saved this month</p>
             </div>
-            <Badge tone="brand">TRY 820</Badge>
+            <Badge tone="brand" className="font-black">TRY 820</Badge>
           </div>
 
           {/* Terminal format */}
-          <div className="rounded-[12px] bg-[#211b16] text-[#fff8f1] p-4 font-mono text-xs space-y-2">
+          <div className="rounded-[14px] bg-[#211b16] text-[#fff8f1] p-4.5 font-mono text-xs space-y-2.5 shadow-sm">
             <div className="flex justify-between border-b border-white/10 pb-1.5">
               <span>Court discount</span>
               <span className="font-extrabold text-[var(--brand)]">TRY 520</span>
@@ -215,20 +215,20 @@ export default function MembershipPage({ params }: MembershipPageProps) {
 
       {/* Plan action buttons */}
       <section className="grid gap-4 grid-cols-3">
-        <Card variant="surface" className="p-5 border border-[var(--line-strong)] rounded-[14px] text-center space-y-3">
+        <Card variant="surface" className="p-5 border border-[var(--line)] rounded-[20px] text-center space-y-3 shadow-sm hover:shadow-md transition-all duration-300">
           <h4 className="text-sm font-extrabold">Freeze Plan</h4>
           <p className="text-[11px] text-[var(--muted)] leading-relaxed font-semibold">Pause your tier credits up to 7 days.</p>
-          <Button variant="secondary" size="sm" className="w-full text-xs font-semibold py-1 rounded-[8px]">Request freeze</Button>
+          <Button variant="secondary" size="sm" className="w-full text-xs font-extrabold py-2 rounded-[10px] border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 bg-white shadow-sm">Request freeze</Button>
         </Card>
-        <Card variant="surface" className="p-5 border border-[var(--line-strong)] rounded-[14px] text-center space-y-3">
+        <Card variant="surface" className="p-5 border border-[var(--line)] rounded-[20px] text-center space-y-3 shadow-sm hover:shadow-md transition-all duration-300">
           <h4 className="text-sm font-extrabold">Upgrade Plan</h4>
           <p className="text-[11px] text-[var(--muted)] leading-relaxed font-semibold">Move to Unlimited Pro tier instantly.</p>
-          <Button variant="primary" size="sm" className="w-full text-xs font-semibold py-1 rounded-[8px] bg-[var(--brand)]">Upgrade now</Button>
+          <Button variant="primary" size="sm" className="w-full text-xs font-extrabold py-2 rounded-[10px] bg-[var(--brand)] shadow-[var(--shadow-btn)] active:scale-95 transition-transform">Upgrade now</Button>
         </Card>
-        <Card variant="surface" className="p-5 border border-[var(--line-strong)] rounded-[14px] text-center space-y-3">
+        <Card variant="surface" className="p-5 border border-[var(--line)] rounded-[20px] text-center space-y-3 shadow-sm hover:shadow-md transition-all duration-300">
           <h4 className="text-sm font-extrabold">Plan Policies</h4>
           <p className="text-[11px] text-[var(--muted)] leading-relaxed font-semibold">Cancellation rules and booking limits.</p>
-          <Button variant="secondary" size="sm" className="w-full text-xs font-semibold py-1 rounded-[8px]">Read policy</Button>
+          <Button variant="secondary" size="sm" className="w-full text-xs font-extrabold py-2 rounded-[10px] border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 bg-white shadow-sm">Read policy</Button>
         </Card>
       </section>
 
@@ -249,13 +249,13 @@ export default function MembershipPage({ params }: MembershipPageProps) {
                 key={plan.id}
                 variant={isCurrent ? "surface" : "surface"}
                 className={`p-6 flex flex-col justify-between border ${
-                  isCurrent ? "border-[var(--brand)] ring-1 ring-[var(--brand)]" : "border-[var(--line-strong)]"
-                } hover:shadow-md transition-all duration-300 rounded-[16px]`}
+                  isCurrent ? "border-[var(--brand)] ring-1 ring-[var(--brand)]" : "border-[var(--line)]"
+                } hover:shadow-md transition-all duration-300 rounded-[20px]`}
               >
                 <div className="space-y-4">
                   <div className="flex justify-between items-start">
                     <h3 className="text-lg font-black tracking-tight">{plan.name}</h3>
-                    {isCurrent && <Badge tone="brand">Current Tier</Badge>}
+                    {isCurrent && <Badge tone="brand" className="font-black">Current Plan</Badge>}
                   </div>
 
                   <div className="flex items-baseline">
@@ -284,7 +284,7 @@ export default function MembershipPage({ params }: MembershipPageProps) {
                 <div className="mt-6 pt-2">
                   <Button
                     variant={isCurrent ? "secondary" : "primary"}
-                    className="w-full rounded-[9px] text-xs font-bold py-2 bg-[var(--brand)]"
+                    className={`w-full rounded-[12px] text-xs font-extrabold py-2.5 ${isCurrent ? "" : "bg-[var(--brand)] shadow-[var(--shadow-btn)] active:scale-[0.98] transition-transform"}`}
                     disabled={isCurrent || isUpgrading}
                     onClick={() => handleUpgrade(plan.id)}
                   >

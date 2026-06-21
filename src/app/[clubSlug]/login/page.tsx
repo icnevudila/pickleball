@@ -87,6 +87,7 @@ export default function PlayerLoginPage() {
               placeholder="dani@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              icon={<Mail className="h-4 w-4" />}
               required
               disabled={isLoading}
               className="rounded-[12px] border-[var(--line)] focus:border-[var(--brand)] focus:ring-[var(--brand)]"
@@ -97,6 +98,7 @@ export default function PlayerLoginPage() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              icon={<Lock className="h-4 w-4" />}
               required
               disabled={isLoading}
               className="rounded-[12px] border-[var(--line)] focus:border-[var(--brand)] focus:ring-[var(--brand)]"

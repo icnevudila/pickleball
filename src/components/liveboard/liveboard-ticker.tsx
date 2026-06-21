@@ -53,24 +53,24 @@ export function LiveboardTicker({
   const repeated = [...items, ...items];
 
   return (
-    <div className="overflow-hidden bg-[var(--paper)] text-[#0b1512]">
-      <div className="liveboard-marquee flex min-w-max items-center gap-8 px-6 py-3 text-sm font-medium tracking-[0.03em]">
+    <div className="overflow-hidden bg-[#211C16] text-[#FFFBF2]">
+      <div className="liveboard-marquee flex min-w-max items-center gap-12 px-8 py-4 text-base font-bold uppercase tracking-wider">
         {repeated.map((item, index) => (
-          <span key={`${item.id}-${index}`} className="whitespace-nowrap">
+          <span key={`${item.id}-${index}`} className="whitespace-nowrap flex items-center">
             <span
-              className={`mr-3 inline-flex px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] ${
+              className={`mr-4 inline-flex rounded-[4px] px-2.5 py-1 font-mono text-[11px] font-black uppercase tracking-[0.18em] ${
                 item.tone === "lime"
-                  ? "bg-[var(--accent-lime)] text-[#0b1512]"
+                  ? "bg-[#D4E88F] text-[#211C16]"
                   : item.tone === "rust"
-                    ? "bg-[var(--brand)] text-white"
+                    ? "bg-[#F04F2A] text-white animate-pulse"
                     : item.tone === "teal"
-                      ? "bg-[var(--brand-deep)] text-[var(--paper)]"
-                      : "bg-[rgba(11,21,18,0.12)] text-[#0b1512]"
+                      ? "bg-[#4F86A6] text-white"
+                      : "bg-white/20 text-[#FFFBF2]"
               }`}
             >
               {item.tag}
             </span>
-            {item.text}
+            <span className="text-white font-extrabold tracking-wide">{item.text}</span>
           </span>
         ))}
       </div>

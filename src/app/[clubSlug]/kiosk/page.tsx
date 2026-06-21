@@ -12,13 +12,81 @@ export default function KioskPage() {
   const clubSlug = params.clubSlug as string;
 
   const [pin, setPin] = React.useState<string>("");
+  const [toastMessage, setToastMessage] = React.useState("");
+  const [showToast, setShowToast] = React.useState(false);
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  const logAudit = (actionType: string, details: string) => {
+    const newLog = {
+      timestamp: new Date().toISOString().replace("T", " ").slice(0, 16),
+      user: "Self Kiosk",
+      action: `${actionType}: ${details}`,
+    };
+    try {
+      const logsKey = `pickle_audit_logs_${clubSlug}`;
+      const existing = localStorage.getItem(logsKey);
+      const logs = existing ? JSON.parse(existing) : [];
+      logs.unshift(newLog);
+      localStorage.setItem(logsKey, JSON.stringify(logs));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const addPlayerToPool = (name: string, courtName = "Court 2") => {
+    if (typeof window === "undefined") return;
+    const poolKey = `pickle_player_pool_${clubSlug}`;
+    const tickerKey = `pickle_ticker_${clubSlug}`;
+
+    const existingPool = localStorage.getItem(poolKey);
+    const pool = existingPool ? JSON.parse(existingPool) : [
+      { name: "Lucas K.", rating: "3.5", checked: false },
+      { name: "Oliver B.", rating: "3.0", checked: false },
+      { name: "Liam T.", rating: "3.8", checked: false },
+      { name: "Noah S.", rating: "3.6", checked: false },
+      { name: "Mia Y.", rating: "2.9", checked: false },
+      { name: "Ava D.", rating: "3.2", checked: false },
+    ];
+
+    if (pool.some((p: any) => p.name.toLowerCase() === name.trim().toLowerCase())) {
+      triggerToast(`${name} is already checked in!`);
+      return;
+    }
+
+    const newPlayer = { name: name.trim(), rating: "—", checked: true };
+    const updatedPool = [...pool, newPlayer];
+    localStorage.setItem(poolKey, JSON.stringify(updatedPool));
+
+    // Also add a ticker item
+    const existingTicker = localStorage.getItem(tickerKey);
+    const ticker = existingTicker ? JSON.parse(existingTicker) : [];
+    const newTicker = [{ kind: "QUEUE", text: `${name.trim()} joined queue from Kiosk` }, ...ticker.slice(0, 4)];
+    localStorage.setItem(tickerKey, JSON.stringify(newTicker));
+
+    // Dispatch event to let other windows know
+    window.dispatchEvent(new Event("storage"));
+    
+    logAudit("kiosk.self_checkin_completed", `${name} checked in via PIN Kiosk`);
+    triggerToast(`Checked in. Your court is ${courtName}.`);
+  };
 
   const handleKeyPress = (val: string) => {
     if (val === "⌫") {
       setPin((prev) => prev.slice(0, -1));
     } else if (val === "OK") {
       if (pin.length > 0) {
-        alert(`Checked in with PIN: ${pin}`);
+        if (pin === "1234") {
+          addPlayerToPool("Ali Düvenci", "Court 2");
+        } else if (pin === "9999") {
+          addPlayerToPool("Mert Yılmaz", "Court 1");
+        } else {
+          triggerToast("No active reservation found for this PIN. Ask the front desk for help.");
+        }
         setPin("");
       }
     } else {
@@ -46,7 +114,7 @@ export default function KioskPage() {
           </div>
           <div>
             <h1 className="text-base font-extrabold tracking-tight text-[var(--foreground)] leading-none">Pickle Pulse Check-in</h1>
-            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[var(--muted)] mt-1">QR okut veya PIN gir · walk-in kuyruğa katıl</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[var(--muted)] mt-1">Scan QR or enter PIN · join walk-in queue</p>
           </div>
         </div>
 
@@ -56,10 +124,10 @@ export default function KioskPage() {
             <div className="space-y-2">
               <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[var(--brand)]">Fast door flow</span>
               <h2 className="text-3xl font-extrabold tracking-[-0.05em] text-[var(--foreground)] leading-tight">
-                Hoş geldin.<br />Kort ritmine katıl.
+                Welcome.<br />Join the court rhythm.
               </h2>
               <p className="text-xs text-[var(--muted)] font-semibold leading-relaxed">
-                Rezervasyonun varsa check-in yap. Walk-in isen adını yazıp Live Desk kuyruğuna düş.
+                If you have a reservation, check in. If you are a walk-in, enter your name to join the Live Desk queue.
               </p>
             </div>
 
@@ -84,7 +152,9 @@ export default function KioskPage() {
               </Button>
               <Button variant="secondary" className="flex-1 rounded-[10px] font-bold py-3 bg-white border-[var(--line-strong)] text-xs text-[var(--foreground)]" onClick={() => {
                 const name = prompt("Please enter your name:");
-                if (name) alert(`Added ${name} to walk-in queue!`);
+                if (name && name.trim()) {
+                  addPlayerToPool(name);
+                }
               }}>
                 Walk-in Queue
               </Button>
@@ -116,6 +186,11 @@ export default function KioskPage() {
           </Card>
         </div>
       </Card>
+      {showToast && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#211b16] text-[#fffaf4] px-4 py-2.5 rounded-[10px] text-xs font-semibold shadow-[0_14px_30px_rgba(0,0,0,0.16)]">
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 }

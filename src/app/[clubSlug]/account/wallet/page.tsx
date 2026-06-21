@@ -45,31 +45,31 @@ export default function WalletPage({ params }: WalletPageProps) {
           label="Wallet Balance"
           value={`TRY ${balance.toLocaleString()}`}
           icon={<Wallet className="w-5 h-5 text-[var(--brand)]" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
         <StatCard
           label="Last Cafe POS Purchase"
           value="TRY 145"
           icon={<DollarSign className="w-5 h-5 text-amber-500" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
         <StatCard
           label="Auto Top-up Guard"
           value="TRY 250"
           icon={<AlertCircle className="w-5 h-5 text-slate-400" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
         <StatCard
           label="Recent Transactions"
           value="3 tx"
           icon={<CheckCircle2 className="w-5 h-5 text-[var(--out-green)]" />}
-          className="bg-[var(--surface)] border border-[var(--line)] rounded-[14px]"
+          className="bg-gradient-to-br from-[var(--surface)] to-[var(--surface-muted)] border border-[var(--line)] rounded-[18px] shadow-[var(--shadow-sm)] hover:shadow-md transition-all duration-300"
         />
       </section>
 
       {/* Priority Cards Row */}
       <section className="grid gap-4 md:grid-cols-3">
-        <article className="rounded-[16px] border border-[#bddbcc] bg-[#f4fbf7] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4">
+        <article className="rounded-[20px] border border-[#bddbcc] bg-gradient-to-b from-[#f4fbf7] to-[#e8f6ee] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4 hover:shadow-md transition-all duration-300">
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[var(--green)]">
               <span className="h-2 w-2 rounded-full bg-[var(--green)]" />
@@ -78,12 +78,12 @@ export default function WalletPage({ params }: WalletPageProps) {
             <h3 className="font-extrabold text-[var(--foreground)] text-base">Enough for tonight</h3>
             <p className="text-xs text-[var(--muted)] font-semibold mt-1">No payment friction during check-in</p>
           </div>
-          <Button variant="secondary" size="sm" className="w-full rounded-[9px] text-xs font-bold py-2 bg-white border-[var(--line-strong)]">
+          <Button variant="secondary" size="sm" className="w-full rounded-[12px] text-xs font-extrabold py-2 border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 shadow-sm bg-white">
             Use credits
           </Button>
         </article>
 
-        <article className="rounded-[16px] border border-[#e1c486] bg-[#fff8e8] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4">
+        <article className="rounded-[20px] border border-[#e1c486] bg-gradient-to-b from-[#fff8e8] to-[#fff4dd] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4 hover:shadow-md transition-all duration-300">
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-amber-700">
               <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
@@ -95,14 +95,14 @@ export default function WalletPage({ params }: WalletPageProps) {
           <Button
             variant="secondary"
             size="sm"
-            className="w-full rounded-[9px] text-xs font-bold py-2 bg-white border-[var(--line-strong)]"
+            className="w-full rounded-[12px] text-xs font-extrabold py-2 border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 shadow-sm bg-white"
             onClick={() => setAutoTopUp(!autoTopUp)}
           >
             {autoTopUp ? "Disable guard" : "Enable guard"}
           </Button>
         </article>
 
-        <article className="rounded-[16px] border border-[#e3b197] bg-gradient-to-b from-[#fffaf5] to-[#fff3eb] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4">
+        <article className="rounded-[20px] border border-[#e3b197] bg-gradient-to-b from-[#fffcf9] to-[#fff3eb] p-5 shadow-[var(--shadow-sm)] flex flex-col justify-between gap-4 hover:shadow-md transition-all duration-300">
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[#9d3d25]">
               <span className="h-2 w-2 rounded-full bg-[var(--brand)]" />
@@ -111,7 +111,7 @@ export default function WalletPage({ params }: WalletPageProps) {
             <h3 className="font-extrabold text-[var(--foreground)] text-base">Last POS receipt ready</h3>
             <p className="text-xs text-[var(--muted)] font-semibold mt-1">Support-safe invoice ledger</p>
           </div>
-          <Button variant="secondary" size="sm" className="w-full rounded-[9px] text-xs font-bold py-2 bg-white border-[var(--line-strong)] flex items-center justify-center gap-1">
+          <Button variant="secondary" size="sm" className="w-full rounded-[12px] text-xs font-extrabold py-2 border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 shadow-sm bg-white flex items-center justify-center gap-1">
             <Download className="w-3.5 h-3.5" /> Download PDF
           </Button>
         </article>
@@ -119,13 +119,13 @@ export default function WalletPage({ params }: WalletPageProps) {
 
       {/* Spend Guard & Balance Details */}
       <section className="grid gap-6 lg:grid-cols-2">
-        <Card variant="surface" className="p-6 border border-[var(--line-strong)] rounded-[16px] shadow-[var(--shadow-sm)] flex flex-col justify-between min-h-[200px]">
+        <Card variant="surface" className="p-6 border border-[var(--line)] rounded-[20px] shadow-[var(--shadow-sm)] flex flex-col justify-between min-h-[200px] hover:shadow-md transition-all duration-300">
           <div className="flex justify-between items-start border-b border-[var(--line)]/50 pb-4">
             <div>
               <h3 className="text-base font-extrabold text-[var(--ink)] tracking-tight">Club balance</h3>
               <p className="text-xs text-[var(--muted)] font-semibold mt-0.5">Wallet credits for bookings and quick cafe payments</p>
             </div>
-            <Badge tone="lime">Ready</Badge>
+            <Badge tone="lime" className="font-black">Ready</Badge>
           </div>
 
           <div className="space-y-1 pt-4">
@@ -134,12 +134,12 @@ export default function WalletPage({ params }: WalletPageProps) {
           </div>
 
           <div className="flex gap-2 pt-6">
-            <Button variant="primary" className="rounded-[9px] text-xs font-bold px-4 py-2 bg-[var(--brand)] flex items-center gap-1" onClick={handleTopUp}>
+            <Button variant="primary" className="rounded-[12px] text-xs font-extrabold px-4 py-2 bg-[var(--brand)] active:scale-95 transition-transform shadow-[var(--shadow-btn)] flex items-center gap-1" onClick={handleTopUp}>
               <Plus className="w-4 h-4" /> Top up TRY 500
             </Button>
             <Button
               variant="secondary"
-              className="rounded-[9px] text-xs font-bold px-4 py-2 bg-white border-[var(--line-strong)]"
+              className="rounded-[12px] text-xs font-extrabold px-4 py-2 bg-white border-[var(--line-strong)] hover:border-[var(--brand)] hover:bg-[var(--brand-soft)] transition-all active:scale-95 shadow-sm"
               onClick={() => setAutoTopUp(!autoTopUp)}
             >
               Auto top-up
@@ -147,7 +147,7 @@ export default function WalletPage({ params }: WalletPageProps) {
           </div>
         </Card>
 
-        <Card variant="surface" className="p-6 border border-[var(--line-strong)] rounded-[16px] shadow-[var(--shadow-sm)] flex flex-col justify-between min-h-[200px]">
+        <Card variant="surface" className="p-6 border border-[var(--line)] rounded-[20px] shadow-[var(--shadow-sm)] flex flex-col justify-between min-h-[200px] hover:shadow-md transition-all duration-300">
           <div className="flex justify-between items-start border-b border-[var(--line)]/50 pb-4">
             <div>
               <h3 className="text-base font-extrabold text-[var(--ink)] tracking-tight">Spend guard</h3>
@@ -155,12 +155,12 @@ export default function WalletPage({ params }: WalletPageProps) {
             </div>
           </div>
 
-          <div className="p-4 border border-[var(--line)] bg-[var(--surface-soft)] rounded-[12px] flex justify-between items-center">
+          <div className="p-4 border border-[var(--line)] bg-[var(--surface-soft)] rounded-[14px] flex justify-between items-center shadow-sm">
             <div>
               <p className="font-extrabold text-sm text-[var(--foreground)]">Auto top-up threshold</p>
-              <p className="text-xs text-[var(--muted)] font-semibold mt-0.5">Add TRY 500 when balance falls below TRY 250</p>
+              <p className="text-xs text-[var(--muted)] font-bold mt-0.5">Add TRY 500 when balance falls below TRY 250</p>
             </div>
-            <Badge tone={autoTopUp ? "lime" : "slate"}>
+            <Badge tone={autoTopUp ? "lime" : "slate"} className="font-black">
               {autoTopUp ? "ON" : "OFF"}
             </Badge>
           </div>
@@ -176,7 +176,7 @@ export default function WalletPage({ params }: WalletPageProps) {
           </p>
         </div>
 
-        <Card variant="surface" className="overflow-hidden border border-[var(--line-strong)] rounded-[16px]">
+        <Card variant="surface" className="overflow-hidden border border-[var(--line)] rounded-[20px] shadow-sm">
           <div className="divide-y divide-[var(--line)]">
             {[
               { desc: "POS · Cafe Water + grip tape", date: "Today 18:02", value: "-TRY 145", type: "Done", tone: "lime" as const },
@@ -190,7 +190,7 @@ export default function WalletPage({ params }: WalletPageProps) {
                 </div>
                 <div className="flex items-center gap-4">
                   <span className={`font-mono text-sm font-black ${tx.value.startsWith("+") ? "text-[var(--out-green)]" : "text-[var(--foreground)]"}`}>{tx.value}</span>
-                  <Badge tone={tx.tone}>{tx.type}</Badge>
+                  <Badge tone={tx.tone} className="font-black text-[9px]">{tx.type}</Badge>
                 </div>
               </div>
             ))}

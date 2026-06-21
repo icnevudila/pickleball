@@ -11,7 +11,7 @@ export interface InputProps
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = "text", label, error, icon, disabled, id, ...props }, ref) => {
+  ({ className, type = "text", label, error, icon, disabled, id, style, ...props }, ref) => {
     const inputId = id || React.useId();
 
     return (
@@ -35,13 +35,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={type}
             className={cx(
               "field-shell w-full text-sm font-semibold transition-all duration-200 outline-none text-[var(--foreground)] placeholder:text-[var(--muted)]/50 focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand-soft)] disabled:opacity-50",
-              icon ? "pl-11" : "pl-4",
               error ? "border-[var(--red)] focus:border-[var(--red)] focus:ring-[var(--red)]/10" : "",
               className
             )}
             disabled={disabled}
             ref={ref}
             {...props}
+            style={{
+              paddingLeft: icon ? "2.75rem" : "1rem",
+              ...style
+            }}
           />
         </div>
         {error && (

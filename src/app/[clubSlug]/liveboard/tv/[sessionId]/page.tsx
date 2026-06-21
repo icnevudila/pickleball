@@ -1,17 +1,13 @@
-import Image from "next/image";
+"use client";
 
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { CountdownTimer } from "@/components/liveboard/countdown-timer";
-import { LiveboardAlertCenter } from "@/components/liveboard/liveboard-alert-center";
-import { LiveboardCueEngine } from "@/components/liveboard/liveboard-cue-engine";
 import { LiveClock } from "@/components/liveboard/live-clock";
 import { LiveboardTicker } from "@/components/liveboard/liveboard-ticker";
-import type { CourtAssignment, Person, QueueEntry } from "@/lib/types";
-import { getLiveboardSnapshot } from "@/lib/liveboard/source";
-import { cx, initials } from "@/lib/utils";
-
-function namesLabel(players: Person[]) {
-  return players.map((player) => player.fullName).join(" / ");
-}
+import { LiveboardCueEngine } from "@/components/liveboard/liveboard-cue-engine";
+import type { CourtAssignment, Person, QueueEntry, Session, RealtimeEvent } from "@/lib/types";
+import { initials, cx } from "@/lib/utils";
 
 function splitIntoSides(players: Person[]) {
   return {
@@ -22,110 +18,135 @@ function splitIntoSides(players: Person[]) {
 
 function pairQueue(queue: QueueEntry[]) {
   const blocks = [];
-
   for (let index = 0; index < queue.length; index += 2) {
     blocks.push(queue.slice(index, index + 2));
   }
-
   return blocks;
 }
 
 function statusCopy(assignment: CourtAssignment) {
   if (assignment.status === "available") {
     return {
-      label: "Loading",
-      tone: "bg-[var(--accent-lime)] text-[var(--brand-deep)]",
-      sublabel: "Next group is being called",
+      label: "Open",
+      class: "status-open",
+      pillClass: "open",
+      sublabel: "Awaiting players to check in",
     };
   }
 
-  if (assignment.status === "ending-soon") {
+  if (assignment.status === "ending-soon" || (assignment.endsInSeconds && assignment.endsInSeconds <= 90)) {
     return {
-      label: "Ending soon",
-      tone: "bg-[var(--accent-amber)] text-[var(--brand-deep)]",
-      sublabel: "Front desk should prep next court wave",
+      label: "Time Low",
+      class: "status-critical",
+      pillClass: "critical",
+      sublabel: "Call next group immediately",
     };
   }
 
   if (assignment.status === "time-up") {
     return {
-      label: "Time up",
-      tone: "bg-[var(--accent-rose)] text-white",
-      sublabel: "Rotation should advance now",
-    };
-  }
-
-  if (assignment.status === "maintenance") {
-    return {
-      label: "Maintenance",
-      tone: "bg-[rgba(255,255,255,0.12)] text-white",
-      sublabel: "Court temporarily unavailable",
+      label: "Time Up",
+      class: "status-critical animate-pulse",
+      pillClass: "critical",
+      sublabel: "Rotate players now",
     };
   }
 
   return {
     label: "Live",
-    tone: "bg-[var(--brand)] text-white",
-    sublabel: "Match currently on court",
+    class: "status-live",
+    pillClass: "live",
+    sublabel: "Match in progress",
   };
 }
 
-function CourtPanel({ assignment }: { assignment: CourtAssignment }) {
+function CourtPanel({ assignment, idx }: { assignment: CourtAssignment; idx: number }) {
   const state = statusCopy(assignment);
   const nextGroup = assignment.nextUp ? splitIntoSides(assignment.nextUp) : null;
+  const PALETTE = ["#E2613D", "#5C8264", "#4F86A6", "#DDA73B"];
+
+  // Circular calculations
+  const R = 62;
+  const CIRC = 2 * Math.PI * R;
+  const endsIn = assignment.endsInSeconds ?? 0;
+  const ASSUMED_TOTAL = 3600;
+  const frac = Math.max(0, Math.min(1, endsIn / ASSUMED_TOTAL));
+  const strokeOffset = CIRC * (1 - frac);
+
+  const getTeamNameColor = (teamIdx: number, pIdx: number) => {
+    return PALETTE[(idx * 2 + teamIdx + pIdx) % PALETTE.length];
+  };
 
   return (
-    <article className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[rgba(18,32,25,0.92)] text-[var(--paper)] shadow-[0_24px_90px_rgba(3,8,6,0.34)]">
-      <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,var(--brand),var(--accent-lime))]" />
-
-      <div className="flex items-center justify-between gap-4 border-b border-white/8 bg-[rgba(14,59,54,0.95)] px-5 py-4">
-        <div>
-          <p className="font-display text-xl tracking-[-0.05em] text-white sm:text-2xl">{assignment.courtName}</p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-[#8ca298]">{state.sublabel}</p>
+    <article className={cx("court-card", state.class)} data-id={assignment.id}>
+      <div className="court-head">
+        <div className="court-title">
+          <div className="court-no">{idx + 1}</div>
+          <div>
+            <div className="court-name">{assignment.courtName}</div>
+            <div className="match-type">Friday Open Play · 18:00 - 21:00</div>
+          </div>
         </div>
-        <span className={cx("rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em]", state.tone)}>
+        <span className={cx("status-pill", state.pillClass)}>
+          <span className="dot" />
           {state.label}
         </span>
       </div>
 
-      <div className="flex items-center justify-end px-5 pt-4">
-        {assignment.endsInSeconds ? (
-          <div className="text-[var(--accent-lime)] [&>div]:!text-[32px] [&>div]:!font-semibold [&>div]:!tracking-[-0.08em] sm:[&>div]:!text-[42px]">
-            <CountdownTimer initialSeconds={assignment.endsInSeconds} compact />
-          </div>
-        ) : (
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8ca298]">Awaiting court release</p>
-        )}
-      </div>
-
-      {nextGroup ? (
-        <div className="grid gap-4 px-5 py-5 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-          <QueueTeam title="Side A" players={nextGroup.left} accent="text-[var(--brand)]" />
-          <div className="grid h-16 w-16 place-items-center rounded-[18px] border border-white/12 bg-[rgba(255,255,255,0.06)] font-display text-xl tracking-[0.18em] text-white">
-            VS
-          </div>
-          <QueueTeam title="Side B" players={nextGroup.right} accent="text-[var(--accent-lime)]" align="right" />
+      <div className="match-area">
+        {/* Team A */}
+        <div className="team team-a">
+          <div className="team-label">Team A</div>
+          {(nextGroup ? nextGroup.left : assignment.teamA).map((player, pIdx) => (
+            <div key={player.id} className="player-row">
+              <span className="avatar" style={{ backgroundColor: getTeamNameColor(0, pIdx) }}>
+                {initials(player.fullName)}
+              </span>
+              <span className="pname">{player.fullName}</span>
+            </div>
+          ))}
         </div>
-      ) : (
-        <div className="grid gap-4 px-5 py-5 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-          <PlayerSide title="Team A" players={assignment.teamA} accent="text-[var(--brand)]" />
-          <div className="rounded-[18px] border border-white/12 bg-[rgba(255,255,255,0.06)] px-4 py-3 text-center">
-            <p className="font-display text-4xl tracking-[-0.08em] text-white sm:text-5xl">11 - 8</p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-[#8ca298]">Current score</p>
-          </div>
-          <PlayerSide title="Team B" players={assignment.teamB} accent="text-[var(--accent-lime)]" align="right" />
-        </div>
-      )}
 
-      <div className="border-t border-white/8 bg-[rgba(255,255,255,0.03)] px-5 py-4">
-        <div className="flex flex-wrap gap-2">
-          {(nextGroup ? assignment.nextUp ?? [] : [...assignment.teamA, ...assignment.teamB]).map((player) => (
-            <span
-              key={player.id}
-              className="rounded-full border border-white/10 bg-[rgba(255,255,255,0.06)] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-[#d8dacc]"
-            >
-              {player.firstName}
-            </span>
+        {/* Circular Timer & Score */}
+        <div className="score-stage">
+          <svg className="ring-svg" viewBox="0 0 144 144" width="100%" height="100%">
+            <circle className="ring-bg" cx="72" cy="72" r={R}></circle>
+            <circle
+              className="ring-fg"
+              cx="72"
+              cy="72"
+              r={R}
+              strokeDasharray={`${CIRC} ${CIRC}`}
+              strokeDashoffset={strokeOffset}
+            ></circle>
+          </svg>
+          <div className="ring-inner">
+            <div className="time-left">
+              {assignment.endsInSeconds ? (
+                <CountdownTimer initialSeconds={assignment.endsInSeconds} compact />
+              ) : (
+                "--:--"
+              )}
+            </div>
+            <div className="scoreline">
+              <span className="snum leading">11</span>
+              <span className="dash">–</span>
+              <span className="snum">8</span>
+            </div>
+            <div className="score-sub">Current set</div>
+          </div>
+        </div>
+
+        {/* Team B */}
+        <div className="team team-b">
+          <div className="team-label">Team B</div>
+          {(nextGroup ? nextGroup.right : assignment.teamB).map((player, pIdx) => (
+            <div key={player.id} className="player-row">
+              <span className="avatar" style={{ backgroundColor: getTeamNameColor(1, pIdx) }}>
+                {initials(player.fullName)}
+              </span>
+              <span className="pname">{player.fullName}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -133,223 +154,275 @@ function CourtPanel({ assignment }: { assignment: CourtAssignment }) {
   );
 }
 
-function PlayerSide({
-  title,
-  players,
-  accent,
-  align = "left",
-}: {
-  title: string;
-  players: Person[];
-  accent: string;
-  align?: "left" | "right";
-}) {
-  return (
-    <div className={cx("space-y-3", align === "right" && "text-right")}>
-      <p className={cx("font-mono text-[10px] uppercase tracking-[0.22em] text-[#8ca298]", align === "right" && "text-right")}>
-        <span className={accent}>{title}</span>
-      </p>
-      <div className="space-y-3">
-        {players.map((player) => (
-          <div
-            key={player.id}
-            className={cx(
-              "flex items-center gap-3 rounded-[20px] border border-white/10 bg-[rgba(255,255,255,0.04)] p-3",
-              align === "right" && "flex-row-reverse",
-            )}
-          >
-            {player.avatar ? (
-              <Image
-                src={player.avatar}
-                alt={player.fullName}
-                className="h-12 w-12 shrink-0 rounded-full border border-white/12 object-cover"
-                width={48}
-                height={48}
-              />
-            ) : (
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-white/12 bg-[rgba(255,255,255,0.08)] font-display text-sm text-white">
-                {initials(player.fullName)}
-              </div>
-            )}
-            <div className={cx("min-w-0", align === "right" && "text-right")}>
-              <p className="truncate text-sm font-semibold uppercase tracking-[0.04em] text-white sm:text-base">
-                {player.fullName}
-              </p>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#8ca298]">
-                {player.tag ?? "Active player"}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+interface PageData {
+  session: Session;
+  assignments: CourtAssignment[];
+  queue: QueueEntry[];
+  events: RealtimeEvent[];
 }
 
-function QueueTeam({
-  title,
-  players,
-  accent,
-  align = "left",
-}: {
-  title: string;
-  players: Person[];
-  accent: string;
-  align?: "left" | "right";
-}) {
-  return (
-    <div className={cx("space-y-3", align === "right" && "text-right")}>
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8ca298]">
-        <span className={accent}>{title}</span>
-      </p>
-      <div className="space-y-3">
-        {players.map((player) => (
-          <div
-            key={player.id}
-            className={cx(
-              "rounded-[20px] border border-white/10 bg-[rgba(255,255,255,0.04)] p-3",
-              align === "right" && "text-right",
-            )}
-          >
-            {player.avatar ? (
-              <Image
-                src={player.avatar}
-                alt={player.fullName}
-                className="mb-3 h-12 w-12 rounded-full border border-white/12 object-cover"
-                width={48}
-                height={48}
-              />
-            ) : null}
-            <p className="truncate text-sm font-semibold uppercase tracking-[0.04em] text-white sm:text-base">
-              {player.fullName}
-            </p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#8ca298]">
-              Next rotation
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default async function TvLiveboardPage({
+export default function TvLiveboardPage({
   params,
 }: {
-  params: Promise<{ sessionId: string }>;
+  params: Promise<{ sessionId: string; clubSlug: string }>;
 }) {
-  const { sessionId } = await params;
-  const { session, assignments, queue, events } = await getLiveboardSnapshot(sessionId);
+  const { sessionId, clubSlug } = React.use(params);
+  const [data, setData] = useState<PageData | null>(null);
+
+  // Poll liveboard snapshot endpoint every 2 seconds for realtime updates
+  useEffect(() => {
+    async function fetchLiveboard() {
+      try {
+        const response = await fetch(`/api/sessions/${sessionId}/liveboard`);
+        if (response.ok) {
+          const json = await response.json();
+          if (json.snapshot) {
+            setData(json.snapshot);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch liveboard updates:", err);
+      }
+    }
+
+    fetchLiveboard();
+    const interval = setInterval(fetchLiveboard, 2000);
+    return () => clearInterval(interval);
+  }, [sessionId]);
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-[#F4ECDC] flex items-center justify-center font-sans font-bold text-[#211C16]">
+        Connecting to liveboard stream...
+      </div>
+    );
+  }
+
+  const { session, assignments, queue, events } = data;
   const upNextBlocks = pairQueue(queue).slice(0, 3);
   const filledCourts = assignments.filter((assignment) => assignment.status !== "available").length;
 
-  return (
-    <div className="min-h-screen overflow-hidden bg-[#0b1512] text-[var(--paper)]">
-      <LiveboardCueEngine events={events} assignments={assignments} queue={queue} />
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,106,77,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(200,255,77,0.08),transparent_32%)]" />
+  const clubName = clubSlug
+    ? clubSlug
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ")
+    : "Kadıköy";
 
-      <div className="relative grid min-h-screen grid-rows-[auto_1fr_auto] gap-4 p-4 sm:p-5 xl:p-6">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/8 pb-4">
-          <div className="flex items-end gap-4">
-            <div className="bg-[var(--brand)] px-4 py-2 font-display text-2xl uppercase tracking-[0.04em] text-[#0b1512] [transform:skewX(-6deg)]">
-              Pickle Pulse
-            </div>
+  // Quick stats calculation safely preventing Infinity error
+  const endsInList = assignments.map((c) => c.endsInSeconds).filter((s): s is number => s !== undefined && s > 0);
+  const minSeconds = endsInList.length > 0 ? Math.min(...endsInList) : 900;
+  const nextOpenMins = Math.max(1, Math.round(minSeconds / 60));
+
+  return (
+    <div className="min-h-screen bg-[#F4ECDC] text-[#211C16] antialiased overflow-hidden font-sans">
+      <LiveboardCueEngine events={events} assignments={assignments} queue={queue} />
+      
+      {/* Background gradients and dots matching template */}
+      <div className="pointer-events-none fixed inset-0 z-[-2] bg-[radial-gradient(circle_at_86%_-8%,rgba(221,167,59,0.14),transparent_32%),radial-gradient(circle_at_-8%_96%,rgba(92,130,100,0.12),transparent_36%)]" />
+      <div className="pointer-events-none fixed inset-0 z-[-1] opacity-45 bg-[radial-gradient(rgba(33,28,22,0.05)_1px,transparent_1px)] bg-[size:26px_26px] [mask-image:radial-gradient(circle_at_50%_40%,black,transparent_78%)]" />
+
+      {/* Styled Outfit Font Styles injected safely */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .board { height: 100vh; display: grid; grid-template-rows: auto 1fr auto; gap: 16px; padding: 22px; }
+        .topbar { position: relative; overflow: hidden; background: #FFFBF2; border: 1px solid rgba(33,28,22,.10); border-radius: 26px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 18px; box-shadow: 0 18px 48px rgba(33,22,12,.10); }
+        .topbar::before { content: ""; position: absolute; left: 18px; right: 18px; bottom: 0; height: 4px; border-radius: 8px; background: linear-gradient(90deg,#E2613D,#DDA73B,#5C8264); }
+        .mark { width: 44px; height: 44px; border-radius: 50%; background: #211C16; position: relative; flex: 0 0 auto; }
+        .mark::before { content: ""; position: absolute; left: 50%; top: 42%; transform: translate(-50%,-58%); width: 18px; height: 24px; border-radius: 10px 10px 7px 7px; background: #F4ECDC; }
+        .mark::after { content: ""; position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); width: 4px; height: 8px; border-radius: 3px; background: #F4ECDC; }
+        .brand-title { font-weight: 900; font-size: 24px; line-height: 1; letter-spacing: .01em; color: #211C16; }
+        .brand-sub { margin-top: 3px; font-weight: 800; font-size: 10px; line-height: 1; letter-spacing: .16em; text-transform: uppercase; color: #B8431F; }
+        
+        .marquee-line { flex: 1; max-width: 600px; height: 40px; display: flex; align-items: center; gap: 10px; min-width: 0; bg: #E4EEE1; background-color: #E4EEE1; border: 1px solid rgba(52,84,59,.16); border-radius: 999px; padding: 0 14px; overflow: hidden; }
+        .marquee-label { font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #34543B; white-space: nowrap; }
+        .marquee { display: flex; gap: 30px; white-space: nowrap; font-weight: 700; font-size: 12px; letter-spacing: .02em; color: #211C16; }
+        .marquee b { color: #B8431F; font-weight: 800; }
+        
+        .live-pill { display: inline-flex; align-items: center; gap: 8px; background: #E2613D; color: #fff; height: 40px; border-radius: 999px; padding: 0 16px; font-weight: 900; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: breathe 1.6s ease-in-out infinite; }
+        
+        .main { min-height: 0; display: grid; grid-template-columns: minmax(0,1fr) 372px; gap: 16px; }
+        .courts { min-height: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 16px; }
+        .court-card { position: relative; overflow: hidden; border-radius: 22px; background: #FFFBF2; border: 1px solid rgba(33,28,22,.10); box-shadow: 0 18px 48px rgba(33,22,12,.10); display: grid; grid-template-rows: auto 1fr; min-height: 0; }
+        .court-card.status-critical { border-color: rgba(226,97,61,.5); background: linear-gradient(165deg,#FBE3D5,#FFFBF2 62%); }
+        .court-card.status-open { background: #E4EEE1; }
+        
+        .court-head { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px 4px; }
+        .court-no { width: 38px; height: 38px; border-radius: 12px; background: #211C16; color: #F4ECDC; display: grid; place-items: center; font-weight: 800; font-size: 17px; line-height: 1; flex: 0 0 auto; }
+        .court-name { font-weight: 800; font-size: 22px; line-height: 1.1; letter-spacing: .01em; color: #211C16; }
+        .match-type { font-weight: 700; font-size: 11px; line-height: 1; letter-spacing: .08em; text-transform: uppercase; color: #544A3C; margin-top: 4px; }
+        .status-pill { display: inline-flex; align-items: center; gap: 7px; height: 30px; border-radius: 999px; padding: 0 13px; font-weight: 800; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+        .status-pill.live { background: #E4EEE1; color: #34543B; }
+        .status-pill.critical { background: #E2613D; color: #fff; }
+        .status-pill.open { background: #F7E9C9; color: #A87A1F; }
+        
+        .match-area { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 14px; padding: 6px 20px 18px; min-height: 0; }
+        .team { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+        .team-b { align-items: flex-end; }
+        .team-label { font-weight: 700; font-size: 11px; line-height: 1; letter-spacing: .1em; text-transform: uppercase; color: #544A3C; margin-bottom: 4px; }
+        .team-b .team-label { text-align: right; }
+        .player-row { display: flex; align-items: center; gap: 12px; }
+        .team-b .player-row { flex-direction: row-reverse; text-align: right; }
+        .avatar { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 18px; color: #fff; flex: 0 0 auto; border: 3px solid #FFFBF2; box-shadow: 0 6px 14px rgba(33,22,12,.18); }
+        .pname { font-weight: 700; font-size: 15px; line-height: 1.25; color: #211C16; text-transform: uppercase; }
+        
+        .score-stage { position: relative; width: 148px; height: 148px; display: grid; place-items: center; }
+        .ring-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+        .ring-bg { fill: none; stroke: rgba(33,28,22,.10); stroke-width: 8; }
+        .ring-fg { fill: none; stroke: #5C8264; stroke-width: 8; stroke-linecap: round; }
+        .status-critical .ring-fg { stroke: #E2613D; }
+        .status-open .ring-fg { stroke: #DDA73B; }
+        .ring-inner { position: relative; z-index: 1; text-align: center; }
+        .time-left { font-weight: 800; font-size: 22px; line-height: 1; color: #211C16; }
+        .scoreline { margin-top: 3px; display: flex; align-items: baseline; justify-content: center; gap: 9px; }
+        .snum { font-weight: 900; font-size: 38px; line-height: .9; color: #544A3C; }
+        .snum.leading { color: #34543B; }
+        .status-critical .snum.leading { color: #B8431F; }
+        .dash { font-weight: 700; font-size: 18px; line-height: 1; color: rgba(33,28,22,.10); }
+        .score-sub { margin-top: 5px; font-weight: 700; font-size: 9px; line-height: 1; letter-spacing: .1em; text-transform: uppercase; color: #544A3C; }
+        
+        .side { min-height: 0; display: grid; grid-template-rows: auto auto auto 1fr; gap: 12px; }
+        .side-card { position: relative; overflow: hidden; border-radius: 20px; background: #FFFBF2; border: 1px solid rgba(33,28,22,.10); box-shadow: 0 14px 36px rgba(33,22,12,.08); }
+        .side-head { height: 42px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid rgba(33,28,22,.10); }
+        .side-title { font-weight: 800; font-size: 13px; line-height: 1; letter-spacing: .12em; text-transform: uppercase; color: #211C16; }
+        .count { min-width: 24px; height: 24px; border-radius: 999px; background: #211C16; color: #F4ECDC; display: grid; place-items: center; font-weight: 800; font-size: 11px; line-height: 1; }
+        
+        .watch-body { padding: 13px 14px; }
+        .watch-row { display: flex; align-items: center; gap: 10px; border-radius: 13px; background: #FBE3D5; padding: 9px 11px; margin-bottom: 8px; }
+        .watch-row .wdot { width: 8px; height: 8px; border-radius: 50%; background: #E2613D; flex: 0 0 auto; }
+        .watch-row strong { display: block; font-weight: 800; font-size: 14px; line-height: 1.25; color: #B8431F; }
+        .watch-row span { display: block; font-weight: 600; font-size: 13px; line-height: 1.35; color: #544A3C; }
+        .watch-row.synced { background: #E4EEE1; }
+        .watch-row.synced .wdot { background: #5C8264; }
+        .watch-row.synced strong { color: #34543B; }
+        
+        .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 13px 14px; }
+        .stat { border: 1px solid rgba(33,28,22,.10); border-radius: 14px; background: #F4ECDC; padding: 11px 6px; text-align: center; }
+        .stat strong { display: block; font-weight: 800; font-size: 34px; line-height: .9; color: #211C16; }
+        .stat span { display: block; margin-top: 6px; font-weight: 700; font-size: 9px; line-height: 1; letter-spacing: .08em; text-transform: uppercase; color: #544A3C; }
+        
+        .queue-item { position: relative; padding: 13px 14px; border-bottom: 1px solid rgba(33,28,22,.10); }
+        .queue-item:first-child { background: linear-gradient(90deg,#FBE3D5,transparent); }
+        .queue-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-weight: 800; font-size: 10px; line-height: 1; letter-spacing: .08em; text-transform: uppercase; color: #544A3C; }
+        .queue-meta b { color: #A87A1F; }
+        .qmatch { font-weight: 700; font-size: 15px; line-height: 1.35; color: #211C16; }
+        .qmatch b { font-weight: 800; }
+        .vs { color: #544A3C; font-weight: 600; }
+        
+        .feed-row { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 10px; padding: 11px 9px; border-radius: 11px; }
+        .feed-row:nth-child(odd) { background: #F4ECDC; }
+        .feed-court { font-weight: 800; font-size: 10px; line-height: 1; color: #B8431F; letter-spacing: .05em; text-transform: uppercase; }
+        .feed-text { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; font-size: 14px; line-height: 1.25; color: #211C16; }
+        .feed-tag { height: 22px; border-radius: 999px; background: #E4EEE1; color: #34543B; display: flex; align-items: center; padding: 0 9px; font-weight: 800; font-size: 9px; line-height: 1; letter-spacing: .05em; text-transform: uppercase; }
+        
+        @keyframes breathe { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(.7);opacity:.45;} }
+      ` }} />
+
+      <div className="board">
+        <header className="topbar">
+          <div className="brand">
+            <div className="mark" aria-hidden="true" />
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#60736b]">Live court status</p>
-              <p className="mt-2 font-display text-3xl tracking-[-0.06em] text-white sm:text-4xl">{session.name}</p>
+              <div className="brand-title">PICKLE PULSE</div>
+              <div className="brand-sub">{clubName} · Live Board</div>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <div className="inline-flex items-center gap-2 bg-[var(--accent-lime)] px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#0b1512]">
-              <span className="h-2 w-2 rounded-full bg-[#0b1512]" />
+          <div className="marquee-line" aria-label="Club updates">
+            <span className="marquee-label">On deck</span>
+            <div className="marquee" id="topMarquee">
+              <span><b>{assignments.length} courts live</b> · queue is flowing</span>
+              <span className="ml-6">Next wave in <b>~{nextOpenMins}m</b></span>
+            </div>
+          </div>
+
+          <div className="top-actions">
+            <span className="live-pill">
+              <span className="dot" />
               Live
-            </div>
-            <div className="text-right">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8ca298]">Local time</p>
-              <div className="mt-1 font-display text-3xl tracking-[-0.04em] text-white sm:text-4xl">
-                <LiveClock />
-              </div>
-            </div>
+            </span>
           </div>
         </header>
 
-        <main className="grid min-h-0 gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
-          <section className="grid min-h-0 gap-4 md:grid-cols-2">
-            {assignments.map((assignment) => (
-              <CourtPanel key={assignment.id} assignment={assignment} />
+        <main className="main">
+          {/* Active Courts Wave */}
+          <section className="courts">
+            {assignments.map((assignment, idx) => (
+              <CourtPanel key={assignment.id} assignment={assignment} idx={idx} />
             ))}
           </section>
 
-          <aside className="grid min-h-0 gap-4 xl:grid-rows-[auto_auto_1fr]">
-            <LiveboardAlertCenter
-              session={session}
-              assignments={assignments}
-              queue={queue}
-              events={events}
-            />
-
-            <section className="rounded-[28px] border border-[rgba(255,106,77,0.5)] bg-[rgba(18,32,25,0.92)] p-5 shadow-[0_24px_90px_rgba(3,8,6,0.32)]">
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--brand)]">Capacity</p>
-                <span className="bg-[var(--brand)] px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#0b1512]">
-                  {session.checkedIn >= session.capacity ? "Full" : "Active"}
-                </span>
+          {/* Sidebar */}
+          <aside className="side">
+            <section className="side-card">
+              <div className="side-head">
+                <div className="side-title">Club Status</div>
               </div>
-              <p className="mt-4 font-display text-3xl tracking-[-0.06em] text-white">
-                {filledCourts === assignments.length ? "No open courts" : `${assignments.length - filledCourts} court open`}
-              </p>
-              <p className="mt-2 text-sm text-[#8ca298]">
-                {queue[0] ? `Next opening estimate: ${queue[0].eta}.` : "Queue is clear and the next wave can go direct."}
-              </p>
+              <div className="watch-body">
+                <div className="watch-row">
+                  <span className="wdot" />
+                  <div>
+                    <strong>Wave 1 · Active</strong>
+                    <span>Fast court rotation is online.</span>
+                  </div>
+                </div>
+                <div className="watch-row synced">
+                  <span className="wdot" />
+                  <div>
+                    <strong>Live updates active</strong>
+                    <span>Real-time lobby board updates.</span>
+                  </div>
+                </div>
+              </div>
+              <div className="stats">
+                <div className="stat">
+                  <strong>{filledCourts}</strong>
+                  <span>Live</span>
+                </div>
+                <div className="stat">
+                  <strong>{queue.length}</strong>
+                  <span>Waiting</span>
+                </div>
+                <div className="stat">
+                  <strong>~{nextOpenMins}m</strong>
+                  <span>Next open</span>
+                </div>
+              </div>
             </section>
 
-            <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[rgba(18,32,25,0.92)] shadow-[0_24px_90px_rgba(3,8,6,0.32)]">
-              <div className="flex items-center justify-between bg-[rgba(14,59,54,0.95)] px-5 py-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white">Up next</p>
-                <span className="bg-[var(--accent-lime)] px-2 py-1 font-display text-sm text-[#0b1512]">{upNextBlocks.length}</span>
+            {/* Next on Court */}
+            <section className="side-card">
+              <div className="side-head">
+                <div className="side-title">Next On Court</div>
+                <span className="count">{upNextBlocks.length}</span>
               </div>
-              <div>
-                {upNextBlocks.map((block, index) => (
-                  <div key={block[0]?.id ?? index} className="border-t border-white/8 px-5 py-4 first:border-t-0">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#60736b]">
-                        {assignments[index]?.courtName ?? `Queue block ${index + 1}`}
-                      </p>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent-lime)]">
-                        {index === 0 ? "Preparing" : "Queued"}
-                      </p>
+              <div id="queue">
+                {upNextBlocks.map((block, idx) => (
+                  <div key={block[0]?.id ?? idx} className="queue-item">
+                    <div className="queue-meta">
+                      <span>Court {idx + 1}</span>
+                      <b>On Deck</b>
                     </div>
-                    <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 text-sm font-semibold uppercase tracking-[0.04em] text-white">
-                      <span className="truncate">{namesLabel(block.slice(0, 1).map((entry) => entry.player))}</span>
-                      <span className="font-display text-xs tracking-[0.18em] text-[#60736b]">VS</span>
-                      <span className="truncate text-right">{namesLabel(block.slice(1).map((entry) => entry.player)) || "Waiting opponent"}</span>
+                    <div className="qmatch">
+                      <b>{block[0]?.player.fullName}</b> <span className="vs">vs</span> {block[1]?.player.fullName ?? "Awaiting opponent"}
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[rgba(18,32,25,0.92)] shadow-[0_24px_90px_rgba(3,8,6,0.32)]">
-              <div className="flex items-center justify-between bg-[rgba(14,59,54,0.95)] px-5 py-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white">Waitlist</p>
-                <span className="bg-[var(--accent-lime)] px-2 py-1 font-display text-sm text-[#0b1512]">{queue.length}</span>
+            {/* Recent Highlights Feed */}
+            <section className="side-card flex flex-col min-h-0">
+              <div className="side-head">
+                <div className="side-title">Recent Highlights</div>
+                <span className="count">{events.length}</span>
               </div>
-              <div className="p-2">
-                {queue.map((entry) => (
-                  <div
-                    key={entry.id}
-                    className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-3 rounded-[16px] px-3 py-3 odd:bg-[rgba(255,255,255,0.03)]"
-                  >
-                    <div className="font-display text-lg text-[#60736b]">{entry.position}.</div>
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold uppercase tracking-[0.04em] text-white">
-                        {entry.player.fullName}
-                      </p>
-                    </div>
-                    <div className="rounded-full border border-white/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[#c9d1cb]">
-                      {entry.eta}
-                    </div>
+              <div className="feed-list overflow-y-auto">
+                {events.map((event) => (
+                  <div key={event.id} className="feed-row">
+                    <div className="feed-court">C1</div>
+                    <div className="feed-text">{event.detail}</div>
+                    <div className="feed-tag">{event.label.split(".")[1] || "pulse"}</div>
                   </div>
                 ))}
               </div>
@@ -357,7 +430,7 @@ export default async function TvLiveboardPage({
           </aside>
         </main>
 
-        <footer className="overflow-hidden bg-[var(--paper)] text-[#0b1512]">
+        <footer className="overflow-hidden rounded-full bg-[#211C16] text-[#FFFBF2]">
           <LiveboardTicker session={session} queue={queue} events={events} />
         </footer>
       </div>

@@ -286,3 +286,101 @@ export function getQueueForSession(sessionId: string) {
 export function getAssignmentsForSession(sessionId: string) {
   return courtAssignments.filter((assignment) => assignment.sessionId === sessionId);
 }
+
+export function callNextOnCourt(courtId: string) {
+  const assignment = courtAssignments.find(a => a.id === courtId);
+  if (!assignment) return;
+
+  // If there are players in nextUp, move them to teamA and teamB
+  if (assignment.nextUp && assignment.nextUp.length >= 2) {
+    assignment.teamA = assignment.nextUp.slice(0, 2);
+    assignment.teamB = assignment.nextUp.slice(2, 4);
+    assignment.nextUp = [];
+  } else {
+    // Take from the queue
+    const sessionQueue = queueEntries.filter(q => q.sessionId === assignment.sessionId);
+    if (sessionQueue.length >= 4) {
+      assignment.teamA = [sessionQueue[0].player, sessionQueue[1].player];
+      assignment.teamB = [sessionQueue[2].player, sessionQueue[3].player];
+      // remove from queueEntries
+      const idsToRemove = new Set([sessionQueue[0].id, sessionQueue[1].id, sessionQueue[2].id, sessionQueue[3].id]);
+      const indexList = queueEntries.filter(q => !idsToRemove.has(q.id));
+      queueEntries.length = 0;
+      queueEntries.push(...indexList);
+    } else if (sessionQueue.length >= 2) {
+      assignment.teamA = [sessionQueue[0].player, sessionQueue[1].player];
+      assignment.teamB = [];
+      const idsToRemove = new Set([sessionQueue[0].id, sessionQueue[1].id]);
+      const indexList = queueEntries.filter(q => !idsToRemove.has(q.id));
+      queueEntries.length = 0;
+      queueEntries.push(...indexList);
+    } else {
+      // Dummy fallback players
+      assignment.teamA = [people[0], people[1]];
+      assignment.teamB = [people[2], people[3]];
+    }
+  }
+
+  assignment.status = "playing";
+  assignment.endsInSeconds = 600;
+
+  const eventText = `${assignment.courtName} game started: ${assignment.teamA.map(p => p.firstName).join(" / ")} vs ${assignment.teamB.map(p => p.firstName).join(" / ") || "Waiting Opponent"}.`;
+  realtimeEvents.unshift({
+    id: `e-call-${Date.now()}`,
+    timestamp: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
+    label: "game.started",
+    detail: eventText
+  });
+}
+
+export function endSetOnCourt(courtId: string, scoreA: number = 11, scoreB: number = 7) {
+  const assignment = courtAssignments.find(a => a.id === courtId);
+  if (!assignment) return;
+
+  const prevTeamA = assignment.teamA;
+  const prevTeamB = assignment.teamB;
+
+  assignment.teamA = [];
+  assignment.teamB = [];
+  assignment.status = "available";
+  assignment.endsInSeconds = undefined;
+
+  const eventText = `${assignment.courtName} set ended: ${prevTeamA.map(p => p.firstName).join(" / ")} vs ${prevTeamB.map(p => p.firstName).join(" / ")} (${scoreA} - ${scoreB}).`;
+  realtimeEvents.unshift({
+    id: `e-end-${Date.now()}`,
+    timestamp: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
+    label: "game.ended",
+    detail: eventText
+  });
+}
+
+export function queueNextOnCourt(courtId: string) {
+  const assignment = courtAssignments.find(a => a.id === courtId);
+  if (!assignment) return;
+
+  const sessionQueue = queueEntries.filter(q => q.sessionId === assignment.sessionId);
+  if (sessionQueue.length >= 4) {
+    assignment.nextUp = [
+      sessionQueue[0].player,
+      sessionQueue[1].player,
+      sessionQueue[2].player,
+      sessionQueue[3].player
+    ];
+    // Remove these from queue
+    const idsToRemove = new Set([sessionQueue[0].id, sessionQueue[1].id, sessionQueue[2].id, sessionQueue[3].id]);
+    const indexList = queueEntries.filter(q => !idsToRemove.has(q.id));
+    queueEntries.length = 0;
+    queueEntries.push(...indexList);
+  } else {
+    // If not enough players, assign some from people list
+    assignment.nextUp = [people[4], people[5], people[6], people[7]];
+  }
+
+  const eventText = `Next group locked for ${assignment.courtName}: ${assignment.nextUp.map(p => p.firstName).join(", ")}.`;
+  realtimeEvents.unshift({
+    id: `e-queue-${Date.now()}`,
+    timestamp: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
+    label: "queue.updated",
+    detail: eventText
+  });
+}

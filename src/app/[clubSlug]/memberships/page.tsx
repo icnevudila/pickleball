@@ -46,7 +46,7 @@ export default async function MembershipsPage({ params }: MembershipsPageProps) 
           <div className="space-y-1">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--brand-deep)]">Pickle Pulse</span>
             <h1 className="text-3xl font-extrabold tracking-[-0.05em] text-[var(--ink)]">
-              Choose Your <TypewriterText words={["Membership", "Plan", "Tier", "Access"]} className="text-[var(--brand)]" />
+              Choose Your Membership
             </h1>
             <p className="text-xs text-[var(--muted)] font-semibold mt-1">
               Membership plans: clearly showing what you get, who it fits, and what it includes.
