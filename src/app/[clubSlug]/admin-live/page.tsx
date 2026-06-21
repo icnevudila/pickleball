@@ -248,24 +248,6 @@ export default function AdminLiveCourtsPage({
                         </div>
                         <div className="text-xs text-[var(--faint)]">Control center · syncs to TV</div>
                       </div>
-                      <div className="flex gap-1.5">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-[11px] uppercase tracking-wider text-[var(--brand)] hover:bg-[var(--brand-soft)]"
-                          onClick={() => handleAction("call_next", court.id)}
-                        >
-                          Sıradakini Al (Call Next)
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-[11px] uppercase tracking-wider text-[var(--muted)] hover:bg-[var(--surface-soft)]"
-                          onClick={() => handleAction("queue_next", court.id)}
-                        >
-                          Sıraya Al (Queue Next)
-                        </Button>
-                      </div>
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -313,42 +295,66 @@ export default function AdminLiveCourtsPage({
                       </div>
                     </div>
 
-                    <div className="mt-6 border-t border-[var(--line)] pt-4">
-                      <div className="mb-3 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--muted)]">
-                        RECORD SET SCORE & END
+                    {/* Dedicated Control Actions Area */}
+                    <div className="mt-6 border-t border-[var(--line)] pt-4 space-y-4">
+                      <div>
+                        <div className="mb-2 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--muted)]">
+                          COURT ROTATION ACTIONS
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="secondary"
+                            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-3 h-auto"
+                            onClick={() => handleAction("call_next", court.id)}
+                          >
+                            Sıradakini Al (Call Next)
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            className="flex-1 bg-[#DDA73B] hover:bg-[#C9942C] text-white font-bold text-xs py-2 px-3 h-auto"
+                            onClick={() => handleAction("queue_next", court.id)}
+                          >
+                            Sıraya Al (Queue Next)
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-center gap-4">
-                        <input
-                          type="number"
-                          value={currentScore.a}
-                          onChange={(e) =>
-                            setScores({
-                              ...scores,
-                              [court.id]: { ...currentScore, a: parseInt(e.target.value) || 0 },
-                            })
-                          }
-                          className="w-16 rounded-lg border border-[var(--line-strong)] bg-[var(--surface)] p-2 text-center font-mono text-xl font-bold shadow-sm outline-none focus:border-[var(--brand)]"
-                        />
-                        <span className="text-xl font-black text-[var(--muted)]">-</span>
-                        <input
-                          type="number"
-                          value={currentScore.b}
-                          onChange={(e) =>
-                            setScores({
-                              ...scores,
-                              [court.id]: { ...currentScore, b: parseInt(e.target.value) || 0 },
-                            })
-                          }
-                          className="w-16 rounded-lg border border-[var(--line-strong)] bg-[var(--surface)] p-2 text-center font-mono text-xl font-bold shadow-sm outline-none focus:border-[var(--brand)]"
-                        />
-                        <Button
-                          variant="secondary"
-                          size="md"
-                          className="ml-2 bg-[var(--brand)] hover:bg-[var(--brand-deep)] text-white"
-                          onClick={() => handleAction("end_set", court.id)}
-                        >
-                          ⚑ Bitir (End Set)
-                        </Button>
+
+                      <div className="border-t border-[var(--line)] pt-4">
+                        <div className="mb-2 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--muted)]">
+                          RECORD SET SCORE & COMPLETE
+                        </div>
+                        <div className="flex items-center justify-center gap-3">
+                          <input
+                            type="number"
+                            value={currentScore.a}
+                            onChange={(e) =>
+                              setScores({
+                                ...scores,
+                                [court.id]: { ...currentScore, a: parseInt(e.target.value) || 0 },
+                              })
+                            }
+                            className="w-14 rounded-lg border border-[var(--line-strong)] bg-[var(--surface)] p-2 text-center font-mono text-xl font-bold shadow-sm outline-none focus:border-[var(--brand)]"
+                          />
+                          <span className="text-xl font-black text-[var(--muted)]">-</span>
+                          <input
+                            type="number"
+                            value={currentScore.b}
+                            onChange={(e) =>
+                              setScores({
+                                ...scores,
+                                [court.id]: { ...currentScore, b: parseInt(e.target.value) || 0 },
+                              })
+                            }
+                            className="w-14 rounded-lg border border-[var(--line-strong)] bg-[var(--surface)] p-2 text-center font-mono text-xl font-bold shadow-sm outline-none focus:border-[var(--brand)]"
+                          />
+                          <Button
+                            variant="secondary"
+                            className="ml-2 bg-[#F04F2A] hover:bg-[#D43F1C] text-white font-bold text-xs py-2 px-4 h-auto"
+                            onClick={() => handleAction("end_set", court.id)}
+                          >
+                            ⚑ Bitir (End Set)
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
