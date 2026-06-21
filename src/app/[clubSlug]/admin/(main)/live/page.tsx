@@ -622,6 +622,92 @@ export default function AdminLivePage() {
     setShowRemoveModal(false);
   };
 
+  const [inlineScores, setInlineScores] = useState<Record<number, { a: number; b: number }>>({});
+
+  const inlineCallNext = (courtId: number) => {
+    setCourts((prevCourts) =>
+      prevCourts.map((c) => {
+        if (c.id === courtId) {
+          if (c.queue.length > 0) {
+            const nextQueue = [...c.queue];
+            const next = nextQueue.shift();
+            if (next) {
+              const parts = next.match.split(" vs ");
+              const teamA = (parts[0] || "").split(" / ").filter(Boolean);
+              const teamB = (parts[1] || "").split(" / ").filter(Boolean);
+              addTicker("LIVE", `${c.title}: ${next.match} called`);
+              return {
+                ...c,
+                teams: [teamA, teamB] as [string[], string[]],
+                status: "live" as const,
+                timer: 55 * 60,
+                type: next.sub,
+                set: "0–0",
+                score: [0, 0] as [number, number],
+                queue: nextQueue,
+              };
+            }
+          } else {
+            // Default fallback players
+            addTicker("LIVE", `${c.title}: Auto paired matches called`);
+            return {
+              ...c,
+              teams: [["Ali Kara", "Deniz Yılmaz"], ["Mark Stone", "Josh Snow"]] as [string[], string[]],
+              status: "live" as const,
+              timer: 55 * 60,
+              type: "Friday Open Play · 18:00 - 21:00",
+              set: "0–0",
+              score: [0, 0] as [number, number],
+            };
+          }
+        }
+        return c;
+      })
+    );
+    notify(`Next group called on Court ${courtId}`);
+  };
+
+  const inlineQueueNext = (courtId: number) => {
+    setCourts((prevCourts) =>
+      prevCourts.map((c) => {
+        if (c.id === courtId) {
+          const newQueueItem = {
+            match: "Maria Rose / Kevin Vale vs Sam Moss / Leo Ortiz",
+            sub: "On Deck · waiting rotation",
+            players: ["Maria Rose", "Kevin Vale", "Sam Moss", "Leo Ortiz"],
+          };
+          addTicker("QUEUE", `${c.title}: New group locked for queue`);
+          return {
+            ...c,
+            queue: [...c.queue, newQueueItem],
+          };
+        }
+        return c;
+      })
+    );
+    notify(`Group queued on Court ${courtId}`);
+  };
+
+  const inlineEndSet = (courtId: number, scoreA: number, scoreB: number) => {
+    setCourts((prevCourts) =>
+      prevCourts.map((c) => {
+        if (c.id === courtId) {
+          addTicker("LIVE", `${c.title}: Set ended ${scoreA}–${scoreB}`);
+          return {
+            ...c,
+            status: "open" as const,
+            timer: 0,
+            teams: [[], []] as [string[], string[]],
+            score: [0, 0] as [number, number],
+            set: "",
+          };
+        }
+        return c;
+      })
+    );
+    notify(`Set completed on Court ${courtId}`);
+  };
+
   const executeAddQueue = (e: React.FormEvent) => {
     e.preventDefault();
     const name = queuePlayerName.trim() || queueGuestName.trim();
@@ -2400,6 +2486,62 @@ export default function AdminLivePage() {
                           </div>
                         </div>
                       )}
+                    </div>
+                  </section>
+
+                  {/* Inline Rotation & Score Controls */}
+                  <section className="inline-rotation-actions p-4 border-t border-[#e2d3c4]/40 bg-[#fffdfb]/60 flex flex-col gap-3">
+                    <div>
+                      <div className="text-[10px] font-black uppercase tracking-wider text-[#73675e] mb-1.5">Court Rotation Actions</div>
+                      <div className="flex gap-2">
+                        <button
+                          className="btn flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-[6px] text-xs transition-colors"
+                          onClick={() => inlineCallNext(c.id)}
+                        >
+                          Sıradakini Al (Call Next)
+                        </button>
+                        <button
+                          className="btn flex-1 bg-[#DDA73B] hover:bg-[#C9942C] text-white font-bold py-1.5 px-3 rounded-[6px] text-xs transition-colors"
+                          onClick={() => inlineQueueNext(c.id)}
+                        >
+                          Sıraya Al (Queue Next)
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-[#e2d3c4]/40 pt-2.5">
+                      <div className="text-[10px] font-black uppercase tracking-wider text-[#73675e] mb-1.5">Record Set Score & Complete</div>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="number"
+                          value={inlineScores[c.id]?.a ?? 11}
+                          onChange={(e) =>
+                            setInlineScores({
+                              ...inlineScores,
+                              [c.id]: { a: parseInt(e.target.value) || 0, b: inlineScores[c.id]?.b ?? 7 },
+                            })
+                          }
+                          className="w-12 rounded-lg border border-[#e2d3c4] bg-white p-1 text-center font-mono text-sm font-bold shadow-sm outline-none focus:border-[#F04F2A]"
+                        />
+                        <span className="text-sm font-black text-neutral-400">-</span>
+                        <input
+                          type="number"
+                          value={inlineScores[c.id]?.b ?? 7}
+                          onChange={(e) =>
+                            setInlineScores({
+                              ...inlineScores,
+                              [c.id]: { a: inlineScores[c.id]?.a ?? 11, b: parseInt(e.target.value) || 0 },
+                            })
+                          }
+                          className="w-12 rounded-lg border border-[#e2d3c4] bg-white p-1 text-center font-mono text-sm font-bold shadow-sm outline-none focus:border-[#F04F2A]"
+                        />
+                        <button
+                          className="btn bg-[#F04F2A] hover:bg-[#D43F1C] text-white font-bold py-1.5 px-3 rounded-[6px] text-xs transition-colors ml-auto"
+                          onClick={() => inlineEndSet(c.id, inlineScores[c.id]?.a ?? 11, inlineScores[c.id]?.b ?? 7)}
+                        >
+                          ⚑ Bitir (End Set)
+                        </button>
+                      </div>
                     </div>
                   </section>
 
